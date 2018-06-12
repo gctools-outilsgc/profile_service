@@ -1,0 +1,11 @@
+# import Profile from './generated/prisma.graphql'
+# import Address from './generated/prisma.graphql'
+# import OrgTier from './generated/prisma.graphql'
+# import Organization from './generated/prisma.graphql'
+
+type Query {
+  profiles(gcID: String, name: String, email: String, mobilPhone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
+  orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
+  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
+}

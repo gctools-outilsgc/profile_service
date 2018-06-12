@@ -1,0 +1,10 @@
+{
+  "name": "profile_service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "^1.14.7",
+    "prisma-binding": "^2.0.2"
+  }
+}

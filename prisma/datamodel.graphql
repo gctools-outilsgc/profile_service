@@ -1,0 +1,43 @@
+type Profile {
+  id: ID! @unique
+  gcID: String! @unique
+  name: String!
+  email: String! @unique
+  avatar: String
+  mobilePhone: String
+  officPhone: String
+  address: Address
+  titleEn: String
+  titleFr: String
+  supervisor: Profile @relation(name:"Employees")
+  org: OrgTier @relation(name:"OrgMembers")
+  orgTiers: [OrgTier!]! @relation(name:"OwnerOfOrgTier")  
+}
+
+type Address {
+  id: ID! @unique
+  streetAddress: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  country: String!
+}
+
+type OrgTier {
+  id: ID! @unique
+  nameEn: String!
+  nameFr: String!
+  organization: Organization! @relation(name:"OrgTiers")
+  ownerID: Profile @relation(name:"OwnerOfOrgTier")
+  members: [Profile!]! @relation(name:"OrgMembers")
+}
+
+type Organization {
+  id: ID! @unique
+  nameEn: String!
+  nameFr: String!
+  acronymEn: String!
+  acronymFr: String!
+  orgTiers: [OrgTier!]! @relation(name:"OrgTiers")
+}
+
