@@ -5,7 +5,7 @@ type Profile {
   email: String! @unique
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   address: Address
   titleEn: String
   titleFr: String

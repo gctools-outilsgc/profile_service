@@ -1,5 +1,5 @@
 # source: http://localhost:4466/profile/dev
-# timestamp: Sat Jun 09 2018 17:40:55 GMT-0400 (EDT)
+# timestamp: Wed Jun 13 2018 13:15:12 GMT-0400 (EDT)
 
 type Address implements Node {
   id: ID!
@@ -1193,7 +1193,7 @@ type Profile implements Node {
   email: String!
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   address(where: AddressWhereInput): Address
   titleEn: String
   titleFr: String
@@ -1218,7 +1218,7 @@ input ProfileCreateInput {
   email: String!
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressCreateOneInput
@@ -1248,7 +1248,7 @@ input ProfileCreateWithoutOrgInput {
   email: String!
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressCreateOneInput
@@ -1262,7 +1262,7 @@ input ProfileCreateWithoutOrgTiersInput {
   email: String!
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressCreateOneInput
@@ -1292,8 +1292,8 @@ enum ProfileOrderByInput {
   avatar_DESC
   mobilePhone_ASC
   mobilePhone_DESC
-  officPhone_ASC
-  officPhone_DESC
+  officePhone_ASC
+  officePhone_DESC
   titleEn_ASC
   titleEn_DESC
   titleFr_ASC
@@ -1311,7 +1311,7 @@ type ProfilePreviousValues {
   email: String!
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
 }
@@ -1361,7 +1361,7 @@ input ProfileUpdateDataInput {
   email: String
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressUpdateOneInput
@@ -1376,7 +1376,7 @@ input ProfileUpdateInput {
   email: String
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressUpdateOneInput
@@ -1418,7 +1418,7 @@ input ProfileUpdateWithoutOrgDataInput {
   email: String
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressUpdateOneInput
@@ -1432,7 +1432,7 @@ input ProfileUpdateWithoutOrgTiersDataInput {
   email: String
   avatar: String
   mobilePhone: String
-  officPhone: String
+  officePhone: String
   titleEn: String
   titleFr: String
   address: AddressUpdateOneInput
@@ -1710,46 +1710,46 @@ input ProfileWhereInput {
 
   """All values not ending with the given string."""
   mobilePhone_not_ends_with: String
-  officPhone: String
+  officePhone: String
 
   """All values that are not equal to given value."""
-  officPhone_not: String
+  officePhone_not: String
 
   """All values that are contained in given list."""
-  officPhone_in: [String!]
+  officePhone_in: [String!]
 
   """All values that are not contained in given list."""
-  officPhone_not_in: [String!]
+  officePhone_not_in: [String!]
 
   """All values less than the given value."""
-  officPhone_lt: String
+  officePhone_lt: String
 
   """All values less than or equal the given value."""
-  officPhone_lte: String
+  officePhone_lte: String
 
   """All values greater than the given value."""
-  officPhone_gt: String
+  officePhone_gt: String
 
   """All values greater than or equal the given value."""
-  officPhone_gte: String
+  officePhone_gte: String
 
   """All values containing the given string."""
-  officPhone_contains: String
+  officePhone_contains: String
 
   """All values not containing the given string."""
-  officPhone_not_contains: String
+  officePhone_not_contains: String
 
   """All values starting with the given string."""
-  officPhone_starts_with: String
+  officePhone_starts_with: String
 
   """All values not starting with the given string."""
-  officPhone_not_starts_with: String
+  officePhone_not_starts_with: String
 
   """All values ending with the given string."""
-  officPhone_ends_with: String
+  officePhone_ends_with: String
 
   """All values not ending with the given string."""
-  officPhone_not_ends_with: String
+  officePhone_not_ends_with: String
   titleEn: String
 
   """All values that are not equal to given value."""
