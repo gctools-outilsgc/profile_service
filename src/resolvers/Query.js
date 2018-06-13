@@ -9,7 +9,9 @@ function profiles(_, args, context, info) {
         officePhone_contains: args.officePhone,
         titleEn_contains: args.titleEn,
         titleFr_contains: args.titleFr,                        
-      },        
+      },
+      skip: args.skip,
+      first: args.first,        
     },
     info
   )
@@ -25,7 +27,9 @@ function addresses(_, args, context, info) {
         province_contains: args.province,
         postalCode_contains: args.postalCode,
         country_contains: args.country,
-      },    
+      },
+      skip: args.skip,
+      first: args.first,      
     },
     info
   )
@@ -39,6 +43,8 @@ function orgtiers(_, args, context, info) {
         nameEn: args.nameEn,
         nameFr: args.nameFr,
       },
+      skip: args.skip,
+      first: args.first,  
     },
     info
   )
@@ -54,6 +60,8 @@ function organizations(_, args, context, info){
         acronymEn: args.acronymEn,
         acronymFr: args.acronymFr,
       },
+      skip: args.skip,
+      first: args.first,  
     },
     info
   )
