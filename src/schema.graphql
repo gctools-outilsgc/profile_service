@@ -9,3 +9,15 @@ type Query {
   orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
+
+type Mutations {
+  createProfile(gcID: String!, name: String!, email: String!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: Address, supervisor: Profile, org: OrgTier): Profile!
+  modifyProfile(): Profile!
+  deleteProfile(): String!
+  createOrgTier(): OrgTier!
+  modifyOrgTier(): OrgTier!
+  deleteOrgTier(): String!
+  createOrganization(): Organization!
+  modifyOrganization(): Organization!
+  deleteOrganization(): String!
+}
