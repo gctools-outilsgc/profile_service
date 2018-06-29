@@ -98,7 +98,7 @@ async function modifyProfile(_, args, context, info){
         updateProfileData.push({
             org :{
                 connect: {
-                    id = args.org.id
+                    id: args.org.id
                 }
             }
         })
@@ -112,7 +112,7 @@ async function modifyProfile(_, args, context, info){
             updateProfileData
         }
     }, info)    
-    
+
 }
 
 function createOrganization(_, args, context, info){
