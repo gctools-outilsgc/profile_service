@@ -1,23 +1,78 @@
-# import Profile from './generated/prisma.graphql'
 # import Address from './generated/prisma.graphql'
-# import OrgTier from './generated/prisma.graphql'
-# import Organization from './generated/prisma.graphql'
 
 type Query {
-  profiles(gcID: String, name: String, email: String, mobilPhone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  profiles(gcId: String, name: String, email: String, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
-type Mutations {
-  createProfile(gcID: String!, name: String!, email: String!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: Address, supervisor: Profile, org: OrgTier): Profile!
-  modifyProfile(): Profile!
-  deleteProfile(): String!
-  createOrgTier(): OrgTier!
-  modifyOrgTier(): OrgTier!
-  deleteOrgTier(): String!
-  createOrganization(): Organization!
-  modifyOrganization(): Organization!
-  deleteOrganization(): String!
+type Mutation {
+  createProfile(gcId: String!, name: String!, email: String!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  modifyProfile(gcId: String!, name: String, email: String, titleEn: String, titleFr: String, mobilePhone: String, officePhone: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  deleteProfile(gcId: String!): String!
+  createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
+  modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
+  deleteOrgTier(id: ID!): String!
+  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
+  modifyOrganization(organizationId: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
+  deleteOrganization(id: ID!): String!
+}
+
+type Profile {
+  gcId: String! 
+  name: String!
+  email: String! 
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: Address
+  titleEn: String
+  titleFr: String
+  supervisor: Profile 
+  org: OrgTier     
+}
+
+type OrgTier {
+  id: ID! 
+  nameEn: String!
+  nameFr: String!
+  organization: Organization!
+  ownerID: Profile
+  members: [Profile!]!
+}
+
+type Organization {
+  id: ID! 
+  nameEn: String!
+  nameFr: String!
+  acronymEn: String!
+  acronymFr: String!
+  orgTiers: [OrgTier!]!
+}
+
+input SupervisorInput {
+  gcId: String,
+  email: String
+}
+
+input OrgTierOwnerInput {
+  gcId: String,
+  email: String
+}
+
+input OrgTierInput {
+  id: ID!
+}
+
+input OrganizationInput {
+  id: ID!
+}
+
+input AddressInput {
+  streetAddress: String,
+  city: String,
+  province: String,
+  postalCode: String,
+  country: String
 }

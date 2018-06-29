@@ -2,7 +2,7 @@ function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
     {
       where:{
-        gcID: args.gcID,
+        gcId: args.gcId,
         name_contains: args.name,
         email: args.email,
         mobilePhone_contains: args.mobilePhone,
