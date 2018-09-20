@@ -1,14 +1,21 @@
 {
   "name": "profile_service",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "cluster.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/cluster.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
+    "cluster": "^0.7.7",
     "dotenv": "^6.0.0",
     "express-jwt": "^5.3.1",
-    "graphql-tools": "^3.0.4",
-    "graphql-yoga": "^1.14.7",
-    "node-fetch": "^2.1.2",
-    "prisma-binding": "^2.0.2"
+    "graphql-cli": "^2.16.7",
+    "graphql-tools": "^3.1.1",
+    "graphql-yoga": "^1.16.2",
+    "node-fetch": "^2.2.0",
+    "prisma": "^1.16.4",
+    "prisma-binding": "^2.1.5"
   }
 }
