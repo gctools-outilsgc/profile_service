@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const { GraphQLServer } = require('graphql-yoga')
 const { Prisma } = require('prisma-binding')
 const Query = require('./resolvers/Query')
@@ -7,6 +5,7 @@ const Mutation = require('./resolvers/Mutations')
 const directives = require('./Auth/Permissions')
 const jwt = require('express-jwt')
 const fetch = require('node-fetch')
+const config = require('./config')
 
 const resolvers = {
   Query,
@@ -24,8 +23,8 @@ const server = new GraphQLServer({
     ...req,
     prisma: new Prisma({
       typeDefs: './src/generated/prisma.graphql',
-      endpoint: 'http://prisma:4466/profile/dev',
-      debug: true,
+      endpoint: 'http://'+config.prisma.host+':4466/profile/',
+      debug: config.prisma.debug,
     }),
   }),
 })

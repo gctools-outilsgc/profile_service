@@ -2,7 +2,7 @@
 
 # Wait for prisma to be ready
 echo "Waiting for prisma..."
-sleep 5
+sleep 10
 
 
 # Deploy to prisma endpoint any changes

@@ -1,17 +1,9 @@
 version: '3'
 services:
-  yoga:
-    build: ./
-    image: profile-yoga
-    environment: 
-      NODE_ENV: "production"
-      PRISMA_API_ENDPOINT: 'prisma'
-    ports:
-    - "4000:4000"
-    depends_on: 
-      - prisma
   prisma:
     image: prismagraphql/prisma:1.16
+    ports:
+    - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -25,13 +17,15 @@ services:
             user: prisma
             password: prisma
             migrations: true
+
     depends_on:
       - postgres
-
   postgres:
     image: postgres
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres:

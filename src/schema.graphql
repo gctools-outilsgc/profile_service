@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   createProfile(gcId: String!, name: String!, email: String!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
   modifyProfile(gcId: String!, name: String, email: String, titleEn: String, titleFr: String, mobilePhone: String, officePhone: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  deleteProfile(gcId: String!): String!
+  deleteProfile(gcId: String!): Boolean!
   createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
   modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
   deleteOrgTier(id: ID!): String!

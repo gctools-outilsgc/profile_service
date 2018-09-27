@@ -2,10 +2,11 @@
   "name": "profile_service",
   "version": "1.0.0",
   "main": "cluster.js",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "start": "node src/cluster.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "cluster": "^0.7.7",
@@ -17,5 +18,9 @@
     "node-fetch": "^2.2.0",
     "prisma": "^1.16.4",
     "prisma-binding": "^2.1.5"
+  },
+  "devDependencies": {
+    "graphql-tester": "^0.0.5",
+    "jest": "^23.6.0"
   }
 }
