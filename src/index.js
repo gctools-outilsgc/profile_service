@@ -2,9 +2,6 @@ const { GraphQLServer } = require('graphql-yoga')
 const { Prisma } = require('prisma-binding')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutations')
-const directives = require('./Auth/Permissions')
-const jwt = require('express-jwt')
-const fetch = require('node-fetch')
 const config = require('./config')
 
 const resolvers = {
@@ -15,7 +12,6 @@ const resolvers = {
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers,
-  directives,
   resolverValidationOptions: {
     requireResolversForResolveType: false 
   },
