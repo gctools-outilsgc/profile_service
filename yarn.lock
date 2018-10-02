@@ -65,6 +65,11 @@
     request-promise "^4.1.1"
     yargs "^8.0.2"
 
+"@okgrow/graphql-scalars@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@okgrow/graphql-scalars/-/graphql-scalars-0.4.2.tgz#5449273abe39c100e7668442e55023f0df507efc"
+  integrity sha512-A4SAXUei/blAxyvZ0aVFRmTMp3k9U8dp3fuaLXYyLjOyZHrEqCe67qW3I8xOq7NsPEU75nMfoQ6D7xtWYDU+vQ==
+
 "@types/body-parser@*":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.17.0.tgz#9f5c9d9bd04bb54be32d5eb9fc0d8c974e6cf58c"
@@ -2862,11 +2867,6 @@ graphql-config@^2.0.1:
     js-yaml "^3.10.0"
     lodash "^4.17.4"
     minimatch "^3.0.4"
-
-graphql-custom-types@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/graphql-custom-types/-/graphql-custom-types-1.4.0.tgz#21dd5d3bf84cc57a938e7466dadc55e025b3cfe3"
-  integrity sha1-Id1dO/hMxXqTjnRm2txV4CWzz+M=
 
 graphql-deduplicator@^2.0.1:
   version "2.0.1"

@@ -1,6 +1,7 @@
 # import Address from './generated/prisma.graphql'
 
 scalar Email
+scalar PhoneNumberRegex
 
 type Query {
   profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
@@ -10,8 +11,8 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: String, officePhone: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumberRegex, officePhone: PhoneNumberRegex, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumberRegex, officePhone: PhoneNumberRegex, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
   deleteProfile(gcId: String!): Boolean!
   createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
   modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
@@ -26,8 +27,8 @@ type Profile {
   name: String!
   email: Email! 
   avatar: String
-  mobilePhone: String
-  officePhone: String
+  mobilePhone: PhoneNumberRegex
+  officePhone: PhoneNumberRegex
   address: Address
   titleEn: String
   titleFr: String
