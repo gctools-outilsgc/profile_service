@@ -1,15 +1,17 @@
 # import Address from './generated/prisma.graphql'
 
+scalar Email
+
 type Query {
-  profiles(gcId: String, name: String, email: String, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
 type Mutation {
-  createProfile(gcId: String!, name: String!, email: String!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  modifyProfile(gcId: String!, name: String, email: String, titleEn: String, titleFr: String, mobilePhone: String, officePhone: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: String, officePhone: String, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: String, officePhone: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
   deleteProfile(gcId: String!): Boolean!
   createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
   modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
@@ -22,7 +24,7 @@ type Mutation {
 type Profile {
   gcId: String! 
   name: String!
-  email: String! 
+  email: Email! 
   avatar: String
   mobilePhone: String
   officePhone: String
@@ -53,12 +55,12 @@ type Organization {
 
 input SupervisorInput {
   gcId: String,
-  email: String
+  email: Email
 }
 
 input OrgTierOwnerInput {
   gcId: String,
-  email: String
+  email: Email
 }
 
 input OrgTierInput {

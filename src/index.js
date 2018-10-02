@@ -1,5 +1,6 @@
 const { GraphQLServer } = require('graphql-yoga')
 const { Prisma } = require('prisma-binding')
+const {GraphQLEmail} = require('graphql-custom-types')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutations')
 const config = require('./config')
@@ -7,6 +8,7 @@ const config = require('./config')
 const resolvers = {
   Query,
   Mutation,
+  Email : GraphQLEmail
 }
 
 const server = new GraphQLServer({
