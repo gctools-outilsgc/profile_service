@@ -3,7 +3,7 @@ const { Prisma } = require('prisma-binding')
 const {EmailAddress, RegularExpression, PostalCode} =  require("@okgrow/graphql-scalars")
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutations')
-const {Country} = require('./resolvers/Scalars')
+const {Country, Province} = require('./resolvers/Scalars')
 const config = require('./config')
 
 const PhoneNumberRegex = new RegularExpression("PhoneNumberRegex", /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)
@@ -11,7 +11,7 @@ const PhoneNumberRegex = new RegularExpression("PhoneNumberRegex", /^[\+]?[(]?[0
 const resolvers = {
   Query,
   Mutation,
-  Country,
+  Country, Province,
   Email : EmailAddress,
   PhoneNumberRegex,
   PostalCode

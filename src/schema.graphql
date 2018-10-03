@@ -3,6 +3,7 @@
 scalar Email
 scalar PhoneNumberRegex
 scalar Country
+scalar Province
 scalar PostalCode
 
 type Query {
@@ -77,7 +78,7 @@ input OrganizationInput {
 input AddressInput {
   streetAddress: String
   city: String
-  province: String
+  province: Province
   postalCode: String
   country: Country
 }

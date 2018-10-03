@@ -1,22 +1,35 @@
 const {GraphQLScalarType } =require('graphql')
 
-var _Country = new GraphQLScalarType({
+exports.Country = new GraphQLScalarType({
     name : 'Country',
     serialize:value=>value,
     parseValue:value=>value,
-    parseLiteral
+    parseLiteral(ast)
+    {
+        var country = ast.value
+        var result = countryList.filter(c => c.name === country);
+        if(result && result.length>=1)
+            return ast;
+        else
+            throw new Error('Invalid country name. Use one of the following : ' + JSON.stringify(countryList))
+    }
 })
- 
-function parseLiteral(ast) {
-var country = ast.value
-var result = countryList.filter(c => c.name === country);
-if(result && result.length>=1)
-    return ast;
-else
-    throw new Error('Invalid country name. Use one of the following : ' + JSON.stringify(countryList))
-}
 
-exports.Country = _Country;
+exports.Province = new GraphQLScalarType({
+    name : 'Province',
+    serialize:value=>value,
+    parseValue:value=>value,
+    parseLiteral(ast)
+    {
+        return ast
+        // var country = ast.value
+        // var result = countryList.filter(c => c.name === country);
+        // if(result && result.length>=1)
+        //     return ast;
+        // else
+        //     throw new Error('Invalid country name. Use one of the following : ' + JSON.stringify(countryList))
+    }
+})
 
 var countryList = [
     {"name": "Afghanistan", "code": "AF"},
