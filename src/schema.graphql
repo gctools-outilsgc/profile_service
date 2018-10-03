@@ -2,6 +2,8 @@
 
 scalar Email
 scalar PhoneNumberRegex
+scalar Country
+scalar PostalCode
 
 type Query {
   profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
@@ -73,9 +75,9 @@ input OrganizationInput {
 }
 
 input AddressInput {
-  streetAddress: String,
-  city: String,
-  province: String,
-  postalCode: String,
-  country: String
+  streetAddress: String
+  city: String
+  province: String
+  postalCode: String
+  country: Country
 }

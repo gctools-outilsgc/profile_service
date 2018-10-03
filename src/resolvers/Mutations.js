@@ -28,40 +28,36 @@ function createProfile(_, args, context, info){
         var requiredVariablesError = []
 
         if (args.address.streetAddress == null){
-            requiredVariblesError.push("streetAddress is not defined and is a required field")
+            requiredVariablesError.push("streetAddress is not defined and is a required field")
         } else{
             createAddressData.streetAddress = args.address.streetAddress
         }
         if (args.address.city == null){
-            requiredVariblesError.push("city is not defined and is a required field")
+            requiredVariablesError.push("city is not defined and is a required field")
         } else{
             createAddressData.city = args.address.city
         }
         if (args.address.province == null){
-            requiredVariblesError.push("province is not defined and is a required field")
+            requiredVariablesError.push("province is not defined and is a required field")
         } else{
             createAddressData.province = args.address.province
         }
         if (args.address.postalCode == null){
-            requiredVariblesError.push("postalCode is not defined and is a required field")
+            requiredVariablesError.push("postalCode is not defined and is a required field")
         } else{
             createAddressData.postalCode = args.address.postalCode
         }
         if (args.address.country == null){
-            requiredVariblesError.push("country is not defined and is a required field")
+            requiredVariablesError.push("country is not defined and is a required field")
         } else{
             createAddressData.country = args.address.country
         }
 
         if (requiredVariablesError.length > 0){
-            throw new Error
+            throw new Error(requiredVariablesError)
         }
 
-        createProfileData.push({
-            address: {
-                createAddressData
-            }
-        })
+        createProfileData.address ={create:createAddressData}
     }
 
     if (args.supervisor !== undefined){
