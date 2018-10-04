@@ -9,7 +9,6 @@ exports.Country = new GraphQLScalarType({
     {
         var country = ast.value
         var result = CountryQuery.findByNameCommon(country)
-        console.log(result)
         if(result)
             return ast;
         else
@@ -23,14 +22,7 @@ exports.Province = new GraphQLScalarType({
     parseValue:value=>value,
     parseLiteral(ast)
     {
-        // console.log(arguments)
-        // var province = ast.value
-        // var result = CountryQuery.find("region", province)
-        //  console.log(result)
-        // if(result)
-        //     return ast;
-        // else
-        //     throw new Error('Invalid province/state name.')
+        console.log(ast)
         return ast;
     }
 })
