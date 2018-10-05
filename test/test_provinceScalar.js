@@ -3,6 +3,7 @@ const assert = require('chai').assert
 const {Country, Province} = require("../src/resolvers/Scalars")
 const {} = require('mocha')
 const Mutation = require("./mutationHelpers")
+const helper = require('./test_helpers')
 
 const resolvers = {
   Country, Province, Mutation
@@ -43,17 +44,6 @@ describe('Address validation', () =>
         {
             createAddress(province:"test",country:"Canada"){province, country}
         }`
-        await runQuery(server, query)
+        await helper.runQuery(server, query)
     })
 })
-
-function runQuery(server, query)
-{
-    return server.query(query).then((data) =>{
-        var errors = data.errors;
-        if(errors)
-        {
-            assert.equal(errors.length, 0, errors)
-        }
-    })
-}
