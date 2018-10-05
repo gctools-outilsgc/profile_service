@@ -1,14 +1,14 @@
 const{mockServer, makeExecutableSchema } = require('graphql-tools')
-const {Country} = require("../src/resolvers/Scalars")
+const {Country} = require("../../src/resolvers/Scalars")
 const {} = require('mocha')
-const Mutation = require("./mutationHelpers")
-const helper = require('./test_helpers')
+const Mutation = require("./addressMutationHelper")
+const helper = require('../test_helpers')
 
 const resolvers = {
   Country, Mutation
 }
 
-describe('Address validation', () =>
+describe('Validate COUNTRY scalar', () =>
 {
     //var server;
     beforeEach(() => 
