@@ -1,7 +1,7 @@
 # import Address from './generated/prisma.graphql'
 
 scalar Email
-scalar PhoneNumberRegex
+scalar PhoneNumber
 scalar Country
 scalar Province
 scalar PostalCode
