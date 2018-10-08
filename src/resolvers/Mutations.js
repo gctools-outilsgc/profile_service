@@ -1,5 +1,4 @@
 function createProfile(_, args, context, info){
-    var createAddressData = {}
     var createProfileData = {}
 
     createProfileData = {
@@ -26,38 +25,31 @@ function createProfile(_, args, context, info){
 
     if (args.address !== undefined){
         var requiredVariablesError = []
-
-        if (args.address.streetAddress == null){
+        if (args.address.streetAddress == null)
+        {
             requiredVariablesError.push("streetAddress is not defined and is a required field")
-        } else{
-            createAddressData.streetAddress = args.address.streetAddress
         }
-        if (args.address.city == null){
+        if (args.address.city == null)
+        {
             requiredVariablesError.push("city is not defined and is a required field")
-        } else{
-            createAddressData.city = args.address.city
         }
-        if (args.address.province == null){
-            requiredVariablesError.push("province is not defined and is a required field")
-        } else{
-            createAddressData.province = args.address.province
-        }
-        if (args.address.postalCode == null){
-            requiredVariablesError.push("postalCode is not defined and is a required field")
-        } else{
-            createAddressData.postalCode = args.address.postalCode
-        }
-        if (args.address.country == null){
+        if (args.address.country == null)
+        {
             requiredVariablesError.push("country is not defined and is a required field")
-        } else{
-            createAddressData.country = args.address.country
         }
-
-        if (requiredVariablesError.length > 0){
+        if (args.address.province == null)
+        {
+            requiredVariablesError.push("province is not defined and is a required field")
+        }
+        if (args.address.postalCode == null)
+        {
+            requiredVariablesError.push("postalCode is not defined and is a required field")
+        }
+        if (requiredVariablesError.length > 0)
+        {
             throw new Error(requiredVariablesError)
         }
-
-        createProfileData.address ={create:createAddressData}
+        createProfileData.address ={create:args.address}
     }
 
     if (args.supervisor !== undefined){
