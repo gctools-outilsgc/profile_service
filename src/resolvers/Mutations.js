@@ -1,3 +1,4 @@
+const countries = require('countryjs')
 function createProfile(_, args, context, info){
     var createProfileData = {}
 
@@ -37,9 +38,28 @@ function createProfile(_, args, context, info){
         {
             requiredVariablesError.push("country is not defined and is a required field")
         }
-        if (args.address.province == null)
+        else
         {
-            requiredVariablesError.push("province is not defined and is a required field")
+            if (args.address.province == null)
+            {
+                requiredVariablesError.push("province is not defined and is a required field")
+            }
+            else{
+    
+                var selectedCountry = args.address.country.value;
+                var states = countries.states(selectedCountry)
+                console.log(states)
+                if(states && states.length > 0)
+                {
+                    var selectedProvince = args.address.province.value;
+                    var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                    var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                    if(index === -1)
+                    {
+                        requiredVariablesError.push("invalid province for selected country")
+                    }
+                }
+            }
         }
         if (args.address.postalCode == null)
         {

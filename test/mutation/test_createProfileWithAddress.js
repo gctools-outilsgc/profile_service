@@ -71,8 +71,36 @@ describe('Create profile with address', () => {
         await graphql(schema, query).then((result) => {
             expectOneErrorWithText(result.errors, "postalCode is not defined and is a required field")
         });
+    }),
+    it("throws exception for invalid province/states in country", async () =>{
+        var query = `
+        mutation{createProfile(gcId:"123",name:"someone",email:"email",
+            address:{streetAddress:"street_name",city:"city_name",province:"province_name",country:"CA", postalCode:"postalCode"}
+        ){name}}`
+        await graphql(schema, query, null, givenBasicContext()).then((result) => {
+            expectOneErrorWithText(result.errors, "invalid province for selected country")
+        });
+    }),
+    it("works if all mandatory fields are filled properly", async () =>{
+        var query = `
+        mutation{createProfile(gcId:"123",name:"someone",email:"email",
+            address:{streetAddress:"street_name",city:"city_name",province:"quebec",country:"CA", postalCode:"postalCode"}
+        ){name}}`
+        await graphql(schema, query, null, givenBasicContext()).then((result) => {
+            expect(result.errors).to.be.undefined;
+        });
     })
 })
+
+function givenBasicContext()
+{
+    return {prisma:{mutation:{
+        createProfile:function(data){
+            data.name = ""
+            return data
+        }
+    }}}
+}
 
 function expectOneErrorWithText(errors, expectedErrorMessage)
 {
