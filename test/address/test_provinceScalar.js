@@ -19,7 +19,7 @@ describe('Validate PROVINCE scalar after country was selected', () =>
             scalar Country
 
             type Address {
-                province(code:String): Province
+                province: Province
                 country: Country
             }
 
@@ -41,7 +41,7 @@ describe('Validate PROVINCE scalar after country was selected', () =>
         var query = `
         mutation
         {
-            createAddress(province{code:"CA"},country:"Canada"){province, country}
+            createAddress(province:"Test",country:"Canada"){province, country}
         }`
         await helper.runQuery(server, query)
     })
