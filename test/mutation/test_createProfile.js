@@ -26,17 +26,50 @@ describe('Create profile', () => {
             resolvers
           });
     }),
+    it('throws exception when gcId field is missing', async () =>{
+        var query = `
+        mutation
+        {
+            createProfile(name:"someone", email:"email@email.com"){name}
+        }`
+        await graphql(schema, query).then((result) => {
+            var errors = result.errors
+            assert.isTrue(errors.length > 0, "Missing mandatory field 'gcId' must throw exception.")
+        });
+    }),
+    it('throws exception when name field is missing', async () =>{
+        var query = `
+        mutation
+        {
+            createProfile(gcId:"123", email:"email@email.com"){name}
+        }`
+        await graphql(schema, query).then((result) => {
+            var errors = result.errors
+            assert.isTrue(errors.length > 0, "Missing mandatory field 'name' must throw exception.")
+        });
+    }),
+    it('throws exception when email field is missing', async () =>{
+        var query = `
+        mutation
+        {
+            createProfile(gcId:"123", name:"someone"){name}
+        }`
+        await graphql(schema, query).then((result) => {
+            var errors = result.errors
+            assert.isTrue(errors.length > 0, "Missing mandatory field 'email' must throw exception.")
+        });
+    }),
     it('works when entering mandatory information.', async () =>{
         var query = `
         mutation
         {
             createProfile(gcId:"123", name:"someone", email:"email@email.com"){name}
         }`
-        await createProfile(schema,query)
+        await createProfileWithContext(schema,query)
     })
 })
 
-function createProfile(schema, query)
+function createProfileWithContext(schema, query)
 {
     var context ={prisma:{mutation:{
         createProfile:function(data){
