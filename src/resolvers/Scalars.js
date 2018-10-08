@@ -1,6 +1,7 @@
-const {GraphQLScalarType} =require('graphql')
+const {GraphQLScalarType} =require("graphql")
 const {RegularExpression} =  require("@okgrow/graphql-scalars");
-const CountryQuery = require("country-query")
+const countries = require("countryjs")
+
 
 exports.Country = new GraphQLScalarType({
     name : 'Country',
@@ -9,7 +10,7 @@ exports.Country = new GraphQLScalarType({
     parseLiteral(ast)
     {
         var country = ast.value
-        var result = CountryQuery.findByNameCommon(country)
+        var result = countries.info(country)
         if(result)
             return ast;
         else
@@ -23,7 +24,6 @@ exports.Province = new GraphQLScalarType({
     parseValue:value=>value,
     parseLiteral(ast)
     {
-        console.log(ast)
         return ast;
     }
 })

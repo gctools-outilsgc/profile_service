@@ -11,7 +11,7 @@
   "dependencies": {
     "@okgrow/graphql-scalars": "^0.4.2",
     "cluster": "^0.7.7",
-    "country-query": "^1.0.1",
+    "countryjs": "^1.8.0",
     "dotenv": "^6.0.0",
     "express-jwt": "^5.3.1",
     "graphql-cli": "^2.16.7",

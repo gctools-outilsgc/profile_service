@@ -39,7 +39,7 @@ describe('Validate COUNTRY scalar', () =>
         var query = `
         mutation
         {
-            createAddress(country:"Canada"){country}
+            createAddress(country:"CA"){country}
         }`
         await helper.runQuery(server, query)
     })
