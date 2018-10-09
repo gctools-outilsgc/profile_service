@@ -86,7 +86,6 @@ function getNewAddressFromArgs(args)
     
                 var selectedCountry = args.address.country.value;
                 var states = countries.states(selectedCountry)
-                console.log(states)
                 if(states && states.length > 0)
                 {
                     var selectedProvince = args.address.province.value;
@@ -162,7 +161,6 @@ async function modifyProfile(_, args, context, info){
                 {
                     var selectedCountry = args.address.country.value;
                     var states = countries.states(selectedCountry)
-                    console.log(states)
                     if(states && states.length > 0)
                     {
                         var selectedProvince = args.address.province.value;
