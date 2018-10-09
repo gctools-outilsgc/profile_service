@@ -1,5 +1,9 @@
 # import Address from './generated/prisma.graphql'
 
+directive @isAuthenticated on FIELD | FIELD_DEFINITION | QUERY
+directive @hasScopes(scopes:[String]) on FIELD | FIELD_DEFINITION
+directive @hasRoles(roles: [String]) on FIELD | FIELD_DEFINITION 
+
 type Query {
   profiles(gcId: String, name: String, email: String, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
