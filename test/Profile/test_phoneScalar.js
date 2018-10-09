@@ -85,7 +85,7 @@ describe('Validate profile PHONE', () =>
         }`
         await helper.runQuery(server, query)
     })
-    it('validate phone number format for ###-##########', async () =>
+    it('validate phone number format for ###-#######', async () =>
     {
         var query = `
         mutation
