@@ -3,9 +3,6 @@ const {} = require('mocha')
 const Mutation = require("./profileMutationHelper")
 const helper = require('../test_helpers')
 const {PhoneNumber} = require("../../src/resolvers/Scalars")
-const {RegularExpression} =  require("@okgrow/graphql-scalars");
-const PhoneNumberRegex = new RegularExpression("PhoneNumberRegex", /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
-
 const resolvers = { PhoneNumber, Mutation }
 
 describe('Validate profile PHONE', () =>

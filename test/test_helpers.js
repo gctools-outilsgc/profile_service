@@ -1,4 +1,5 @@
 const assert = require('chai').assert
+const expect = require('chai').expect
 
 function runQuery(server, query)
 {
@@ -25,4 +26,16 @@ function runQueryAndExpectError(server, query)
     })
 }
 
-module.exports = {runQuery, runQueryAndExpectError}
+function expectOneErrorWithText(errors, expectedErrorMessage)
+{
+    expect(errors.length).to.equal(1)
+    var error = errors[0];
+    expect(error.message).to.contain(expectedErrorMessage);
+}
+
+function expectNoErrors(errors)
+{
+    expect(errors).to.be.undefined;
+}
+
+module.exports = {runQuery, runQueryAndExpectError, expectOneErrorWithText,expectNoErrors}

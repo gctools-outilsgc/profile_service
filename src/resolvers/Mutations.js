@@ -147,14 +147,28 @@ async function modifyProfile(_, args, context, info){
             if (args.address.city !== undefined){
                 updateAddressData.city = args.address.city
             }
-            if (args.address.province !== undefined){
-                updateAddressData.province = args.address.province
+            if (args.address.country !== undefined){
+                updateAddressData.country = args.address.country
+                if (args.address.province !== undefined)
+                {
+                    var selectedCountry = args.address.country.value;
+                    var states = countries.states(selectedCountry)
+                    console.log(states)
+                    if(states && states.length > 0)
+                    {
+                        var selectedProvince = args.address.province.value;
+                        var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                        var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                        if(index === -1)
+                        {
+                            throw new Error("invalid province for selected country")
+                        }
+                    }
+                    updateAddressData.province = args.address.province
+                }
             }
             if (args.address.postalCode !== undefined){
                 updateAddressData.postalCode = args.address.postalCode
-            }
-            if (args.address.country !== undefined){
-                updateAddressData.country = args.address.country
             }
             updateProfileData.address = {
                 update: updateAddressData  
