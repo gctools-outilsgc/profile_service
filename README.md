@@ -2,11 +2,11 @@ profile_service
 
 # Validation
 
-Some validation are implemented for some of the following field.
+Some validation are implemented for some fields.
 
 The field with **<--** have a specific validation.
 
-```json
+```
 profile
 {
     gcId,
