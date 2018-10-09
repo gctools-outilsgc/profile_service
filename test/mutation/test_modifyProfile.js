@@ -66,7 +66,6 @@ function contextWithExistingProfile()
         mutation:{
             updateProfile:function(){return {name: "updated"}}
         }
-        
     }}
 }
 

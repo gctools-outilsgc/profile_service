@@ -176,36 +176,47 @@ async function modifyProfile(_, args, context, info){
         } else {
             var requiredVariablesError = []
             if (args.address.streetAddress == null){
-                requiredVariblesError.push("streetAddress is not defined and is a required field")
-            } else{
-                createAddressData.streetAddress = args.address.streetAddress
+                requiredVariablesError.push("streetAddress is not defined and is a required field")
             }
             if (args.address.city == null){
-                requiredVariblesError.push("city is not defined and is a required field")
-            } else{
-                createAddressData.city = args.address.city
+                requiredVariablesError.push("city is not defined and is a required field")
             }
             if (args.address.province == null){
-                requiredVariblesError.push("province is not defined and is a required field")
-            } else{
-                createAddressData.province = args.address.province
+                requiredVariablesError.push("province is not defined and is a required field")
             }
             if (args.address.postalCode == null){
-                requiredVariblesError.push("postalCode is not defined and is a required field")
-            } else{
-                createAddressData.postalCode = args.address.postalCode
+                requiredVariablesError.push("postalCode is not defined and is a required field")
             }
             if (args.address.country == null){
-                requiredVariblesError.push("country is not defined and is a required field")
+                requiredVariablesError.push("country is not defined and is a required field")
             } else{
-                createAddressData.country = args.address.country
+                if (args.address.province == null)
+                {
+                    requiredVariablesError.push("province is not defined and is a required field")
+                }
+                else{
+        
+                    var selectedCountry = args.address.country.value;
+                    var states = countries.states(selectedCountry)
+                    console.log(states)
+                    if(states && states.length > 0)
+                    {
+                        var selectedProvince = args.address.province.value;
+                        var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                        var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                        if(index === -1)
+                        {
+                            requiredVariablesError.push("invalid province for selected country")
+                        }
+                    }
+                }
             }
 
             if (requiredVariablesError.length > 0){
-                throw new Error
+                throw new Error(requiredVariablesError)
             } else {
                 updateProfileData.address = {
-                    create: createAddressData
+                    create: args.address
                 }
             }
         }        
