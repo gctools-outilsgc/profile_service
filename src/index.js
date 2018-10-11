@@ -1,12 +1,18 @@
-const { GraphQLServer } = require('graphql-yoga')
-const { Prisma } = require('prisma-binding')
-const Query = require('./resolvers/Query')
-const Mutation = require('./resolvers/Mutations')
-const config = require('./config')
+const { GraphQLServer } = require("graphql-yoga");
+const { Prisma } = require("prisma-binding");
+const {EmailAddress, PostalCode} =  require("@okgrow/graphql-scalars");
+const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutations");
+const {Country, Province, PhoneNumber} = require("./resolvers/Scalars");
+const config = require("./config");
 
 const resolvers = {
   Query,
   Mutation,
+  Country, Province,
+  Email : EmailAddress,
+  PhoneNumber,
+  PostalCode
 }
 
 const server = new GraphQLServer({
