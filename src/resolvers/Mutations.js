@@ -1,5 +1,5 @@
+const countries = require('countryjs')
 function createProfile(_, args, context, info){
-    var createAddressData = {}
     var createProfileData = {}
 
     createProfileData = {
@@ -24,44 +24,10 @@ function createProfile(_, args, context, info){
         createProfileData.titleFr = args.titleFr
     }
 
-    if (args.address !== undefined){
-        var requiredVariablesError = []
-
-        if (args.address.streetAddress == null){
-            requiredVariblesError.push("streetAddress is not defined and is a required field")
-        } else{
-            createAddressData.streetAddress = args.address.streetAddress
-        }
-        if (args.address.city == null){
-            requiredVariblesError.push("city is not defined and is a required field")
-        } else{
-            createAddressData.city = args.address.city
-        }
-        if (args.address.province == null){
-            requiredVariblesError.push("province is not defined and is a required field")
-        } else{
-            createAddressData.province = args.address.province
-        }
-        if (args.address.postalCode == null){
-            requiredVariblesError.push("postalCode is not defined and is a required field")
-        } else{
-            createAddressData.postalCode = args.address.postalCode
-        }
-        if (args.address.country == null){
-            requiredVariblesError.push("country is not defined and is a required field")
-        } else{
-            createAddressData.country = args.address.country
-        }
-
-        if (requiredVariablesError.length > 0){
-            throw new Error
-        }
-
-        createProfileData.push({
-            address: {
-                createAddressData
-            }
-        })
+    var newAddress = getNewAddressFromArgs(args);
+    if(newAddress != null)
+    {
+        createProfileData.address ={create:newAddress}
     }
 
     if (args.supervisor !== undefined){
@@ -94,10 +60,60 @@ function createProfile(_, args, context, info){
         }, info)
 }
 
+function getNewAddressFromArgs(args)
+{
+    if (args.address !== undefined){
+        var requiredVariablesError = []
+        if (args.address.streetAddress == null)
+        {
+            requiredVariablesError.push("streetAddress is not defined and is a required field")
+        }
+        if (args.address.city == null)
+        {
+            requiredVariablesError.push("city is not defined and is a required field")
+        }
+        if (args.address.country == null)
+        {
+            requiredVariablesError.push("country is not defined and is a required field")
+        }
+        else
+        {
+            if (args.address.province == null)
+            {
+                requiredVariablesError.push("province is not defined and is a required field")
+            }
+            else{
+    
+                var selectedCountry = args.address.country.value;
+                var states = countries.states(selectedCountry)
+                if(states && states.length > 0)
+                {
+                    var selectedProvince = args.address.province.value;
+                    var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                    var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                    if(index === -1)
+                    {
+                        requiredVariablesError.push("invalid province for selected country")
+                    }
+                }
+            }
+        }
+        if (args.address.postalCode == null)
+        {
+            requiredVariablesError.push("postalCode is not defined and is a required field")
+        }
+        if (requiredVariablesError.length > 0)
+        {
+            throw new Error(requiredVariablesError)
+        }
+        return args.address;
+    }
+    return null;
+}
+
 async function modifyProfile(_, args, context, info){
     var updateProfileData = {}
     var updateAddressData = {}
-    var createAddressData = {}
     var updateSupervisorData = {}
     const currentProfile = await context.prisma.Profile(
         {
@@ -139,52 +155,36 @@ async function modifyProfile(_, args, context, info){
             if (args.address.city !== undefined){
                 updateAddressData.city = args.address.city
             }
-            if (args.address.province !== undefined){
-                updateAddressData.province = args.address.province
+            if (args.address.country !== undefined){
+                updateAddressData.country = args.address.country
+                if (args.address.province !== undefined)
+                {
+                    var selectedCountry = args.address.country.value;
+                    var states = countries.states(selectedCountry)
+                    if(states && states.length > 0)
+                    {
+                        var selectedProvince = args.address.province.value;
+                        var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                        var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                        if(index === -1)
+                        {
+                            throw new Error("invalid province for selected country")
+                        }
+                    }
+                    updateAddressData.province = args.address.province
+                }
             }
             if (args.address.postalCode !== undefined){
                 updateAddressData.postalCode = args.address.postalCode
-            }
-            if (args.address.country !== undefined){
-                updateAddressData.country = args.address.country
             }
             updateProfileData.address = {
                 update: updateAddressData  
             }
         } else {
-            var requiredVariablesError = []
-            if (args.address.streetAddress == null){
-                requiredVariblesError.push("streetAddress is not defined and is a required field")
-            } else{
-                createAddressData.streetAddress = args.address.streetAddress
-            }
-            if (args.address.city == null){
-                requiredVariblesError.push("city is not defined and is a required field")
-            } else{
-                createAddressData.city = args.address.city
-            }
-            if (args.address.province == null){
-                requiredVariblesError.push("province is not defined and is a required field")
-            } else{
-                createAddressData.province = args.address.province
-            }
-            if (args.address.postalCode == null){
-                requiredVariblesError.push("postalCode is not defined and is a required field")
-            } else{
-                createAddressData.postalCode = args.address.postalCode
-            }
-            if (args.address.country == null){
-                requiredVariblesError.push("country is not defined and is a required field")
-            } else{
-                createAddressData.country = args.address.country
-            }
-
-            if (requiredVariablesError.length > 0){
-                throw new Error
-            } else {
-                updateProfileData.address = {
-                    create: createAddressData
-                }
+            var newAddress = getNewAddressFromArgs(args);
+            if(newAddress != null)
+            {
+                updateProfileData.address ={create:newAddress}
             }
         }        
         
