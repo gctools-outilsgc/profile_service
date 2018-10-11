@@ -2,9 +2,9 @@ profile_service
 
 # Validation
 
-Some validation are implemented for some fields.
+Validation is implemented for some fields.
 
-The field with **<--** have a specific validation.
+Fields with **<--** have a specific validation.
 
 ```
 profile
@@ -30,12 +30,13 @@ profile
 }
 ```
 ## Profile
-In creation, only **gcId**, **name** and **email** are mandatory.
+When initializing a 'Profile' only **gcId**, **name** and **email** are mandatory fields.
 ### Email Address
-Email address must be formated like so:
+Email address must be formated as:
 name@domain.domainExtension
 
 *example:* myname@profile.com
+
 ### Mobile/Office Phone Number
 Available format:
 * ##########
@@ -47,11 +48,10 @@ Available format:
 * ###-#######
 
 ## Address
-When specifying an address to a profile in creation or in modification, every fields are **mandatory**.
-### Coutry
+When specifying an address all fields are **mandatory** except in cases when an address already exists on a profile and it is only being modified.
+### Country value
 The country must be a two letter ISO code. See [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1).
 
-### Province / State
-The validation goes as follow:
+### Province / State value
 * The **province/state** must be part of the country. If not, it will be considered as an invalid selection.
 * For the case where the no **provinces/state** are available in the data, only a value is required.
