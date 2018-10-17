@@ -83,12 +83,12 @@ function getNewAddressFromArgs(args)
                 requiredVariablesError.push("province is not defined and is a required field")
             }
             else{
-    
+                
                 var selectedCountry = args.address.country.value;
                 var states = countries.states(selectedCountry)
                 if(states && states.length > 0)
                 {
-                    var selectedProvince = args.address.province.value;
+                    var selectedProvince = args.address.province;
                     var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
                     var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
                     if(index === -1)
@@ -106,6 +106,10 @@ function getNewAddressFromArgs(args)
         {
             throw new Error(requiredVariablesError)
         }
+
+        //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
+        var country = args.address.country;
+        args.address.country = country.value;
         return args.address;
     }
     return null;

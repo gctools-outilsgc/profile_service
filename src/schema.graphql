@@ -78,7 +78,7 @@ input OrganizationInput {
 input AddressInput {
   streetAddress: String
   city: String
-  province: Province
+  province: String
   postalCode: String
   country: Country
 }
