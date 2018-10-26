@@ -10,8 +10,7 @@ const development = {
  prisma: {
      host:'localhost',
      debug: true
- }
-
+ },
 };
 
 const production = {

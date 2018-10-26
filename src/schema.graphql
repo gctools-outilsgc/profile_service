@@ -1,8 +1,9 @@
 # import Address from './generated/prisma.graphql'
 
-directive @isAuthenticated on FIELD | FIELD_DEFINITION | QUERY
-directive @hasScopes(scopes:[String]) on FIELD | FIELD_DEFINITION
-directive @hasRoles(roles: [String]) on FIELD | FIELD_DEFINITION 
+directive @isAuthenticated on FIELD | FIELD_DEFINITION
+directive @isOwner on FIELD | FIELD_DEFINITION
+directive @hasScope(scopes:[String]) on FIELD | FIELD_DEFINITION
+directive @hasRole(roles: [String]) on FIELD | FIELD_DEFINITION 
 
 scalar Email
 scalar PhoneNumber
@@ -11,10 +12,10 @@ scalar Province
 scalar PostalCode
 
 type Query {
-  profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
-  addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
-  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
+  profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]! @isAuthenticated,
+  addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]! @isAuthenticated,
+  orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]! @isAuthenticated,
+  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]! @isAuthenticated,
 }
 
 type Mutation {

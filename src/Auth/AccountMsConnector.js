@@ -1,45 +1,55 @@
+require('dotenv').config();
+const fetch = require('node-fetch');
+
 function getToken(ctx){
-    if (ctx.user.accessToken != null){
-      return next()
+    if (typeof ctx.token !== 'object'){
+        ctx.token = new Object;
+    }
+    if (ctx.token.key != null){
+      return;
     }
     else {
-        token = req.headers.Authorization
-        if (token != null){
-          ctx.user.accessToken = token
+        if ('authorization' in ctx.req.request.headers){
+            ctx.token.key = ctx.req.request.headers.authorization;
         } else {
-          throw new Error('No Access Token provided for protected resource')
+            throw new Error('No Access Token provided for protected resource')
         }
     }  
-  }
+};
 
-  function checkScopes(ctx){
-
-  }
-
-function checkAccessToken(ctx){
-    getToken(ctx)
-    fetch(process.env.OPENID_USERENDPOINT, { 
-        method: 'post', 
+async function getTokenInfo(ctx){
+    getToken(ctx);
+    url = process.env.OPENID_USERENDPOINT;
+    postOptions = { 
+        method: 'POST', 
         headers: new Headers({
-          'Authorization': ctx.user.accessToken, 
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }), 
-    })
+          'Authorization': ctx.token.key, 
+        }),
+    };
+
+    await fetch(url, postOptions)
+    .then(checkStatus)
     .then(response => response.json())
-    .then(function (extractData) {
-        if (response.ok){
-            
-        } else {
-            throw new Error('Could not connect to OpenID Provider')
-        }
+    .then(function(json){
+        ctx.token.sub = json['sub'];
     })
+    .catch(error =>{
+        console.error('Account Connector Error: ', error.message);
+    });
+};
 
-    
+function checkScopes(ctx){
 
-} 
+  };
+
+function checkStatus(response){
+    if (!response.ok){ // res.status >= 200 && res.status < 300
+        throw new Error('Error connecting to Account service: ' + response.statusText);
+    }
+    return response;
+};
 
 
 module.exports = {
-    checkAccessToken,
-    checkScopes,
+    getTokenInfo,
 }
