@@ -1,6 +1,5 @@
 const{mockServer, makeExecutableSchema} = require('graphql-tools')
 const {Country, Province} = require("../../src/resolvers/Scalars")
-const {} = require('mocha')
 const Mutation = require("./addressMutationHelper")
 const helper = require('../test_helpers')
 
