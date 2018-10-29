@@ -6,10 +6,10 @@ This app/solution can be run in 2 different environments
 ## Development
 To setup this application in development run the following commands:
 
-* sudo docker-compose -f docker-compose-dev.yml up
-* sudo npm install
-* cd prisma && yarn prisma deploy && cd ..
-* NODE_ENV=development PRISMA_API_ENDPOINT=localhost node ./src/cluster.js
+* `sudo docker-compose -f docker-compose-dev.yml up`
+* `sudo npm install`
+* `cd prisma && yarn prisma deploy && cd ..`
+* `NODE_ENV=development PRISMA_API_ENDPOINT=localhost node ./src/cluster.js`
 
 The profile as a service playground endpoint can now be reached at http://localhost:4000/playground and the graphql endpoint at http://localhost:4000/graphql
 The prisma service can be reached at http://localhost:4466/profile
@@ -18,9 +18,13 @@ The prisma service can be reached at http://localhost:4466/profile
 ## Production
 To setup this application for production:
 
-* sudo docker-compose up --build -d
+* `sudo docker-compose up --build -d`
 
 The profile as a service playground endpoint can now be reached at http://localhost:4000/playground and the graphql endpoint at http://localhost:4000/graphql
+
+# Tests
+To run tests from the root of the project:
+`npm test`
 
 # Validation
 
