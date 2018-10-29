@@ -18,7 +18,7 @@ function getToken(ctx){
 };
 
 async function getTokenInfo(ctx){
-    getToken(ctx);
+    await getToken(ctx);
     url = process.env.OPENID_USERENDPOINT;
     postOptions = { 
         method: 'POST', 
