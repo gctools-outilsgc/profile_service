@@ -3,9 +3,7 @@ const { graphql } = require("graphql");
 const {Country, Province, PhoneNumber} = require("../../src/resolvers/Scalars")
 const fs = require("fs")
 const path = require("path")
-const {} = require("mocha")
 const Mutation = require("../../src/resolvers/Mutations")
-const assert = require("chai").assert
 const expect = require("chai").expect
 
 var schema;
