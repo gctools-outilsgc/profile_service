@@ -19,15 +19,15 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  deleteProfile(gcId: String!): Boolean!
-  createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
+  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!,
+  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile! @isOwner,
+  deleteProfile(gcId: String!): Boolean!,
+  createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!,
   modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
-  deleteOrgTier(id: ID!): String!
-  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
-  modifyOrganization(organizationId: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
-  deleteOrganization(id: ID!): String!
+  deleteOrgTier(id: ID!): String!,
+  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!,
+  modifyOrganization(organizationId: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!,
+  deleteOrganization(id: ID!): String!,
 }
 
 type Profile {
