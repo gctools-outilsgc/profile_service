@@ -1,5 +1,4 @@
 const{mockServer, makeExecutableSchema } = require('graphql-tools')
-const {} = require('mocha')
 const Mutation = require("./profileMutationHelper")
 const helper = require('../test_helpers')
 const {PhoneNumber} = require("../../src/resolvers/Scalars")

@@ -167,7 +167,7 @@ async function modifyProfile(_, args, context, info){
                     var states = countries.states(selectedCountry)
                     if(states && states.length > 0)
                     {
-                        var selectedProvince = args.address.province.value;
+                        var selectedProvince = args.address.province;
                         var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
                         var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
                         if(index === -1)
