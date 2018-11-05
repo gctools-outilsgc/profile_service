@@ -1,18 +1,19 @@
-const{mockServer, makeExecutableSchema } = require('graphql-tools')
+const{ makeExecutableSchema } = require('graphql-tools')
+const { graphql } = require('graphql');
 const {Country} = require("../../src/resolvers/Scalars")
 const Mutation = require("./addressMutationHelper")
-const helper = require('../test_helpers')
+const helpers = require("../test_helpers")
 
 const resolvers = {
   Country, Mutation
 }
 
+var schema;
+
 describe('Validate COUNTRY scalar', () =>
 {
-    //var server;
-    beforeEach(() => 
-    {
-        const schema = makeExecutableSchema({
+    beforeEach(()=>{
+        schema = makeExecutableSchema({
             typeDefs: `
             scalar Country
 
@@ -30,9 +31,7 @@ describe('Validate COUNTRY scalar', () =>
             `,
             resolvers
           });
-        const mocks = {Province: () => { return "A province"}, Country: () => {return "A country"}}
-        server = new mockServer(schema, mocks);
-    })
+    }),
     it('validate country and expect to be a valid one', async () =>
     {
         var query = `
@@ -40,7 +39,9 @@ describe('Validate COUNTRY scalar', () =>
         {
             createAddress(country:"CA"){country}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+        });
     })
     it('expect an error when country does not exist', async ()=>
     {
@@ -49,6 +50,8 @@ describe('Validate COUNTRY scalar', () =>
         {
             createAddress(country:"NoWhere"){country}
         }`
-        await helper.runQueryAndExpectError(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectOneErrorWithText(result.errors, "Invalid country name")
+        });
     })
 })

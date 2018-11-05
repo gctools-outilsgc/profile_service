@@ -5,6 +5,7 @@ scalar PhoneNumber
 scalar Country
 scalar Province
 scalar PostalCode
+scalar Upload
 
 type Query {
   profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
@@ -14,7 +15,7 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
+  createProfile(gcId: String!, name: String!, email: Email!, avatar: Upload, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
   modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
   deleteProfile(gcId: String!): Boolean!
   createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!

@@ -1,15 +1,16 @@
-const{mockServer, makeExecutableSchema } = require('graphql-tools')
+const{makeExecutableSchema } = require('graphql-tools')
+const { graphql } = require('graphql');
 const Mutation = require("./profileMutationHelper")
-const helper = require('../test_helpers')
+const helpers = require('../test_helpers')
 const {PhoneNumber} = require("../../src/resolvers/Scalars")
 const resolvers = { PhoneNumber, Mutation }
 
+var schema;
+
 describe('Validate profile PHONE', () =>
 {
-    //var server;
-    beforeEach(() => 
-    {
-        const schema = makeExecutableSchema({
+    beforeEach(()=>{
+        schema = makeExecutableSchema({
             typeDefs: `
             scalar PhoneNumber
 
@@ -27,9 +28,7 @@ describe('Validate profile PHONE', () =>
             `,
             resolvers
           });
-        const mocks = {PhoneNumber: () => { return "1234567890"}}
-        server = new mockServer(schema, mocks);
-    })
+    }),
     it('validate phone number format for ##########', async () =>
     {
         var query = `
@@ -37,7 +36,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"1234567890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+        });
     })
     it('validate phone number format for ###-###-####', async () =>
     {
@@ -46,7 +47,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"123-456-7890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+           helpers.expectNoErrors(result.errors)
+        });
     })
     it('validate phone number format for ###.###.####', async () =>
     {
@@ -55,7 +58,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"123.456.7890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+         });
     })
     it('validate phone number format for (###) ###-####', async () =>
     {
@@ -64,7 +69,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"(123) 456-7890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+         });
     })
     it('validate phone number format for (###)###-####', async () =>
     {
@@ -73,7 +80,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"(123)456-7890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+         });
     })
     it('validate phone number format for +###########', async () =>
     {
@@ -82,7 +91,9 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"+11234567890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+         });
     })
     it('validate phone number format for ###-#######', async () =>
     {
@@ -91,6 +102,8 @@ describe('Validate profile PHONE', () =>
         {
             createProfile(phone:"123-4567890"){phone}
         }`
-        await helper.runQuery(server, query)
+        await graphql(schema, query).then((result) => {
+            helpers.expectNoErrors(result.errors)
+         });
     })
 })

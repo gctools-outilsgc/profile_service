@@ -1,4 +1,7 @@
 const countries = require('countryjs')
+const processUpload = require('./File-Upload')
+
+
 function createProfile(_, args, context, info){
     var createProfileData = {}
 
@@ -9,7 +12,7 @@ function createProfile(_, args, context, info){
     }
 
     if (args.avatar !== undefined){
-        createProfileData.avatar= args.avatar
+        createProfileData.avatar= processUpload(args.avatar)
     }
     if (args.mobilePhone !== undefined){
         createProfileData.mobilePhone = args.mobilePhone

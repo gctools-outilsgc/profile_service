@@ -7,6 +7,7 @@ const Mutation = require("../../src/resolvers/Mutations")
 const assert = require('chai').assert
 
 var schema;
+
 describe('Create profile', () => {
     beforeEach(()=>{
         const resolvers = {Mutation, PhoneNumber, Country, Province}
