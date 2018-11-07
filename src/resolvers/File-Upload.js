@@ -12,6 +12,7 @@ const storeUpload = async ({ stream }) => {
   return new Promise((resolve, reject) =>
     im(stream)
       .setFormat(`${extension}`)
+      .resize(300,300)
       .stream()
       .pipe(createWriteStream(path))
       .on('finish', () => resolve( {id} ))
