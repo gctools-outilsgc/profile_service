@@ -7,9 +7,8 @@ const temp_schema= `
   scalar Upload
 
   type File {
-    id: ID!
-    filename:String!
-    path: String!
+    filename:String
+    path: String
   }
   
   type Query {
@@ -27,7 +26,7 @@ const resolvers = {
     uploads: () => db.get('uploads').value(),
   },
   Mutation: {
-    singleUpload: (obj, { file }) => {return processUpload(file)},
+    singleUpload: (obj, { file }) => processUpload(file),
     multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
   }
 }
@@ -44,13 +43,14 @@ describe('Link avatar to profile', ()=>{
 
     var query = `mutation($file:Upload!)
     {
-      singleUpload(file:$file){filename}
+      singleUpload(file:$file){path}
     }`;
 
-    await graphql(schema, query, null, null, {"file":uploadedFile}).then(async (result) => {
-        var errors = result.errors
-        console.error(errors)
-    });
+    graphql(schema, query, null, null, {"file":uploadedFile})
+    .then(({path}) => {
+      console.log(`ID for the picture is ${path}`)
+    })
+    .catch(error => console.error(error));
   })
 })
 

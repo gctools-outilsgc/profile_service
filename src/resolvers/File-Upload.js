@@ -9,19 +9,19 @@ const storeUpload = async ({ stream }) => {
   const id = shortid.generate()
   const path = __dirname + `${uploadDir}/${id}.${extension}`
 
-  new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) =>
     im(stream)
       .setFormat(`${extension}`)
       .stream()
       .pipe(createWriteStream(path))
-      .on('finish', () => resolve({ id }))
+      .on('finish', () => resolve( {id} ))
       .on('error', reject),
   )
 }
 
 const processUpload = async upload => {
   const { stream, filename } = await upload
-  return {id} = await storeUpload({ stream, filename })
+  return { id, path } = await storeUpload({ stream, filename })
 }
 
 module.exports = {processUpload}
