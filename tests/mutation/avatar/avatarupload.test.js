@@ -2,7 +2,6 @@ const {graphql} = require('graphql');
 const {makeExecutableSchema} = require('graphql-tools');
 const {processUpload} = require('../../../src/resolvers/File-Upload.js')
 const fs = require('fs');
-const upload = require('upload')
 
 const temp_schema= `
   scalar Upload
@@ -28,7 +27,7 @@ const resolvers = {
     uploads: () => db.get('uploads').value(),
   },
   Mutation: {
-    singleUpload: (obj, { file }) => processUpload(file),
+    singleUpload: (obj, { file }) => {return processUpload(file)},
     multipleUpload: (obj, { files }) => Promise.all(files.map(processUpload)),
   }
 }
@@ -41,29 +40,27 @@ describe('Link avatar to profile', ()=>{
     });
 
 
-    var file = uploadFile(__dirname + '../../../pictureconversion/pics/avatar.png');
+    var uploadedFile = uploadFile(__dirname + '/../../pictureconversion/pics/avatar.png', 'avatar.png');
 
     var query = `mutation($file:Upload!)
     {
       singleUpload(file:$file){filename}
     }`;
 
-    await graphql(schema, query, null, {file}).then(async (result) => {
+    await graphql(schema, query, null, null, {"file":uploadedFile}).then(async (result) => {
         var errors = result.errors
         console.error(errors)
-        console.error(result.errors[0].locations)
     });
   })
 })
 
-function uploadFile(path)
+function uploadFile(path, filename)
 {
-  var file = fs.readFileSync(path);
-  upload.upload({
-    url:path,
-    data: file,
-    progress:()=>{},
-    success:()=>{},
-    error:()=>{}
-  })
+  var stream = fs.readFileSync(path);
+  return {stream,
+    filename,
+    id:"something",
+    mimetype:"image/jpg",
+    encoding:"jpg"
+  }
 }
