@@ -14,13 +14,16 @@
     "countryjs": "^1.8.0",
     "dotenv": "^6.0.0",
     "express-jwt": "^5.3.1",
+    "form-data": "^2.3.3",
     "gm": "^1.23.1",
     "graphql-cli": "^2.16.7",
     "graphql-tools": "^3.1.1",
     "graphql-yoga": "^1.16.2",
     "node-fetch": "^2.2.0",
     "prisma": "^1.16.4",
-    "prisma-binding": "^2.1.5"
+    "prisma-binding": "^2.1.5",
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

@@ -35,3 +35,5 @@ node_modules
 test-report\.html
 
 \.idea/
+
+tests/pictureconversion/folder/

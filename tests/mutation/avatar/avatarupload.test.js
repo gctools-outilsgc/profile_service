@@ -38,7 +38,6 @@ describe('Link avatar to profile', ()=>{
       resolvers
     });
 
-
     var uploadedFile = uploadFile(__dirname + '/../../pictureconversion/pics/avatar.png', 'avatar.png');
 
     var query = `mutation($file:Upload!)
