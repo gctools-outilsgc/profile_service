@@ -1,60 +1,68 @@
 const shortid = require('shortid');
 const fs = require('fs');
 const request = require('request');
-const FormData = require('form-data');
 const gm = require('gm');
-const im = gm.subClass({imageMagick: true})
+const im = gm.subClass({imageMagick: true});
 
-const storeUpload = async ({ stream }) => {
+const convertPicture = async ({ stream }) => {
   const extension = "jpg";
   const uploadDir = '/convert';
   const id = shortid.generate()
-  const path = __dirname + `${uploadDir}/${id}.${extension}`
-
+  const destinationPath = __dirname + `${uploadDir}/${id}.${extension}`
   return new Promise((resolve, reject) =>
-    im(stream)
+    gm(stream)
       .setFormat(`${extension}`)
-      .resize(300,300)
-      .stream()
-      .pipe(fs.createWriteStream(path))
-      .pipe(postImage(id, path))
-      .on('finish', () => resolve( {id} ))
-      .on('error', reject),
+      // .resize(300,300)
+      // .write(fs.createWriteStream(destinationPath), error =>{
+      //     if(error)
+      //     {
+      //       reject()
+      //     }
+      //     else{
+      //       resolve( {path: destinationPath} )
+      //     }
+      // })
+      // .stream(`${extension}`)
+      // .pipe(fs.createWriteStream(destinationPath))
+      // .on('finish', () => resolve( {path: destinationPath} ))
+      // .on('error', reject)
+      .stream(function (err, stdout, stderr) {
+        stdout
+          .pipe(fs.createWriteStream(destinationPath))
+          .on('finish', () => resolve( {path: destinationPath} ))
+          .on('error', reject);
+      })
   )
 }
 
-const postImage = (({id, path}) => {
-  var formData = new FormData();
-  formData.append('postimage', `open('${path}', 'rb')`);
-  // {
-  //   postimage:{
-  //     value:  fs.readFileSync(path),
-  //     options: {r
-  //       filename: `${id}.jpg`,
-  //       contentType: 'image/jpg'
-  //     }
-  //   }
-    // postimage:fs.readFileSync(path)
-  // }
-
-  request({
-    headers: {'content-type' : 'application/x-www-form-urlencoded'},
-    url:     `http://localhost:8007/backend.php`,
-    // body:    `postimage=open(${path},'rb')`,
-    method: "POST",
-    formData
-    // form: {postimage: `open('${path}', 'rb')`}
-  }, function optionalCallback (err, httpResponse, body) {
-    if (err) {
-      return console.error('upload failed:', err);
-    }
-    console.error(`response:${httpResponse.statusCode}, url:${httpResponse.url}, body:${body}`)
+const postImage = async ({path}) => {
+  console.error(path);
+  return new Promise((resolve, reject) => {
+    var req = request({
+      headers: {'Content-Type' : 'image/jpeg'},
+      url:     `http://localhost:8007/backend.php`,
+      method: "POST"
+    }, function optionalCallback (err, httpResponse, body) {
+      if (err) {
+        console.error('upload failed:', err);
+        reject();
+      }
+      else{
+      console.error(`response:${httpResponse.statusCode}, url:${httpResponse.url}, body:${body}`)
+      const fileUrl = 'worked';
+      resolve({fileUrl})
+      }
+    });
+    var form = req.form();
+    form.append('postimage', fs.createReadStream(path))
   });
-});
+};
 
 const processUpload = async upload => {
-  const { stream, filename } = await upload
-  return { id, path } = await storeUpload({ stream, filename })
+  const { stream, filename } = await upload;
+  const { path } = await convertPicture({ stream, filename });
+  return  await postImage({path});
 }
 
-module.exports = {processUpload, postImage}
+module.exports = {
+  processUpload}
