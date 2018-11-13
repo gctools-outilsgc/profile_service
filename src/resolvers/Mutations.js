@@ -12,7 +12,10 @@ function createProfile(_, args, context, info){
     }
 
     if (args.avatar !== undefined){
-        createProfileData.avatar= processUpload(args.avatar)
+        processUpload(args.avatar).then(({url})=>
+        {
+            createProfileData.avatar= url;
+        })
     }
     if (args.mobilePhone !== undefined){
         createProfileData.mobilePhone = args.mobilePhone
