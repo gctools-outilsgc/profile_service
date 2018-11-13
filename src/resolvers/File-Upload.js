@@ -3,11 +3,13 @@ const fs = require('fs');
 const request = require('request');
 const gm = require('gm');
 
+const uploadDir = '/convert';
+const fullUploadDir = __dirname + uploadDir;
+
 const convertPicture = async ({ stream, filename }) => {
   const extension = "jpg";
-  const uploadDir = '/convert';
   const id = shortid.generate()
-  const destinationPath = __dirname + `${uploadDir}/${filename}-${id}.${extension}`
+  const destinationPath = `${fullUploadDir}/${filename}-${id}.${extension}`
   return new Promise((resolve, reject) =>
     gm(stream)
       .setFormat(`${extension}`)
@@ -46,8 +48,19 @@ const postImage = ({path}) => {
    });
 };
 
+const createUploadFolderIfNeeded = ()=> {
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(fullUploadDir)){
+      fs.mkdirSync(fullUploadDir);
+    }
+    resolve()
+  });
+}
+
+
 const processUpload = async upload => {
   const { stream, filename } = await upload;
+  await createUploadFolderIfNeeded()
   const { path } = await convertPicture({ stream, filename });
   const {url} = await postImage({path});
   return {url};
