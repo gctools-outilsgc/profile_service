@@ -48,7 +48,7 @@ const postImage = ({path}) => {
    });
 };
 
-const createUploadFolderIfNeeded = ()=> {
+const createUploadFolderIfNeeded = async () => {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(fullUploadDir)){
       fs.mkdirSync(fullUploadDir);
@@ -57,13 +57,22 @@ const createUploadFolderIfNeeded = ()=> {
   });
 }
 
+const deletePictureFromTempFolder = async ({path})=> {
+  return new Promise((resolve, reject) => {
+    if (fs.existsSync(path), err => reject(err)){
+      fs.unlinkSync(path, (err)=>reject(err))
+    }
+    resolve()
+  });
+}
 
 const processUpload = async upload => {
   const { stream, filename } = await upload;
   await createUploadFolderIfNeeded()
   const { path } = await convertPicture({ stream, filename });
   const {url} = await postImage({path});
-  return {url};
+  await deletePictureFromTempFolder({path});
+  return {url, path};
 }
 
 module.exports = {processUpload}
