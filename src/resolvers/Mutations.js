@@ -62,6 +62,7 @@ function createProfile(_, args, context, info){
         createProfileData.address ={create:newAddress};
     
     if (typeof args.supervisor !== "undefined") {
+        var createSupervisorData = {};
         if (typeof args.supervisor.gcId !== "undefined")
             createSupervisorData.push({gcId: args.supervisor.gcId});
         if (typeof args.supervisor.email !== "undefined")
