@@ -1,4 +1,49 @@
 const countries = require("countryjs");
+
+function getNewAddressFromArgs(args) {
+    if (typeof args.address !== "undefined") {
+        var requiredVariablesError = [];
+        if (args.address.streetAddress == null) {
+            requiredVariablesError.push("streetAddress is not defined and is a required field");
+        }
+        if (args.address.city == null) {
+            requiredVariablesError.push("city is not defined and is a required field");
+        }
+        if (args.address.country == null) {
+            requiredVariablesError.push("country is not defined and is a required field");
+        } else {
+        if (args.address.province == null) {
+            requiredVariablesError.push("province is not defined and is a required field");
+        } else {
+            var selectedCountry = args.address.country.value;
+            var states = countries.states(selectedCountry);
+            if(states && states.length > 0) {
+                var selectedProvince = args.address.province;
+                var upperCaseStates = states.map(function(x){ 
+                                                    return x.toUpperCase();
+                                                });
+                var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
+                if(index === -1) {
+                    requiredVariablesError.push("invalid province for selected country");
+                }
+            }
+        }
+        }
+        if (args.address.postalCode == null) {
+            requiredVariablesError.push("postalCode is not defined and is a required field");
+        }
+        if (requiredVariablesError.length > 0) {
+            throw new Error(requiredVariablesError);
+        }
+
+        //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
+        var country = args.address.country;
+        args.address.country = country.value;
+        return args.address;
+    }
+    return null;
+}
+
 function createProfile(_, args, context, info){
     var createProfileData = {};
 
@@ -57,50 +102,6 @@ function createProfile(_, args, context, info){
     return context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
-}
-
-function getNewAddressFromArgs(args) {
-    if (typeof args.address !== "undefined") {
-        var requiredVariablesError = [];
-        if (args.address.streetAddress == null) {
-            requiredVariablesError.push("streetAddress is not defined and is a required field");
-        }
-        if (args.address.city == null) {
-            requiredVariablesError.push("city is not defined and is a required field");
-        }
-        if (args.address.country == null) {
-            requiredVariablesError.push("country is not defined and is a required field");
-        } else {
-        if (args.address.province == null) {
-            requiredVariablesError.push("province is not defined and is a required field");
-        } else {
-            var selectedCountry = args.address.country.value;
-            var states = countries.states(selectedCountry);
-            if(states && states.length > 0) {
-                var selectedProvince = args.address.province;
-                var upperCaseStates = states.map(function(x){ 
-                                                    return x.toUpperCase();
-                                                });
-                var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
-                if(index === -1) {
-                    requiredVariablesError.push("invalid province for selected country");
-                }
-            }
-        }
-        }
-        if (args.address.postalCode == null) {
-            requiredVariablesError.push("postalCode is not defined and is a required field");
-        }
-        if (requiredVariablesError.length > 0) {
-            throw new Error(requiredVariablesError);
-        }
-
-        //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
-        var country = args.address.country;
-        args.address.country = country.value;
-        return args.address;
-    }
-    return null;
 }
 
 async function modifyProfile(_, args, context, info){

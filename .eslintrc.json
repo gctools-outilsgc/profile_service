@@ -4,7 +4,8 @@
     "brace-style":["error", "1tbs"],
     "quotes":["error", "double"],
     "semi":["error", "always"],
-    "no-undefined":"error"
+    "no-undefined":"error",
+    "no-use-before-define": "error"
   },
   "settings": {
   },
