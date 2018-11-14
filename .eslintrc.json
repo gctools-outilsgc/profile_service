@@ -9,7 +9,9 @@
     "no-use-before-define": "error",
     "arrow-parens": ["error", "always"],
     "arrow-spacing": ["error", { "before": true, "after": true }],
-    "no-undef": ["error", { "typeof": true }]
+    "no-undef": ["error", { "typeof": true }],
+    "object-shorthand": "error",
+    "camelcase":"warn"
   },
   "settings": {
   },
