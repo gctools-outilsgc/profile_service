@@ -14,6 +14,6 @@ if (config.app.multicore) {
     require("./index");
   }
 } else {
-  require("./index")
+  require("./index");
 }
 

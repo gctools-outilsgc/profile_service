@@ -13,7 +13,7 @@ const resolvers = {
   Email : EmailAddress,
   PhoneNumber,
   PostalCode
-}
+};
 
 const server = new GraphQLServer({
   typeDefs: "./src/schema.graphql",
@@ -29,11 +29,11 @@ const server = new GraphQLServer({
       debug: config.prisma.debug,
     }),
   }),
-})
+});
 const options = {
   port: 4000,
   endpoint: "/graphql",
   subscriptions: "/subscriptions",
   playground: "/playground",
-}
-server.start(options,() => console.log("GraphQL server is running on http://localhost:4000"))
+};
+server.start(options,() => console.log("GraphQL server is running on http://localhost:4000"));

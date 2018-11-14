@@ -2,7 +2,8 @@
   "env":{"es6": true, "jest": true, "node": true},
   "rules": {
     "brace-style":["error", "1tbs"],
-    "quotes":["error", "double"]
+    "quotes":["error", "double"],
+    "semi":["error", "always"]
   },
   "settings": {
   },

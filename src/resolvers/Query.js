@@ -14,7 +14,7 @@ function profiles(_, args, context, info) {
       first: args.first,        
     },
     info
-  )
+  );
 }
 
 function addresses(_, args, context, info) {
@@ -32,7 +32,7 @@ function addresses(_, args, context, info) {
       first: args.first,      
     },
     info
-  )
+  );
 }
 
 function orgtiers(_, args, context, info) {
@@ -47,7 +47,7 @@ function orgtiers(_, args, context, info) {
       first: args.first,  
     },
     info
-  )
+  );
 }
 
 function organizations(_, args, context, info){
@@ -64,7 +64,7 @@ function organizations(_, args, context, info){
       first: args.first,  
     },
     info
-  )
+  );
 }
 
 
@@ -73,4 +73,4 @@ module.exports = {
     addresses,
     orgtiers,
     organizations,
-}
+};
