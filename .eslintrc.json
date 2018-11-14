@@ -2,6 +2,7 @@
   "env":{"es6": true, "jest": true, "node": true},
   "rules": {
     "brace-style":["error", "1tbs"],
+    "curly": ["error", "multi"],
     "quotes":["error", "double"],
     "semi":["error", "always"],
     "no-undefined":"error",
