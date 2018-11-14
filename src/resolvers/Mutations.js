@@ -1,4 +1,4 @@
-const countries = require('countryjs')
+const countries = require("countryjs");
 function createProfile(_, args, context, info){
     var createProfileData = {}
 
@@ -25,8 +25,7 @@ function createProfile(_, args, context, info){
     }
 
     var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null)
-    {
+    if(newAddress != null) {
         createProfileData.address ={create:newAddress}
     }
 
@@ -40,18 +39,18 @@ function createProfile(_, args, context, info){
         createProfileData.push({
             supervisor: {
                 connect: {
-                    createSupervisorData
-                }
-            }
+                    createSupervisorData,
+                },
+            },
         })
     }
     if (args.org !== undefined){
         createProfileData.push({
             org :{
                 connect: {
-                    id: args.org.id
-                }
-            }
+                    id: args.org.id,
+                },
+            },
         })
     }
 
@@ -60,50 +59,39 @@ function createProfile(_, args, context, info){
         }, info)
 }
 
-function getNewAddressFromArgs(args)
-{
-    if (args.address !== undefined){
+function getNewAddressFromArgs(args) {
+    if (args.address !== undefined) {
         var requiredVariablesError = []
-        if (args.address.streetAddress == null)
-        {
+        if (args.address.streetAddress == null) {
             requiredVariablesError.push("streetAddress is not defined and is a required field")
         }
-        if (args.address.city == null)
-        {
+        if (args.address.city == null) {
             requiredVariablesError.push("city is not defined and is a required field")
         }
-        if (args.address.country == null)
-        {
+        if (args.address.country == null) {
             requiredVariablesError.push("country is not defined and is a required field")
-        }
-        else
-        {
-            if (args.address.province == null)
-            {
-                requiredVariablesError.push("province is not defined and is a required field")
-            }
-            else{
-                
-                var selectedCountry = args.address.country.value;
-                var states = countries.states(selectedCountry)
-                if(states && states.length > 0)
-                {
-                    var selectedProvince = args.address.province;
-                    var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
-                    var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
-                    if(index === -1)
-                    {
-                        requiredVariablesError.push("invalid province for selected country")
-                    }
+        } else {
+        if (args.address.province == null) {
+            requiredVariablesError.push("province is not defined and is a required field")
+        } else {
+            var selectedCountry = args.address.country.value;
+            var states = countries.states(selectedCountry)
+            if(states && states.length > 0) {
+                var selectedProvince = args.address.province;
+                var upperCaseStates = states.map(function(x){ 
+                                                    return x.toUpperCase()
+                                                })
+                var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
+                if(index === -1) {
+                    requiredVariablesError.push("invalid province for selected country")
                 }
             }
         }
-        if (args.address.postalCode == null)
-        {
+        }
+        if (args.address.postalCode == null) {
             requiredVariablesError.push("postalCode is not defined and is a required field")
         }
-        if (requiredVariablesError.length > 0)
-        {
+        if (requiredVariablesError.length > 0) {
             throw new Error(requiredVariablesError)
         }
 
@@ -127,9 +115,8 @@ async function modifyProfile(_, args, context, info){
         })
 
     if (currentProfile == null | undefined){
-        throw new Error('Could not find profile with gcId ${args.gcId}')
+        throw new Error("Could not find profile with gcId ${args.gcId}")
     }
-    
     if (args.name !== undefined) {
         updateProfileData.name = args.name
     }
@@ -161,17 +148,16 @@ async function modifyProfile(_, args, context, info){
             }
             if (args.address.country !== undefined){
                 updateAddressData.country = args.address.country
-                if (args.address.province !== undefined)
-                {
+                if (args.address.province !== undefined) {
                     var selectedCountry = args.address.country.value;
                     var states = countries.states(selectedCountry)
-                    if(states && states.length > 0)
-                    {
+                    if(states && states.length > 0) {
                         var selectedProvince = args.address.province;
-                        var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
+                        var upperCaseStates = states.map(function(x) {
+                                                         return x.toUpperCase()
+                                                        })
                         var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
-                        if(index === -1)
-                        {
+                        if(index === -1) {
                             throw new Error("invalid province for selected country")
                         }
                     }
@@ -186,12 +172,10 @@ async function modifyProfile(_, args, context, info){
             }
         } else {
             var newAddress = getNewAddressFromArgs(args);
-            if(newAddress != null)
-            {
+            if(newAddress != null) {
                 updateProfileData.address ={create:newAddress}
             }
         }        
-        
     }
     if (args.supervisor !== undefined){
         if (args.supervisor.gcId !== undefined){

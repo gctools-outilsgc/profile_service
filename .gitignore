@@ -31,3 +31,7 @@ node_modules
 .vscode/
 
 \.env
+
+\.idea/
+
+test-report\.html

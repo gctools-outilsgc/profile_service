@@ -6,13 +6,16 @@
   "scripts": {
     "start": "node src/cluster.js",
     "dev": "node src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "eslint": "eslint src/"
   },
   "dependencies": {
     "@okgrow/graphql-scalars": "^0.4.2",
     "cluster": "^0.7.7",
     "countryjs": "^1.8.0",
+    "dev": "^0.1.3",
     "dotenv": "^6.0.0",
+    "eslint": "^5.9.0",
     "express-jwt": "^5.3.1",
     "graphql-cli": "^2.16.7",
     "graphql-tools": "^3.1.1",
@@ -22,6 +25,7 @@
     "prisma-binding": "^2.1.5"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",
     "graphql-tester": "^0.0.5",
