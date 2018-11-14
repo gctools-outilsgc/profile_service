@@ -8,19 +8,19 @@ function createProfile(_, args, context, info){
         email: args.email,
     };
 
-    if (args.avatar !== undefined){
+    if (typeof args.avatar !== "undefined"){
         createProfileData.avatar= args.avatar;
     }
-    if (args.mobilePhone !== undefined){
+    if (typeof args.mobilePhone !== "undefined"){
         createProfileData.mobilePhone = args.mobilePhone;
     }
-    if (args.officePhone !== undefined){
+    if (typeof args.officePhone !== "undefined"){
         createProfileData.officePhone = args.officePhone;
     }
-    if (args.titleEn !== undefined){
+    if (typeof args.titleEn !== "undefined"){
         createProfileData.titleEn = args.titleEn;
     }
-    if (args.titleFr !== undefined){
+    if (typeof args.titleFr !== "undefined"){
         createProfileData.titleFr = args.titleFr;
     }
 
@@ -29,11 +29,11 @@ function createProfile(_, args, context, info){
         createProfileData.address ={create:newAddress};
     }
 
-    if (args.supervisor !== undefined){
-        if (args.supervisor.gcId !== undefined){
+    if (typeof args.supervisor !== "undefined"){
+        if (typeof args.supervisor.gcId !== "undefined"){
             createSupervisorData.push({gcId: args.supervisor.gcId});
         }
-        if (args.supervisor.email !== undefined){
+        if (typeof args.supervisor.email !== "undefined"){
             createSupervisorData.push({email: args.supervisor.email});
         }
         createProfileData.push({
@@ -44,7 +44,7 @@ function createProfile(_, args, context, info){
             },
         });
     }
-    if (args.org !== undefined){
+    if (typeof args.org !== "undefined"){
         createProfileData.push({
             org :{
                 connect: {
@@ -60,7 +60,7 @@ function createProfile(_, args, context, info){
 }
 
 function getNewAddressFromArgs(args) {
-    if (args.address !== undefined) {
+    if (typeof args.address !== "undefined") {
         var requiredVariablesError = [];
         if (args.address.streetAddress == null) {
             requiredVariablesError.push("streetAddress is not defined and is a required field");
@@ -114,41 +114,41 @@ async function modifyProfile(_, args, context, info){
             }            
         });
 
-    if (currentProfile == null | undefined){
+    if (typeof currentProfile === "undefined"){
         throw new Error("Could not find profile with gcId ${args.gcId}");
     }
-    if (args.name !== undefined) {
+    if (typeof args.name !== "undefined") {
         updateProfileData.name = args.name;
     }
-    if (args.email !== undefined){
+    if (typeof args.email !== "undefined"){
         updateProfileData.email = args.email;
     }
-    if (args.avatar !== undefined){
+    if (typeof args.avatar !== "undefined"){
         updateProfileData.avatar= args.avatar;
     }
-    if (args.mobilePhone !== undefined){
+    if (typeof args.mobilePhone !== "undefined"){
         updateProfileData.mobilePhone = args.mobilePhone;
     }
-    if (args.officePhone !== undefined){
+    if (typeof args.officePhone !== "undefined"){
         updateProfileData.officePhone = args.officePhone;
     }
-    if (args.titleEn !== undefined){
+    if (typeof args.titleEn !== "undefined"){
         updateProfileData.titleEn = args.titleEn;
     }
-    if (args.titleFr !== undefined){
+    if (typeof args.titleFr !== "undefined"){
         updateProfileData.titleFr = args.titleFr;
     }
-    if (args.address !== undefined){
+    if (typeof args.address !== "undefined"){
         if (currentProfile.address.id !== null){
-            if (args.address.streetAddress !== undefined){
+            if (typeof args.address.streetAddress !== "undefined"){
                 updateAddressData.streetAddress = args.address.streetAddress;
             }
-            if (args.address.city !== undefined){
+            if (typeof args.address.city !== "undefined"){
                 updateAddressData.city = args.address.city;
             }
-            if (args.address.country !== undefined){
+            if (typeof args.address.country !== "undefined"){
                 updateAddressData.country = args.address.country;
-                if (args.address.province !== undefined) {
+                if (typeof args.address.province !== "undefined") {
                     var selectedCountry = args.address.country.value;
                     var states = countries.states(selectedCountry);
                     if(states && states.length > 0) {
@@ -164,7 +164,7 @@ async function modifyProfile(_, args, context, info){
                     updateAddressData.province = args.address.province;
                 }
             }
-            if (args.address.postalCode !== undefined){
+            if (typeof args.address.postalCode !== "undefined"){
                 updateAddressData.postalCode = args.address.postalCode;
             }
             updateProfileData.address = {
@@ -177,11 +177,11 @@ async function modifyProfile(_, args, context, info){
             }
         }        
     }
-    if (args.supervisor !== undefined){
-        if (args.supervisor.gcId !== undefined){
+    if (typeof args.supervisor !== "undefined"){
+        if (typeof args.supervisor.gcId !== "undefined"){
             updateSupervisorData.push({gcId: args.supervisor.gcId});
         }
-        if (args.supervisor.email !== undefined){
+        if (typeof args.supervisor.email !== "undefined"){
             updateSupervisorData.push({email: args.supervisor.email});
         }
         updateProfileData.push({
@@ -192,7 +192,7 @@ async function modifyProfile(_, args, context, info){
             }
         });
     }
-    if (args.org !== undefined){
+    if (typeof args.org !== "undefined"){
         updateProfileData.push({
             org :{
                 connect: {
