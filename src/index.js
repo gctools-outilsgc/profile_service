@@ -21,7 +21,7 @@ const server = new GraphQLServer({
   resolverValidationOptions: {
     requireResolversForResolveType: false 
   },
-  context: req => ({
+  context: (req) => ({
     ...req,
     prisma: new Prisma({
       typeDefs: "./src/generated/prisma.graphql",

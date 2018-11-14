@@ -5,7 +5,9 @@
     "quotes":["error", "double"],
     "semi":["error", "always"],
     "no-undefined":"error",
-    "no-use-before-define": "error"
+    "no-use-before-define": "error",
+    "arrow-parens": ["error", "always"],
+    "arrow-spacing": ["error", { "before": true, "after": true }]
   },
   "settings": {
   },
