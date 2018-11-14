@@ -16,7 +16,7 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
+  typeDefs: "./src/schema.graphql",
   resolvers,
   resolverValidationOptions: {
     requireResolversForResolveType: false 
@@ -24,16 +24,16 @@ const server = new GraphQLServer({
   context: req => ({
     ...req,
     prisma: new Prisma({
-      typeDefs: './src/generated/prisma.graphql',
-      endpoint: 'http://'+config.prisma.host+':4466/profile/',
+      typeDefs: "./src/generated/prisma.graphql",
+      endpoint: "http://"+config.prisma.host+":4466/profile/",
       debug: config.prisma.debug,
     }),
   }),
 })
 const options = {
   port: 4000,
-  endpoint: '/graphql',
-  subscriptions: '/subscriptions',
-  playground: '/playground',
+  endpoint: "/graphql",
+  subscriptions: "/subscriptions",
+  playground: "/playground",
 }
-server.start(options,() => console.log(`GraphQL server is running on http://localhost:4000`))
+server.start(options,() => console.log("GraphQL server is running on http://localhost:4000"))

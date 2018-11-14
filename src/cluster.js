@@ -1,6 +1,6 @@
-const cluster = require('cluster');
-const os = require('os');
-const config = require('./config');
+const cluster = require("cluster");
+const os = require("os");
+const config = require("./config");
 
 if (config.app.multicore) {
   if (cluster.isMaster) {
@@ -11,9 +11,9 @@ if (config.app.multicore) {
       cluster.fork();
     }
   } else {
-    require('./index');
+    require("./index");
   }
 } else {
-  require('./index')
+  require("./index")
 }
 
