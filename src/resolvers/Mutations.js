@@ -1,5 +1,19 @@
 const countries = require("countryjs");
 
+function findExistingProfileOrThrowException(context, profileId){
+    let profile = context.prisma.Profile(
+        {
+            where: {
+                gcId: profileId
+            }            
+        });
+
+    if (profile === null || typeof profile === "undefined"){
+        throw new Error("Could not find profile with gcId ${args.gcId}");
+    }
+    return profile;
+}
+
 function copyValueToObjectIfDefined(originalValue){
     if(typeof originalValue !== "undefined"){
         return originalValue;
@@ -96,18 +110,7 @@ function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
-    var updateAddressData = {};
-    var updateSupervisorData = {};
-    const currentProfile = await context.prisma.Profile(
-        {
-            where: {
-                gcId: args.gcId
-            }            
-        });
-
-    if (currentProfile === null || typeof currentProfile === "undefined"){
-        throw new Error("Could not find profile with gcId ${args.gcId}");
-    }
+    const currentProfile = await findExistingProfileOrThrowException(context, args.gcId);
     var updateProfileData = {
         name: args.name,
         email: args.email,
@@ -120,21 +123,17 @@ async function modifyProfile(_, args, context, info){
 
     if (typeof args.address !== "undefined") {
         if (currentProfile.address.id !== null){
-            if (typeof args.address.streetAddress !== "undefined"){
-                updateAddressData.streetAddress = args.address.streetAddress;
-            }
-            if (typeof args.address.city !== "undefined"){
-                updateAddressData.city = args.address.city;
-            }
+            var updateAddressData = {
+                streetAddress: copyValueToObjectIfDefined(args.address.streetAddress),
+                city: copyValueToObjectIfDefined(args.address.city),
+                postalCode: copyValueToObjectIfDefined(args.address.postalCode)
+            };
             if (typeof args.address.country !== "undefined"){
                 updateAddressData.country = args.address.country.value;
                 if (typeof args.address.province !== "undefined") {
                     throwExceptionIfProvinceDoesNotBelongToCountry(updateAddressData.country, args.address.province);
                     updateAddressData.province = args.address.province;
                 }
-            }
-            if (typeof args.address.postalCode !== "undefined"){
-                updateAddressData.postalCode = args.address.postalCode;
             }
             updateProfileData.address = {
                 update: updateAddressData  
@@ -145,14 +144,14 @@ async function modifyProfile(_, args, context, info){
                 updateProfileData.address ={create:newAddress};
             }
         }  
-    }      
-    if (typeof args.supervisor !== "undefined"){
-        if (typeof args.supervisor.gcId !== "undefined"){
-            updateSupervisorData.push({gcId: args.supervisor.gcId});
-        }
-        if (typeof args.supervisor.email !== "undefined"){
-            updateSupervisorData.push({email: args.supervisor.email});
-        }
+    }  
+    
+    if (typeof args.supervisor !== "undefined") {
+        var updateSupervisorData = {
+            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            email: copyValueToObjectIfDefined(args.supervisor.email)
+        };
+
         updateProfileData.push({
             supervisor: {
                 connect: {
@@ -161,7 +160,7 @@ async function modifyProfile(_, args, context, info){
             }
         });
     }
-
+    
     if (typeof args.org !== "undefined"){
         updateProfileData.push({
             org :{
@@ -171,13 +170,13 @@ async function modifyProfile(_, args, context, info){
             }
         });
     }
+
     return await context.prisma.mutation.updateProfile({
         where:{
         gcId: args.gcId
         },
         data: updateProfileData   
     }, info);    
-
 }
 
 async function deleteProfile(_, args, context){
