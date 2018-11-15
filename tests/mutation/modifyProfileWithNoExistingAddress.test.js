@@ -74,7 +74,7 @@ describe("Modify existing profile with no actual address", () =>{
     it("throws exception for invalid province/states in country", async () =>{
         var query = `
         mutation{modifyProfile(gcId:"123",
-            address:{streetAddress:"street_name",city:"city_name",province:"province_name",country:"CA", postalCode:"postalCode"}
+            address:{streetAddress:"street_name",city:"city_name",province:"invalid_provincename",country:"CA", postalCode:"postalCode"}
         ){name}}`;
         await graphql(schema, query, null, contextWithExistingProfile()).then((result) =>{
             helpers.expectOneErrorWithText(result.errors, "invalid province for selected country");

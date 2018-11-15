@@ -4,15 +4,7 @@ function copyValueToObjectIfDefined(originalValue){
     if(typeof originalValue !== "undefined"){
         return originalValue;
     }
-    return null;
 }
-
-// function updateObjectValueIfExist(newValue, actualValue){
-//     if(typeof newValue !== "undefined"){
-//         return newValue;
-//     }
-//     return actualValue;
-// }
 
 function throwExceptionIfProvinceDoesNotBelongToCountry(country, province){
     var states = countries.states(country);
@@ -47,7 +39,7 @@ function getNewAddressFromArgs(args) {
         validateRequiredField(args.address, "province"),
     ];
     errors = errors.filter(function (el) {
-        return el !== null;
+        return el !== null && typeof el !== "undefined" && el !== "";
       });
     if (errors.length > 0) {
         throw new Error(errors);
@@ -66,23 +58,13 @@ function createProfile(_, args, context, info){
         gcId: args.gcId,
         name: args.name,
         email: args.email,
+        avatar: copyValueToObjectIfDefined(args.avatar),
+        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
-
-    if (typeof args.avatar !== "undefined") {
-        createProfileData.avatar= args.avatar;
-    }
-    if (typeof args.mobilePhone !== "undefined"){
-        createProfileData.mobilePhone = args.mobilePhone;
-    }
-    if (typeof args.officePhone !== "undefined"){
-        createProfileData.officePhone = args.officePhone;
-    }
-    if (typeof args.titleEn !== "undefined"){
-        createProfileData.titleEn = args.titleEn;
-    }
-    if (typeof args.titleFr !== "undefined"){
-        createProfileData.titleFr = args.titleFr;
-    }
+    
     var newAddress = getNewAddressFromArgs(args);
     if(newAddress != null) {
         createProfileData.address ={create:newAddress};
@@ -119,7 +101,6 @@ function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
-    var updateProfileData = {};
     var updateAddressData = {};
     var updateSupervisorData = {};
     const currentProfile = await context.prisma.Profile(
@@ -132,27 +113,16 @@ async function modifyProfile(_, args, context, info){
     if (currentProfile === null || typeof currentProfile === "undefined"){
         throw new Error("Could not find profile with gcId ${args.gcId}");
     }
-    if (typeof args.name !== "undefined") {
-        updateProfileData.name = args.name;
-    }
-    if (typeof args.email !== "undefined"){
-        updateProfileData.email = args.email;
-    }
-    if (typeof args.avatar !== "undefined"){
-        updateProfileData.avatar= args.avatar;
-    }
-    if (typeof args.mobilePhone !== "undefined"){
-        updateProfileData.mobilePhone = args.mobilePhone;
-    }
-    if (typeof args.officePhone !== "undefined"){
-        updateProfileData.officePhone = args.officePhone;
-    }
-    if (typeof args.titleEn !== "undefined"){
-        updateProfileData.titleEn = args.titleEn;
-    }
-    if (typeof args.titleFr !== "undefined"){
-        updateProfileData.titleFr = args.titleFr;
-    }
+    var updateProfileData = {
+        name: args.name,
+        email: args.email,
+        avatar: copyValueToObjectIfDefined(args.avatar),
+        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.titleFr),
+    };
+
     if (typeof args.address !== "undefined") {
         if (currentProfile.address.id !== null){
             if (typeof args.address.streetAddress !== "undefined"){
