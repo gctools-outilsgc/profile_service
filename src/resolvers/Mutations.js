@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const {findExistingProfileOrThrowException} = require("./helper/profileHelper");
+const {throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 
 function createProfile(_, args, context, info){
@@ -47,7 +47,13 @@ function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
-    const currentProfile = findExistingProfileOrThrowException(context, args.gcId);
+    const currentProfile = await context.prisma.Profile(
+        {
+            where: {
+                gcId: args.gcId
+            }            
+        });
+    throwExceptionIfProfileIsNotDefine(currentProfile);
     var updateProfileData = {
         name: args.name,
         email: args.email,
