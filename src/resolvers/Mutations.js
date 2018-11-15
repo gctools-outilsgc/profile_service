@@ -14,9 +14,9 @@ function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
     
-    var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null) {
-        createProfileData.address = {create:newAddress};
+    var address = getNewAddressFromArgs(args);
+    if(address != null) {
+        createProfileData.address = {create:address};
     }
     if (typeof args.supervisor !== "undefined") {
         var createSupervisorData = {

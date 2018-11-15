@@ -1,5 +1,6 @@
 const findExistingProfileOrThrowException = async (context, profileId) =>{
-  let profile = await context.prisma.Profile(
+    var profileFunc = context.prisma.Profile;
+    let profile = await profileFunc(
       {
           where: {
               gcId: profileId

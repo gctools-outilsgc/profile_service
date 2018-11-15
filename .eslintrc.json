@@ -6,6 +6,7 @@
     "block-scoped-var":"error",
     "brace-style":["error", "1tbs"],
     "camelcase":"warn",
+    
     "curly": ["error", "all"],
     "eqeqeq": ["error", "smart"],
     "guard-for-in": "error",

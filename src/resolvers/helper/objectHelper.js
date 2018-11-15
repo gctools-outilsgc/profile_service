@@ -1,5 +1,5 @@
 const copyValueToObjectIfDefined = (originalValue) =>{
-  if(typeof originalValue !== "undefined"){
+  if(originalValue !== null && typeof originalValue !== "undefined"){
       return originalValue;
   }
 };
