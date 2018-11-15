@@ -1,7 +1,6 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const {findExistingProfileOrThrowException} = require("./helper/profileHelper");
-const { getNewAddressFromArgs, throwExceptionIfProvinceDoesNotBelongToCountry,
-        throwExceptionIfCountryIsDefinedButNotProvince} = require("./helper/addressHelper");
+const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 
 function createProfile(_, args, context, info){
     var createProfileData = {
@@ -45,36 +44,6 @@ function createProfile(_, args, context, info){
     return context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
-}
-
-function updateExistingAddress(args){
-    var updateAddressData = {
-        streetAddress: copyValueToObjectIfDefined(args.address.streetAddress),
-        city: copyValueToObjectIfDefined(args.address.city),
-        postalCode: copyValueToObjectIfDefined(args.address.postalCode)
-    };
-    if (typeof args.address.country !== "undefined"){
-        var selectedCountry = args.address.country.value;
-        throwExceptionIfCountryIsDefinedButNotProvince(selectedCountry, args.address.province);
-        throwExceptionIfProvinceDoesNotBelongToCountry(selectedCountry, args.address.province);
-        updateAddressData.country = selectedCountry;
-        updateAddressData.province = args.address.province;
-    }
-    return { update: updateAddressData };
-}
-
-
-function updateOrCreateAddressOnProfile(args, profile){
-    if(typeof args.address === "undefined"){
-        return;
-    }
-    if (profile.address.id !== null){
-        return updateExistingAddress(args);
-    }
-    var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null) {
-        return { create:newAddress };
-    }
 }
 
 async function modifyProfile(_, args, context, info){
