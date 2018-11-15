@@ -47,7 +47,7 @@ function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
-    const currentProfile = await findExistingProfileOrThrowException(context, args.gcId);
+    const currentProfile = findExistingProfileOrThrowException(context, args.gcId);
     var updateProfileData = {
         name: args.name,
         email: args.email,
