@@ -52,9 +52,7 @@ function getNewAddressFromArgs(args) {
 }
 
 function createProfile(_, args, context, info){
-    var createProfileData = {};
-
-    createProfileData = {
+    var createProfileData = {
         gcId: args.gcId,
         name: args.name,
         email: args.email,
@@ -67,16 +65,13 @@ function createProfile(_, args, context, info){
     
     var newAddress = getNewAddressFromArgs(args);
     if(newAddress != null) {
-        createProfileData.address ={create:newAddress};
+        createProfileData.address = {create:newAddress};
     }
     if (typeof args.supervisor !== "undefined") {
-        var createSupervisorData = {};
-        if (typeof args.supervisor.gcId !== "undefined"){
-            createSupervisorData.push({gcId: args.supervisor.gcId});
-        }
-        if (typeof args.supervisor.email !== "undefined"){
-            createSupervisorData.push({email: args.supervisor.email});
-        }
+        var createSupervisorData = {
+            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            email: copyValueToObjectIfDefined(args.supervisor.email)
+        };
         createProfileData.push({
             supervisor: {
                 connect: {
