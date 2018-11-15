@@ -2,16 +2,22 @@ const countries = require("countryjs");
 const {validateRequiredField} = require("./objectHelper");
 
 const throwExceptionIfProvinceDoesNotBelongToCountry = (country, province) =>{
-  var states = countries.states(country);
-  if(states && states.length > 0) {
-      var upperCaseStates = states.map(function(x) {
-                                          return x.toUpperCase();
-                                      });
-      var index = upperCaseStates.indexOf(province.toUpperCase());
-      if(index === -1) {
-          throw new Error("invalid province for selected country");
-      }
-  }
+    var states = countries.states(country);
+    if(states && states.length > 0) {
+        var upperCaseStates = states.map(function(x) {
+                                            return x.toUpperCase();
+                                        });
+        var index = upperCaseStates.indexOf(province.toUpperCase());
+        if(index === -1) {
+            throw new Error("invalid province for selected country");
+        }
+    }
+};
+
+const throwExceptionIfCountryIsDefinedButNotProvince = (country, province) =>{
+    if(typeof country !== "undefined" && typeof province === "undefined"){
+        throw new Error("Province field is mandatory");
+    }
 };
 
 const getNewAddressFromArgs = (args) =>{
@@ -41,5 +47,6 @@ const getNewAddressFromArgs = (args) =>{
 
 module.exports ={
   throwExceptionIfProvinceDoesNotBelongToCountry,
+  throwExceptionIfCountryIsDefinedButNotProvince,
   getNewAddressFromArgs
 };

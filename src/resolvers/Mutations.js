@@ -1,6 +1,7 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const {findExistingProfileOrThrowException} = require("./helper/profileHelper");
-const {getNewAddressFromArgs, throwExceptionIfProvinceDoesNotBelongToCountry} = require("./helper/addressHelper");
+const { getNewAddressFromArgs, throwExceptionIfProvinceDoesNotBelongToCountry,
+        throwExceptionIfCountryIsDefinedButNotProvince} = require("./helper/addressHelper");
 
 function createProfile(_, args, context, info){
     var createProfileData = {
@@ -36,7 +37,7 @@ function createProfile(_, args, context, info){
         createProfileData.push({
             org :{
                 connect: {
-                    id: args.org.id,
+                    id: args.org.id
                 },
             },
         });
@@ -44,6 +45,36 @@ function createProfile(_, args, context, info){
     return context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
+}
+
+function updateExistingAddress(args){
+    var updateAddressData = {
+        streetAddress: copyValueToObjectIfDefined(args.address.streetAddress),
+        city: copyValueToObjectIfDefined(args.address.city),
+        postalCode: copyValueToObjectIfDefined(args.address.postalCode)
+    };
+    if (typeof args.address.country !== "undefined"){
+        var selectedCountry = args.address.country.value;
+        throwExceptionIfCountryIsDefinedButNotProvince(selectedCountry, args.address.province);
+        throwExceptionIfProvinceDoesNotBelongToCountry(selectedCountry, args.address.province);
+        updateAddressData.country = selectedCountry;
+        updateAddressData.province = args.address.province;
+    }
+    return { update: updateAddressData };
+}
+
+
+function updateOrCreateAddressOnProfile(args, profile){
+    if(typeof args.address === "undefined"){
+        return;
+    }
+    if (profile.address.id !== null){
+        return updateExistingAddress(args);
+    }
+    var newAddress = getNewAddressFromArgs(args);
+    if(newAddress != null) {
+        return { create:newAddress };
+    }
 }
 
 async function modifyProfile(_, args, context, info){
@@ -57,32 +88,12 @@ async function modifyProfile(_, args, context, info){
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr),
     };
-
-    if (typeof args.address !== "undefined") {
-        if (currentProfile.address.id !== null){
-            var updateAddressData = {
-                streetAddress: copyValueToObjectIfDefined(args.address.streetAddress),
-                city: copyValueToObjectIfDefined(args.address.city),
-                postalCode: copyValueToObjectIfDefined(args.address.postalCode)
-            };
-            if (typeof args.address.country !== "undefined"){
-                updateAddressData.country = args.address.country.value;
-                if (typeof args.address.province !== "undefined") {
-                    throwExceptionIfProvinceDoesNotBelongToCountry(updateAddressData.country, args.address.province);
-                    updateAddressData.province = args.address.province;
-                }
-            }
-            updateProfileData.address = {
-                update: updateAddressData  
-            };
-        } else {
-            var newAddress = getNewAddressFromArgs(args);
-            if(newAddress != null) {
-                updateProfileData.address ={create:newAddress};
-            }
-        }  
-    }  
     
+    var address = updateOrCreateAddressOnProfile(args, currentProfile);
+    if(address != null){
+        updateProfileData.address = address;
+    }
+       
     if (typeof args.supervisor !== "undefined") {
         var updateSupervisorData = {
             gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
