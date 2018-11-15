@@ -5,8 +5,8 @@ const countries = require("countryjs");
 
 exports.Country = new GraphQLScalarType({
     name : "Country",
-    serialize:(value) => value,
-    parseValue:(value) => value,
+    serialize:(value) =>value,
+    parseValue:(value) =>value,
     parseLiteral(ast) {
         var country = ast.value;
         var result = countries.info(country);
@@ -20,8 +20,8 @@ exports.Country = new GraphQLScalarType({
 
 exports.Province = new GraphQLScalarType({
     name : "Province",
-    serialize:(value) => value,
-    parseValue:(value) => value,
+    serialize:(value) =>value,
+    parseValue:(value) =>value,
     parseLiteral(ast) {
         return ast;
     }
