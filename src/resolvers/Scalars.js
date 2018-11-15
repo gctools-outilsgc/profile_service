@@ -10,10 +10,11 @@ exports.Country = new GraphQLScalarType({
     parseLiteral(ast) {
         var country = ast.value;
         var result = countries.info(country);
-        if(result)
+        if(result){
             return ast;
-        else
+        } else{
             throw new Error("Invalid country name.");
+        }
     }
 });
 

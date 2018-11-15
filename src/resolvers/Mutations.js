@@ -3,16 +3,18 @@ const countries = require("countryjs");
 function getNewAddressFromArgs(args) {
     if (typeof args.address !== "undefined") {
         var requiredVariablesError = [];
-        if (args.address.streetAddress == null) 
+        if (args.address.streetAddress == null) {
             requiredVariablesError.push("streetAddress is not defined and is a required field");
-        if (args.address.city == null) 
+        }
+        if (args.address.city == null) {
             requiredVariablesError.push("city is not defined and is a required field");
-        if (args.address.country == null) 
+        }
+        if (args.address.country == null) {
             requiredVariablesError.push("country is not defined and is a required field");
-        else 
-            if (args.address.province == null) 
+        } else {
+            if (args.address.province == null) {
                 requiredVariablesError.push("province is not defined and is a required field");
-            else {
+            } else {
                 var selectedCountry = args.address.country.value;
                 var states = countries.states(selectedCountry);
                 if(states && states.length > 0) {
@@ -21,14 +23,18 @@ function getNewAddressFromArgs(args) {
                                                         return x.toUpperCase();
                                                     });
                     var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
-                    if(index === -1) 
+                    if(index === -1) {
                         requiredVariablesError.push("invalid province for selected country");
+                    }
                 }
             }
-        if (args.address.postalCode == null) 
+        }
+        if (args.address.postalCode == null) {
             requiredVariablesError.push("postalCode is not defined and is a required field");
-        if (requiredVariablesError.length > 0) 
+        }
+        if (requiredVariablesError.length > 0) {
             throw new Error(requiredVariablesError);
+        }
         //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
         var country = args.address.country;
         args.address.country = country.value;
@@ -46,28 +52,33 @@ function createProfile(_, args, context, info){
         email: args.email,
     };
 
-    if (typeof args.avatar !== "undefined")
+    if (typeof args.avatar !== "undefined") {
         createProfileData.avatar= args.avatar;
-    if (typeof args.mobilePhone !== "undefined")
+    }
+    if (typeof args.mobilePhone !== "undefined"){
         createProfileData.mobilePhone = args.mobilePhone;
-    if (typeof args.officePhone !== "undefined")
+    }
+    if (typeof args.officePhone !== "undefined"){
         createProfileData.officePhone = args.officePhone;
-    if (typeof args.titleEn !== "undefined")
+    }
+    if (typeof args.titleEn !== "undefined"){
         createProfileData.titleEn = args.titleEn;
-    if (typeof args.titleFr !== "undefined")
+    }
+    if (typeof args.titleFr !== "undefined"){
         createProfileData.titleFr = args.titleFr;
-
+    }
     var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null) 
+    if(newAddress != null) {
         createProfileData.address ={create:newAddress};
-    
+    }
     if (typeof args.supervisor !== "undefined") {
         var createSupervisorData = {};
-        if (typeof args.supervisor.gcId !== "undefined")
+        if (typeof args.supervisor.gcId !== "undefined"){
             createSupervisorData.push({gcId: args.supervisor.gcId});
-        if (typeof args.supervisor.email !== "undefined")
+        }
+        if (typeof args.supervisor.email !== "undefined"){
             createSupervisorData.push({email: args.supervisor.email});
-
+        }
         createProfileData.push({
             supervisor: {
                 connect: {
@@ -77,7 +88,7 @@ function createProfile(_, args, context, info){
         });
     }
 
-    if (typeof args.org !== "undefined")
+    if (typeof args.org !== "undefined"){
         createProfileData.push({
             org :{
                 connect: {
@@ -85,7 +96,7 @@ function createProfile(_, args, context, info){
                 },
             },
         });
-
+    }
     return context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
@@ -102,28 +113,38 @@ async function modifyProfile(_, args, context, info){
             }            
         });
 
-    if (typeof currentProfile === "undefined")
+    if (typeof currentProfile === "undefined"){
         throw new Error("Could not find profile with gcId ${args.gcId}");
-    if (typeof args.name !== "undefined") 
+    }
+    if (typeof args.name !== "undefined") {
         updateProfileData.name = args.name;
-    if (typeof args.email !== "undefined")
+    }
+    if (typeof args.email !== "undefined"){
         updateProfileData.email = args.email;
-    if (typeof args.avatar !== "undefined")
+    }
+    if (typeof args.avatar !== "undefined"){
         updateProfileData.avatar= args.avatar;
-    if (typeof args.mobilePhone !== "undefined")
+    }
+    if (typeof args.mobilePhone !== "undefined"){
         updateProfileData.mobilePhone = args.mobilePhone;
-    if (typeof args.officePhone !== "undefined")
+    }
+    if (typeof args.officePhone !== "undefined"){
         updateProfileData.officePhone = args.officePhone;
-    if (typeof args.titleEn !== "undefined")
+    }
+    if (typeof args.titleEn !== "undefined"){
         updateProfileData.titleEn = args.titleEn;
-    if (typeof args.titleFr !== "undefined")
+    }
+    if (typeof args.titleFr !== "undefined"){
         updateProfileData.titleFr = args.titleFr;
-    if (typeof args.address !== "undefined") 
+    }
+    if (typeof args.address !== "undefined") {
         if (currentProfile.address.id !== null){
-            if (typeof args.address.streetAddress !== "undefined")
+            if (typeof args.address.streetAddress !== "undefined"){
                 updateAddressData.streetAddress = args.address.streetAddress;
-            if (typeof args.address.city !== "undefined")
+            }
+            if (typeof args.address.city !== "undefined"){
                 updateAddressData.city = args.address.city;
+            }
             if (typeof args.address.country !== "undefined"){
                 updateAddressData.country = args.address.country;
                 if (typeof args.address.province !== "undefined") {
@@ -135,29 +156,33 @@ async function modifyProfile(_, args, context, info){
                                                          return x.toUpperCase();
                                                         });
                         var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
-                        if(index === -1) 
+                        if(index === -1) {
                             throw new Error("invalid province for selected country");
+                        }
                     }
                     updateAddressData.province = args.address.province;
                 }
             }
-            if (typeof args.address.postalCode !== "undefined")
+            if (typeof args.address.postalCode !== "undefined"){
                 updateAddressData.postalCode = args.address.postalCode;
-            
+            }
             updateProfileData.address = {
                 update: updateAddressData  
             };
         } else {
             var newAddress = getNewAddressFromArgs(args);
-            if(newAddress != null) 
+            if(newAddress != null) {
                 updateProfileData.address ={create:newAddress};
-        }        
+            }
+        }  
+    }      
     if (typeof args.supervisor !== "undefined"){
-        if (typeof args.supervisor.gcId !== "undefined")
+        if (typeof args.supervisor.gcId !== "undefined"){
             updateSupervisorData.push({gcId: args.supervisor.gcId});
-        if (typeof args.supervisor.email !== "undefined")
+        }
+        if (typeof args.supervisor.email !== "undefined"){
             updateSupervisorData.push({email: args.supervisor.email});
-
+        }
         updateProfileData.push({
             supervisor: {
                 connect: {
@@ -167,7 +192,7 @@ async function modifyProfile(_, args, context, info){
         });
     }
 
-    if (typeof args.org !== "undefined")
+    if (typeof args.org !== "undefined"){
         updateProfileData.push({
             org :{
                 connect: {
@@ -175,6 +200,7 @@ async function modifyProfile(_, args, context, info){
                 }
             }
         });
+    }
     return await context.prisma.mutation.updateProfile({
         where:{
         gcId: args.gcId
