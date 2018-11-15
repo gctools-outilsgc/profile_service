@@ -1,5 +1,32 @@
 const countries = require("countryjs");
 
+function copyValueToObjectIfDefined(originalValue){
+    if(typeof originalValue !== "undefined"){
+        return originalValue;
+    }
+    return null;
+}
+
+// function updateObjectValueIfExist(newValue, actualValue){
+//     if(typeof newValue !== "undefined"){
+//         return newValue;
+//     }
+//     return actualValue;
+// }
+
+function throwExceptionIfProvinceDoesNotBelongToCountry(country, province){
+    var states = countries.states(country);
+    if(states && states.length > 0) {
+        var upperCaseStates = states.map(function(x) {
+                                            return x.toUpperCase();
+                                        });
+        var index = upperCaseStates.indexOf(province.toUpperCase());
+        if(index === -1) {
+            throw new Error("invalid province for selected country");
+        }
+    }
+}
+
 function getNewAddressFromArgs(args) {
     if (typeof args.address !== "undefined") {
         var requiredVariablesError = [];
@@ -16,17 +43,8 @@ function getNewAddressFromArgs(args) {
                 requiredVariablesError.push("province is not defined and is a required field");
             } else {
                 var selectedCountry = args.address.country.value;
-                var states = countries.states(selectedCountry);
-                if(states && states.length > 0) {
-                    var selectedProvince = args.address.province;
-                    var upperCaseStates = states.map(function(x){ 
-                                                        return x.toUpperCase();
-                                                    });
-                    var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
-                    if(index === -1) {
-                        requiredVariablesError.push("invalid province for selected country");
-                    }
-                }
+                args.address.country = selectedCountry;
+                throwExceptionIfProvinceDoesNotBelongToCountry(selectedCountry, args.address.province);
             }
         }
         if (args.address.postalCode == null) {
@@ -35,9 +53,6 @@ function getNewAddressFromArgs(args) {
         if (requiredVariablesError.length > 0) {
             throw new Error(requiredVariablesError);
         }
-        //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
-        var country = args.address.country;
-        args.address.country = country.value;
         return args.address;
     }
     return null;
@@ -113,7 +128,7 @@ async function modifyProfile(_, args, context, info){
             }            
         });
 
-    if (typeof currentProfile === "undefined"){
+    if (currentProfile === null || typeof currentProfile === "undefined"){
         throw new Error("Could not find profile with gcId ${args.gcId}");
     }
     if (typeof args.name !== "undefined") {
@@ -146,20 +161,9 @@ async function modifyProfile(_, args, context, info){
                 updateAddressData.city = args.address.city;
             }
             if (typeof args.address.country !== "undefined"){
-                updateAddressData.country = args.address.country;
+                updateAddressData.country = args.address.country.value;
                 if (typeof args.address.province !== "undefined") {
-                    var selectedCountry = args.address.country.value;
-                    var states = countries.states(selectedCountry);
-                    if(states && states.length > 0) {
-                        var selectedProvince = args.address.province;
-                        var upperCaseStates = states.map(function(x) {
-                                                         return x.toUpperCase();
-                                                        });
-                        var index = upperCaseStates.indexOf(selectedProvince.toUpperCase());
-                        if(index === -1) {
-                            throw new Error("invalid province for selected country");
-                        }
-                    }
+                    throwExceptionIfProvinceDoesNotBelongToCountry(updateAddressData.country, args.address.province);
                     updateAddressData.province = args.address.province;
                 }
             }
