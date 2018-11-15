@@ -27,35 +27,36 @@ function throwExceptionIfProvinceDoesNotBelongToCountry(country, province){
     }
 }
 
-function getNewAddressFromArgs(args) {
-    if (typeof args.address !== "undefined") {
-        var requiredVariablesError = [];
-        if (args.address.streetAddress == null) {
-            requiredVariablesError.push("streetAddress is not defined and is a required field");
-        }
-        if (args.address.city == null) {
-            requiredVariablesError.push("city is not defined and is a required field");
-        }
-        if (args.address.country == null) {
-            requiredVariablesError.push("country is not defined and is a required field");
-        } else {
-            if (args.address.province == null) {
-                requiredVariablesError.push("province is not defined and is a required field");
-            } else {
-                var selectedCountry = args.address.country.value;
-                args.address.country = selectedCountry;
-                throwExceptionIfProvinceDoesNotBelongToCountry(selectedCountry, args.address.province);
-            }
-        }
-        if (args.address.postalCode == null) {
-            requiredVariablesError.push("postalCode is not defined and is a required field");
-        }
-        if (requiredVariablesError.length > 0) {
-            throw new Error(requiredVariablesError);
-        }
-        return args.address;
+function validateRequiredField(args, property){
+    let value = args[property];
+    if(args[property] === null || typeof value === "undefined"){
+        return `${property} is not defined and is a required field`;
     }
-    return null;
+}
+
+function getNewAddressFromArgs(args) {
+    if (typeof args.address === "undefined") {
+        return null;
+    }
+
+    var errors = [
+        validateRequiredField(args.address, "streetAddress"),
+        validateRequiredField(args.address, "city"),
+        validateRequiredField(args.address, "postalCode"),
+        validateRequiredField(args.address, "country"),
+        validateRequiredField(args.address, "province"),
+    ];
+    errors = errors.filter(function (el) {
+        return el !== null;
+      });
+    if (errors.length > 0) {
+        throw new Error(errors);
+    }
+
+    var selectedCountry = args.address.country.value;
+    args.address.country = selectedCountry;
+    throwExceptionIfProvinceDoesNotBelongToCountry(selectedCountry, args.address.province);
+    return args.address;
 }
 
 function createProfile(_, args, context, info){
