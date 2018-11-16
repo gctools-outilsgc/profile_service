@@ -4,6 +4,13 @@ profile_service
 This app/solution can be run in 2 different environments
 
 ## Development
+### Graphics magick
+This tool is used to convert the picture once uploaded on the server. The picture size is reduce to `300x300` and converted to `.jpg` format. There's a need to install the version locally so the conversion can work. To do so run the following commands:
+
+* `sudo apt-get update`
+* `sudo apt-get install graphicsmagick`
+
+### Application
 To setup this application in development run the following commands:
 
 * `sudo docker-compose -f docker-compose-dev.yml up`

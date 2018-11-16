@@ -2,18 +2,18 @@ const shortid = require('shortid');
 const fs = require('fs');
 const request = require('request');
 const gm = require('gm');
+const config = require('../config');
 
 const uploadDir = '/convert';
 const fullUploadDir = __dirname + uploadDir;
 
 const convertPicture = async ({ stream, filename }) => {
-  const extension = "jpg";
   const id = shortid.generate()
-  const destinationPath = `${fullUploadDir}/${filename}-${id}.${extension}`
+  const destinationPath = `${fullUploadDir}/${filename}-${id}.${config.gm.image_format}`
   return new Promise((resolve, reject) =>
     gm(stream)
-      .setFormat(`${extension}`)
-      .resize(300,300)
+      .setFormat(`${config.gm.image_format}`)
+      .resize(config.gm.image_width,config.gm.image_height)
       .write(destinationPath, error =>
         {
           if(error)
@@ -31,7 +31,7 @@ const postImage = ({path}) => {
    return new Promise((resolve, reject) => {
     var req = request({
       headers: {'Content-Type' : 'image/jpeg'},
-      url:     `http://localhost:8007/backend.php`,
+      url:     config.imageserver.url,
       method: "POST"
     }, function optionalCallback (err, httpResponse, body) {
       if (err) {
