@@ -47,6 +47,7 @@ function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
+    // eslint-disable-next-line new-cap
     const currentProfile = await context.prisma.Profile(
         {
             where: {

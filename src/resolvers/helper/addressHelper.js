@@ -1,7 +1,7 @@
 const countries = require("countryjs");
 const {validateRequiredField, copyValueToObjectIfDefined} = require("./objectHelper");
 
-const throwExceptionIfProvinceDoesNotBelongToCountry = (country, province) =>{
+const throwExceptionIfProvinceDoesNotBelongToCountry = (country, province) => {
     var states = countries.states(country);
     if(states && states.length > 0) {
         var upperCaseStates = states.map(function(x) {
@@ -14,13 +14,13 @@ const throwExceptionIfProvinceDoesNotBelongToCountry = (country, province) =>{
     }
 };
 
-const throwExceptionIfCountryIsDefinedButNotProvince = (country, province) =>{
+const throwExceptionIfCountryIsDefinedButNotProvince = (country, province) => {
     if(typeof country !== "undefined" && typeof province === "undefined"){
         throw new Error("Province field is mandatory");
     }
 };
 
-const getNewAddressFromArgs = (args) =>{
+const getNewAddressFromArgs = (args) => {
   if (typeof args.address === "undefined") {
       return null;
   }

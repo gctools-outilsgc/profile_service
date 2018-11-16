@@ -21,7 +21,7 @@ const server = new GraphQLServer({
   resolverValidationOptions: {
     requireResolversForResolveType: false 
   },
-  context: (req) =>({
+  context: (req) => ({
     ...req,
     prisma: new Prisma({
       typeDefs: "./src/generated/prisma.graphql",
@@ -36,4 +36,5 @@ const options = {
   subscriptions: "/subscriptions",
   playground: "/playground",
 };
-server.start(options,() =>console.log("GraphQL server is running on http://localhost:4000"));
+// eslint-disable-next-line no-console
+server.start(options,() => console.log("GraphQL server is running on http://localhost:4000"));

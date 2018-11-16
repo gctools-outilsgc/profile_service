@@ -6,6 +6,7 @@ if (config.app.multicore){
   if (cluster.isMaster) {
     const cpus = os.cpus().length;
 
+    // eslint-disable-next-line no-console
     console.log(`Forking for ${cpus} CPUs`);
     for (let i = 0; i<cpus; i++) {
       cluster.fork();
