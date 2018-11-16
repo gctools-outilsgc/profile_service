@@ -63,15 +63,14 @@ function updateExistingAddress(args){
 
 
 function updateOrCreateAddressOnProfile(args, profile){
-    if(typeof args.address === "undefined"){
-        return;
-    }
-    if (profile.address.id !== null){
-        return updateExistingAddress(args);
-    }
-    var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null) {
-        return { create:newAddress };
+    if(typeof args.address !== "undefined"){
+        if (profile.address.id !== null){
+            return updateExistingAddress(args);
+        }
+        var newAddress = getNewAddressFromArgs(args);
+        if(newAddress != null) {
+            return { create:newAddress };
+        }
     }
 }
 
