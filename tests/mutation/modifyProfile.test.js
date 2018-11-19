@@ -62,8 +62,10 @@ describe("Modify existing profile", () =>{
 
 function contextWithExistingProfile() {
     return {prisma:{
-        Profile(){
-            return {};
+        query:{
+            profiles(){
+                return {};
+            },
         },
         mutation:{
             updateProfile(){
@@ -77,17 +79,21 @@ function contextWithExistingProfile() {
 
 function contextWithProfileNUll() {
     return {prisma:{
-        Profile(){
-            return null;
-        }
+        query:{
+            profiles(){
+                return null;
+            },
+        },
     }};
 }
 
 function contextWithProfileUndefined() {
     return {prisma:{
-        Profile(){
-            return undefined;
-        }
+        query:{
+            profiles(){
+                return undefined;
+            },
+        },
     }};
 }
 

@@ -39,8 +39,10 @@ describe("Modify existing profile with an existing actual address", () =>{
 
 function contextWithExistingProfile() {
     return {prisma:{
-        Profile(){
-            return {address:{id:{}}};
+        query:{
+            profiles(){
+                return {address:{id:null}};
+            },
         },
         mutation:{
             updateProfile(data){
