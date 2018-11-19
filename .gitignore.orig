@@ -32,8 +32,14 @@ node_modules
 
 \.env
 
+<<<<<<< HEAD
+\.idea/
+
+test-report\.html
+=======
 test-report\.html
 
 \.idea/
 
 tests/pictureconversion/folder/
+>>>>>>> profile_service_avatarupload

@@ -1,13 +1,23 @@
+<<<<<<< HEAD
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const {processAvatar, throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
+const {throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
+=======
+const countries = require('countryjs')
+const processUpload = require('./File-Upload')
+
+
+function createProfile(_, args, context, info){
+    var createProfileData = {}
+>>>>>>> profile_service_avatarupload
 
 function createProfile(_, args, context, info){
     var createProfileData = {
         gcId: args.gcId,
         name: args.name,
         email: args.email,
-        avatar: processAvatar(args.avatar),
+<<<<<<< HEAD
+        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
@@ -23,6 +33,42 @@ function createProfile(_, args, context, info){
             gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
             email: copyValueToObjectIfDefined(args.supervisor.email)
         };
+=======
+    }
+
+    if (args.avatar !== undefined){
+        processUpload(args.avatar).then(({url})=>
+        {
+            createProfileData.avatar= url;
+        })
+    }
+    if (args.mobilePhone !== undefined){
+        createProfileData.mobilePhone = args.mobilePhone
+    }
+    if (args.officePhone !== undefined){
+        createProfileData.officePhone = args.officePhone
+    }
+    if (args.titleEn !== undefined){
+        createProfileData.titleEn = args.titleEn
+    }
+    if (args.titleFr !== undefined){
+        createProfileData.titleFr = args.titleFr
+    }
+
+    var newAddress = getNewAddressFromArgs(args);
+    if(newAddress != null)
+    {
+        createProfileData.address ={create:newAddress}
+    }
+
+    if (args.supervisor !== undefined){
+        if (args.supervisor.gcId !== undefined){
+            createSupervisorData.push({gcId: args.supervisor.gcId})
+        }
+        if (args.supervisor.email !== undefined){
+            createSupervisorData.push({email: args.supervisor.email})
+        }
+>>>>>>> profile_service_avatarupload
         createProfileData.push({
             supervisor: {
                 connect: {

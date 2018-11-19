@@ -1,5 +1,30 @@
 version: '3'
 services:
+  web:
+    build: .
+    environment:
+      - DEBUG=True
+      - ALLOWED_HOST=*
+      - SECRET_KEY=AFGcl457890liknoKpQOm42jwh
+      - DB_HOST=postgres
+      - DB_USER=prisma
+      - DB_PASSWORD=prisma
+      - OIDC_USERINFO_ENDPOINT=https://dev.account.gccollab.ca/openid/userinfo
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+      - image
+  image:
+    build: ./image-server
+    volumes:
+      - ./volumes/upload:/usr/share/nginx/html/upload
+    environment:
+      - TITLE=Meerkat-Image-Server
+      - DOMAIN=https://avatar.gccollab.ca
+      - LOWPROFILE=True
+    ports:
+    - "8007:80"
   yoga:
     build: ./
     image: profile-yoga

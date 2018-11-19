@@ -10,8 +10,18 @@ const development = {
  prisma: {
      host:"localhost",
      debug: true
+ },
+ gm: {
+  // eslint-disable-next-line camelcase
+  image_width:300,
+  // eslint-disable-next-line camelcase
+  image_height:300,
+  // eslint-disable-next-line camelcase
+  image_format:"jpg"
+ },
+ imageserver:{
+   url:"http://localhost:8007/backend.php"
  }
-
 };
 
 const production = {
@@ -22,6 +32,17 @@ const production = {
  prisma: {
      host: "prisma",
      debug: false
+ },
+ gm: {
+  // eslint-disable-next-line camelcase
+  image_width:300,
+  // eslint-disable-next-line camelcase
+  image_height:300,
+  // eslint-disable-next-line camelcase
+  image_format:"jpg"
+ },
+ imageserver:{
+  url:"http://localhost:8007/backend.php"
  }
 };
 
