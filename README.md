@@ -83,3 +83,7 @@ The country must be a two letter ISO code. See [ISO 3166-1](https://en.wikipedia
 
 * The **province/state** must be part of the country. If not, it will be considered as an invalid selection.
 * For the case where the no **provinces/state** are available in the data, only a value is required.
+
+## Postgres container update
+
+To migrate the database to a more recent version of `Postgres`, follow the steps [here](DBMIGRATION.md)
