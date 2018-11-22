@@ -124,7 +124,7 @@ async function modifyProfile(_, args, context, info){
             where: {
                 gcId: args.gcId
             }            
-        })
+        });
 
     if (currentProfile == null | undefined){
         throw new Error('Could not find profile with gcId ${args.gcId}')
@@ -247,8 +247,10 @@ function createOrganization(_, args, context, info){
 }
 
 function modifyOrganization(_, args, context, info){
+};
+
     
-}
+
 
 function createOrgTier(_, args, context, info){
     return context.prisma.mutation.createOrgTier({
@@ -261,7 +263,57 @@ function createOrgTier(_, args, context, info){
 }
 
 function modifyOrgTier(_, args, context, info){
+    var modifyOrgTierInfo = {};
+    var modifyOrgTierOwner = {};
+    var modifyOrgTierOrganization = {};
 
+    const currentOrgTier = await context.prisma.OrgTier(
+        {
+            where: {
+                ID: args.ID
+            }            
+        });
+
+    if (currentOrgTier == null | undefined){
+            throw new Error('Could not find OrgTier with ID ${args.ID}')
+    };
+
+    if (args.nameEn !== undefined){
+        modifyOrgInfo.nameEn = args.nameEn;
+    }
+
+    if (args.nameFr !== undefined){
+        modifyOrgInfo.nameFr = args.nameFr;
+    }
+
+    if (args.owner !== undefined){
+        if (args.owner.gcId !== undefined){
+            modifyOrgTierOwner.push({gcId: args.owner.gcId})
+        };
+        if (args.owner.email !== undefined){
+            modifyOrgTierOwner.push({email: args.owner.email})
+        };
+        modifyOrgTierInfo.push({
+            ownerID:{
+                connect:{
+                    modifyOrgTierOwner
+                }
+            }
+        });
+    }
+
+    if (args.organization !== undefined){
+        if(args.organization.id !== undefined){
+            modifyOrgTierOrganization.push({id: args.organization.id})
+        }
+        modifyOrgTierInfo.push({
+            organization:{
+                connect:{
+                    modifyOrgTierOrganization
+                }
+            }
+        });
+    };
 }
 
 module.exports = {
@@ -269,5 +321,7 @@ module.exports = {
     modifyProfile,
     deleteProfile,
     createOrganization,
-    createOrgTier
+    createOrgTier,
+    modifyOrgTier,
+
 }

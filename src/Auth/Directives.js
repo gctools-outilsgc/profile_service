@@ -24,8 +24,11 @@ class OwnerDirective extends SchemaDirectiveVisitor{
     const { resolve = defaultFieldResolver } = field;
     field.resolve = async function(...args) {
       const [, requestQuery, ctx] = args;
-      const [, subject] = await Promise.all([account.getTokenInfo(ctx), getSubject(requestQuery)]);
-      if(subject.gcId == ctx.token.sub){
+      //const [, gcId] = await Promise.all([account.getTokenInfo(ctx), getOwner(requestQuery)]);
+      // Get the owner of the object and verify if the access token owner is the same.
+      await account.getTokenInfo(ctx);
+      await getOwner(requestQuery);
+      if(gcId == ctx.token.sub){
         const result = await resolve.apply(this, args);
         return result;      
       } else {
@@ -36,10 +39,13 @@ class OwnerDirective extends SchemaDirectiveVisitor{
   }
 }
 
-function getSubject(query){
+function getOwner(query){
+  // Get the gcId either trough the query or by using the ID on the query and finding the user with Prisma.
   try{
-    if(query['ID'] || query['gcId']){
-      return {id:query['ID'], gcId:query['gcId']};
+    if(query['gcId']){
+      return query['gcId'];
+    } else {
+      checkPrisma
     }
   } catch(e){
       console.error('The @isOwner directive should only be used on resolvers that have a gcId or ID requirement');

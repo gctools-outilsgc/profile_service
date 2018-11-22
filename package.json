@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/cluster.js",
     "dev": "node src/index.js",
-    "test": "jest"
+    "test": "nyc jest"
   },
   "dependencies": {
     "@okgrow/graphql-scalars": "^0.4.2",
