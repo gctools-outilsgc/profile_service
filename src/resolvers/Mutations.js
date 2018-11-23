@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const {processAvatar, throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 
 function createProfile(_, args, context, info){
@@ -7,7 +7,7 @@ function createProfile(_, args, context, info){
         gcId: args.gcId,
         name: args.name,
         email: args.email,
-        avatar: processAvatar(args.avatar),
+        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
