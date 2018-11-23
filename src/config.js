@@ -10,6 +10,11 @@ const development = {
  prisma: {
      host:'localhost',
      debug: true
+ },
+ image:{
+   url:"http://image/backend.php",
+   format:"jpg",
+   size:300
  }
 };
 
@@ -21,7 +26,12 @@ const production = {
  prisma: {
      host: 'prisma',
      debug: false
- }
+ },
+ image:{
+  url:"http://image/backend.php",
+  format:"jpg",
+  size:300
+}
 };
 
 const config = {
