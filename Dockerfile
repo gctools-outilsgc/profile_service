@@ -3,11 +3,7 @@ FROM node:8
 # Create app directory
 WORKDIR /usr/src/app
 
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-  graphicsmagick=1.3.28 \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
