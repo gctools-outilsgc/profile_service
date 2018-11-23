@@ -13,7 +13,7 @@ const development = {
  },
  image:{
    url:"http://image/backend.php",
-   format:"jpg",
+   format:"jpeg",
    size:300
  }
 };
@@ -29,7 +29,7 @@ const production = {
  },
  image:{
   url:"http://image/backend.php",
-  format:"jpg",
+  format:"jpeg",
   size:300
 }
 };

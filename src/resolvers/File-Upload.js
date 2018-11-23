@@ -2,6 +2,7 @@ const shortid = require("shortid");
 const fs = require("fs");
 const request = require("request");
 const sharp = require("sharp");
+const config = require("../config")
 
 const uploadDir = '/convert';
 const fullUploadDir = __dirname + uploadDir;
@@ -12,7 +13,7 @@ const convertPicture = async ({ stream, filename }) => {
 
   return new Promise((resolve, reject) => {
    
-    sharp(stream).resize(300).jpeg()
+    sharp(stream).resize(config.image.size).toFormat(config.image.format)
     .toFile(destinationPath)
     .then(() => resolve( {path: destinationPath} ))
     .catch((errors) => reject(errors));
@@ -23,7 +24,7 @@ const postImage = ({path}) => {
    return new Promise((resolve, reject) => {
     var req = request({
       headers: {"Content-Type" : "image/jpeg"},
-      url:     "http://localhost:8007/backend.php",
+      url:     config.image.url,
       method: "POST"
     }, function optionalCallback (err, httpResponse, body) {
       if (err) {
