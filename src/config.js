@@ -20,7 +20,7 @@ const development = {
   image_format:"jpg"
  },
  imageserver:{
-   url:"http://localhost:8007/backend.php"
+   url:"http://image/backend.php"
  }
 };
 
@@ -42,7 +42,7 @@ const production = {
   image_format:"jpg"
  },
  imageserver:{
-  url:"http://localhost:8007/backend.php"
+  url:"http://image/backend.php"
  }
 };
 
