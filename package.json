@@ -15,7 +15,6 @@
     "dotenv": "^6.0.0",
     "express-jwt": "^5.3.1",
     "form-data": "^2.3.3",
-    "gm": "^1.23.1",
     "graphql-cli": "^2.16.7",
     "graphql-tools": "^3.1.1",
     "graphql-yoga": "^1.16.2",
@@ -23,6 +22,7 @@
     "prisma": "^1.16.4",
     "prisma-binding": "^2.1.5",
     "request": "^2.88.0",
+    "sharp": "^0.21.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",

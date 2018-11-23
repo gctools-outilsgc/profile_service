@@ -52,5 +52,7 @@ services:
       POSTGRES_PASSWORD: prisma
     volumes:
       - postgres:/var/lib/postgresql/data
+  libvips:
+    image: marcbachmann/libvips
 volumes:
   postgres:

@@ -1,37 +1,29 @@
-const shortid = require('shortid');
-const fs = require('fs');
-const request = require('request');
-const gm = require('gm');
-const config = require('../config');
+const shortid = require("shortid");
+const fs = require("fs");
+const request = require("request");
+const sharp = require("sharp");
 
 const uploadDir = '/convert';
 const fullUploadDir = __dirname + uploadDir;
 
 const convertPicture = async ({ stream, filename }) => {
-  const id = shortid.generate()
-  const destinationPath = `${fullUploadDir}/${filename}-${id}.${config.gm.image_format}`
-  return new Promise((resolve, reject) =>
-    gm(stream)
-      .setFormat(`${config.gm.image_format}`)
-      .resize(config.gm.image_width,config.gm.image_height)
-      .write(destinationPath, error =>
-        {
-          if(error)
-          {
-            reject()
-          }
-          else{
-            resolve( {path: destinationPath} )
-          }
-      })
-  )
-}
+  const id = shortid.generate();
+  const destinationPath = `${fullUploadDir}/${filename}-${id}.jpg`;
+
+  return new Promise((resolve, reject) => {
+   
+    sharp(stream).resize(300).jpeg()
+    .toFile(destinationPath)
+    .then(() => resolve( {path: destinationPath} ))
+    .catch((errors) => reject(errors));
+  });
+};
 
 const postImage = ({path}) => {
    return new Promise((resolve, reject) => {
     var req = request({
-      headers: {'Content-Type' : 'image/jpeg'},
-      url:     config.imageserver.url,
+      headers: {"Content-Type" : "image/jpeg"},
+      url:     "http://localhost:8007/backend.php",
       method: "POST"
     }, function optionalCallback (err, httpResponse, body) {
       if (err) {
