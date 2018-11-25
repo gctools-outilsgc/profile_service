@@ -11,9 +11,10 @@ describe("upload and convert image", async () => {
       expect(url).toContain("https://avatar");
       console.log(`Url for picture upload : ${url}`);
     })
-    .catch((result) => 
-      console.error(`Error ------ ${result}`)
-    );
+    .catch((result) => {
+      if(result)
+        console.error(`Error ------ ${result}`);
+    });
   });
   it("must delete picture in temp folder after upload", async () => {
     var filepath = path.join(__dirname, "./pics/avatar.png");
@@ -22,8 +23,9 @@ describe("upload and convert image", async () => {
     .then(({path}) => {
       expect(fs.existsSync(path)).toBeFalsy();
     })
-    .catch((result) => 
-      console.error(`Error ------ ${result}`)
-    );
+    .catch((result) => {
+      if(result)
+        console.error(`Error ------ ${result}`);
+    });
   });
 });
