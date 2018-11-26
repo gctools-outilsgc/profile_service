@@ -4,6 +4,8 @@ profile_service
 This app/solution can be run in 2 different environments
 
 ## Development
+
+### Application
 To setup this application in development run the following commands:
 
 * `sudo docker-compose -f docker-compose-dev.yml up`

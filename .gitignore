@@ -31,3 +31,9 @@ node_modules
 .vscode/
 
 \.env
+
+test-report\.html
+
+\.idea/
+
+tests/pictureconversion/folder/

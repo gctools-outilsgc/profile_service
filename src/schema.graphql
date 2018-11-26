@@ -5,6 +5,7 @@ scalar PhoneNumber
 scalar Country
 scalar Province
 scalar PostalCode
+scalar Upload
 
 type Query {
   profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,

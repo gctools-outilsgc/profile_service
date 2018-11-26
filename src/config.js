@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const env = process.env.NODE_ENV; // 'development' or 'production'
 
@@ -8,10 +8,9 @@ const development = {
    multicore: false
  },
  prisma: {
-     host:'localhost',
+     host:"localhost",
      debug: true
  }
-
 };
 
 const production = {
@@ -20,10 +19,9 @@ const production = {
    multicore: true
  },
  prisma: {
-     host: 'prisma',
+     host: "prisma",
      debug: false
  }
-
 };
 
 const config = {
