@@ -1,5 +1,5 @@
 const countries = require('countryjs')
-const processUpload = require('./File-Upload')
+const {processUpload} = require('./File-Upload')
 
 
 function createProfile(_, args, context, info){
