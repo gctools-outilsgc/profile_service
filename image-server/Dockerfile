@@ -1,5 +1,5 @@
 FROM shito/alpine-nginx:edge
-LABEL Christian Haschek <office@haschek-solutions.com>
+MAINTAINER Christian Haschek <office@haschek-solutions.com>
 
 # Add PHP 7
 RUN apk upgrade -U && \
