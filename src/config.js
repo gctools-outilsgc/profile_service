@@ -12,7 +12,7 @@ const development = {
      debug: true
  },
  image:{
-   url:"http://image/backend.php",
+   url:"http://localhost:8007/backend.php",
    format:"jpeg",
    size:300
  }
