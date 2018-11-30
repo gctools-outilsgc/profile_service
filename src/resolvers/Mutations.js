@@ -1,227 +1,100 @@
+const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
+const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
+const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const countries = require('countryjs')
 const {processUpload} = require('./File-Upload')
 
-
 async function createProfile(_, args, context, info){
-    var createProfileData = {}
-
-    createProfileData = {
+    var createProfileData = {
         gcId: args.gcId,
         name: args.name,
         email: args.email,
+        avatar: copyValueToObjectIfDefined(args.avatar),
+        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.titleFr)
+    };
+    
+    var address = getNewAddressFromArgs(args);
+    if(address != null) {
+        createProfileData.address = {create:address};
     }
-
-    if (args.avatar !== undefined){
-        await processUpload(args.avatar).then((url)=>
-        {
-            createProfileData.avatar = url;
-        })
-    }
-    if (args.mobilePhone !== undefined){
-        createProfileData.mobilePhone = args.mobilePhone
-    }
-    if (args.officePhone !== undefined){
-        createProfileData.officePhone = args.officePhone
-    }
-    if (args.titleEn !== undefined){
-        createProfileData.titleEn = args.titleEn
-    }
-    if (args.titleFr !== undefined){
-        createProfileData.titleFr = args.titleFr
-    }
-
-    var newAddress = getNewAddressFromArgs(args);
-    if(newAddress != null)
-    {
-        createProfileData.address ={create:newAddress}
-    }
-
-    if (args.supervisor !== undefined){
-        if (args.supervisor.gcId !== undefined){
-            createSupervisorData.push({gcId: args.supervisor.gcId})
-        }
-        if (args.supervisor.email !== undefined){
-            createSupervisorData.push({email: args.supervisor.email})
-        }
+    if (typeof args.supervisor !== "undefined") {
+        var createSupervisorData = {
+            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            email: copyValueToObjectIfDefined(args.supervisor.email)
+        };
         createProfileData.push({
             supervisor: {
                 connect: {
-                    createSupervisorData
-                }
-            }
-        })
+                    createSupervisorData,
+                },
+            },
+        });
     }
-    if (args.org !== undefined){
+
+    if (typeof args.org !== "undefined"){
         createProfileData.push({
             org :{
                 connect: {
                     id: args.org.id
-                }
-            }
-        })
+                },
+            },
+        });
     }
-
     return context.prisma.mutation.createProfile({
         data: createProfileData,
-        }, info)
-}
-
-function getNewAddressFromArgs(args)
-{
-    if (args.address !== undefined){
-        var requiredVariablesError = []
-        if (args.address.streetAddress == null)
-        {
-            requiredVariablesError.push("streetAddress is not defined and is a required field")
-        }
-        if (args.address.city == null)
-        {
-            requiredVariablesError.push("city is not defined and is a required field")
-        }
-        if (args.address.country == null)
-        {
-            requiredVariablesError.push("country is not defined and is a required field")
-        }
-        else
-        {
-            if (args.address.province == null)
-            {
-                requiredVariablesError.push("province is not defined and is a required field")
-            }
-            else{
-                
-                var selectedCountry = args.address.country.value;
-                var states = countries.states(selectedCountry)
-                if(states && states.length > 0)
-                {
-                    var selectedProvince = args.address.province;
-                    var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
-                    var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
-                    if(index === -1)
-                    {
-                        requiredVariablesError.push("invalid province for selected country")
-                    }
-                }
-            }
-        }
-        if (args.address.postalCode == null)
-        {
-            requiredVariablesError.push("postalCode is not defined and is a required field")
-        }
-        if (requiredVariablesError.length > 0)
-        {
-            throw new Error(requiredVariablesError)
-        }
-
-        //Fix -- issue where [object, object] was saved in the country cell instead of the real value.
-        var country = args.address.country;
-        args.address.country = country.value;
-        return args.address;
-    }
-    return null;
+        }, info);
 }
 
 async function modifyProfile(_, args, context, info){
-    var updateProfileData = {}
-    var updateAddressData = {}
-    var updateSupervisorData = {}
-    const currentProfile = await context.prisma.Profile(
+    // eslint-disable-next-line new-cap
+    const currentProfile = await context.prisma.query.profiles(
         {
             where: {
                 gcId: args.gcId
             }            
-        })
-
-    if (currentProfile == null | undefined){
-        throw new Error('Could not find profile with gcId ${args.gcId}')
-    }
+        });
+    throwExceptionIfProfileIsNotDefine(currentProfile);
+    var updateProfileData = {
+        name: args.name,
+        email: args.email,
+        avatar: copyValueToObjectIfDefined(args.avatar),
+        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.titleFr),
+    };
     
-    if (args.name !== undefined) {
-        updateProfileData.name = args.name
+    var address = updateOrCreateAddressOnProfile(args, currentProfile);
+    if(address != null){
+        updateProfileData.address = address;
     }
-    if (args.email !== undefined){
-        updateProfileData.email = args.email
-    }
-    if (args.avatar !== undefined){
-        updateProfileData.avatar= args.avatar
-    }
-    if (args.mobilePhone !== undefined){
-        updateProfileData.mobilePhone = args.mobilePhone
-    }
-    if (args.officePhone !== undefined){
-        updateProfileData.officePhone = args.officePhone
-    }
-    if (args.titleEn !== undefined){
-        updateProfileData.titleEn = args.titleEn
-    }
-    if (args.titleFr !== undefined){
-        updateProfileData.titleFr = args.titleFr
-    }
-    if (args.address !== undefined){
-        if (currentProfile.address.id !== null){
-            if (args.address.streetAddress !== undefined){
-                updateAddressData.streetAddress = args.address.streetAddress
-            }
-            if (args.address.city !== undefined){
-                updateAddressData.city = args.address.city
-            }
-            if (args.address.country !== undefined){
-                updateAddressData.country = args.address.country
-                if (args.address.province !== undefined)
-                {
-                    var selectedCountry = args.address.country.value;
-                    var states = countries.states(selectedCountry)
-                    if(states && states.length > 0)
-                    {
-                        var selectedProvince = args.address.province;
-                        var upperCaseStates = states.map(function(x){ return x.toUpperCase() })
-                        var index = upperCaseStates.indexOf(selectedProvince.toUpperCase())
-                        if(index === -1)
-                        {
-                            throw new Error("invalid province for selected country")
-                        }
-                    }
-                    updateAddressData.province = args.address.province
-                }
-            }
-            if (args.address.postalCode !== undefined){
-                updateAddressData.postalCode = args.address.postalCode
-            }
-            updateProfileData.address = {
-                update: updateAddressData  
-            }
-        } else {
-            var newAddress = getNewAddressFromArgs(args);
-            if(newAddress != null)
-            {
-                updateProfileData.address ={create:newAddress}
-            }
-        }        
-        
-    }
-    if (args.supervisor !== undefined){
-        if (args.supervisor.gcId !== undefined){
-            updateSupervisorData.push({gcId: args.supervisor.gcId})
-        }
-        if (args.supervisor.email !== undefined){
-            updateSupervisorData.push({email: args.supervisor.email})
-        }
+       
+    if (typeof args.supervisor !== "undefined") {
+        var updateSupervisorData = {
+            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            email: copyValueToObjectIfDefined(args.supervisor.email)
+        };
+
         updateProfileData.push({
             supervisor: {
                 connect: {
                     updateSupervisorData
                 }
             }
-        })
+        });
     }
-    if (args.org !== undefined){
+    
+    if (typeof args.org !== "undefined"){
         updateProfileData.push({
             org :{
                 connect: {
                     id: args.org.id
                 }
             }
-        })
+        });
     }
 
     return await context.prisma.mutation.updateProfile({
@@ -229,8 +102,7 @@ async function modifyProfile(_, args, context, info){
         gcId: args.gcId
         },
         data: updateProfileData   
-    }, info)    
-
+    }, info);    
 }
 
 async function deleteProfile(_, args, context){
@@ -238,7 +110,7 @@ async function deleteProfile(_, args, context){
         where:{
             gcId: args.gcId
         }
-    })
+    });
 }
 
 function createOrganization(_, args, context, info){            
@@ -249,7 +121,7 @@ function createOrganization(_, args, context, info){
         acronymEn: args.acronymEn,        
         acronymFr: args.acronymFr  
         }        
-    }, info)
+    }, info);
 }
 
 function modifyOrganization(_, args, context, info){
@@ -263,7 +135,7 @@ function createOrgTier(_, args, context, info){
             nameFr: args.nameFr,
             organization: {connect: {id: args.organization.id}}
         }
-    }, info)
+    }, info);
 }
 
 function modifyOrgTier(_, args, context, info){
@@ -276,4 +148,4 @@ module.exports = {
     deleteProfile,
     createOrganization,
     createOrgTier
-}
+};
