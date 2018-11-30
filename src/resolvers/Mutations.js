@@ -9,12 +9,18 @@ async function createProfile(_, args, context, info){
         gcId: args.gcId,
         name: args.name,
         email: args.email,
-        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
+    
+    if (args.avatar !== undefined){
+        await processUpload(args.avatar).then((url)=>
+        {
+            createProfileData.avatar = url;
+        })
+    }
     
     var address = getNewAddressFromArgs(args);
     if(address != null) {
@@ -60,12 +66,18 @@ async function modifyProfile(_, args, context, info){
     var updateProfileData = {
         name: args.name,
         email: args.email,
-        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr),
     };
+
+    if (args.avatar !== undefined){
+        await processUpload(args.avatar).then((url)=>
+        {
+            upadteProfileData.avatar = url;
+        })
+    }
     
     var address = updateOrCreateAddressOnProfile(args, currentProfile);
     if(address != null){
