@@ -15,10 +15,9 @@ async function createProfile(_, args, context, info){
     };
     
     if (args.avatar !== undefined){
-        await processUpload(args.avatar).then((url) =>
-        {
+        await processUpload(args.avatar).then((url) => {
             createProfileData.avatar = url;
-        })
+        });
     }
     
     var address = getNewAddressFromArgs(args);
@@ -72,10 +71,9 @@ async function modifyProfile(_, args, context, info){
     };
 
     if (args.avatar !== undefined){
-        await processUpload(args.avatar).then((url)=>
-        {
+        await processUpload(args.avatar).then((url) => {
             updateProfileData.avatar = url;
-        })
+        });
     }
     
     var address = updateOrCreateAddressOnProfile(args, currentProfile);

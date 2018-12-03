@@ -20,9 +20,9 @@ const storeUpload = async ({ stream, filename }) => {
 function deletePictureFromTempFolder(path){
   return new Promise((resolve, reject) => {
     var deletePath = String(path);
-    if (fs.existsSync(deletePath), (err) => reject(err)){
-      fs.unlinkSync(deletePath, (err) => reject(err))
-    };
+    if (fs.existsSync(deletePath, (err) => reject(err))){
+      fs.unlinkSync(deletePath, (err) => reject(err));
+    }
     resolve();
   });
 }
@@ -42,8 +42,7 @@ const convertPicture = async (originPath) => {
     .then(function (err, info){
       if(err){
         reject(err);
-      }
-      else{
+      } else{
         resolve(destinationPath);
       }
     });
@@ -59,10 +58,8 @@ const postImage = (path) => {
       method: "POST"
     }, function optionalCallback (err, httpResponse, body) {
       if (err) {
-        console.error(err);
         reject();
-      }
-      else{
+      } else{
         var bodyJson = JSON.parse(body);
         var url = bodyJson.url;
         resolve(url);
@@ -90,6 +87,6 @@ const processUpload = async (upload) => {
   const url = await postImage(avatarPath);
   await deletePictureFromTempFolder(avatarPath);
   return url;
-}
+};
 
 module.exports = {processUpload};
