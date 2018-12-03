@@ -37,3 +37,9 @@ test-report\.html
 \.idea/
 
 tests/pictureconversion/folder/
+
+src/resolvers/convert/
+
+tests/pictureconversion/sharpConvert/
+
+jest_*/

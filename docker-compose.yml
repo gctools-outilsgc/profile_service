@@ -1,5 +1,15 @@
 version: '3'
 services:
+  image:
+    build: ./image-server
+    volumes:
+      - ./image-server/upload:/usr/share/nginx/html/upload
+    environment:
+      - TITLE=OADW-Image-Server
+      - DOMAIN=https://avatar.gccollab.ca
+      - LOWPROFILE=True
+    ports:
+    - "8007:80"
   yoga:
     build: ./
     image: profile-yoga

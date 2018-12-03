@@ -1,18 +1,24 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
+const {processUpload} = require("./File-Upload");
 
-function createProfile(_, args, context, info){
+async function createProfile(_, args, context, info){
     var createProfileData = {
         gcId: args.gcId,
         name: args.name,
         email: args.email,
-        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
+    
+    if (typeof args.avatar !== "undefined"){
+        await processUpload(args.avatar).then((url) => {
+            createProfileData.avatar = url;
+        });
+    }
     
     var address = getNewAddressFromArgs(args);
     if(address != null) {
@@ -58,12 +64,17 @@ async function modifyProfile(_, args, context, info){
     var updateProfileData = {
         name: args.name,
         email: args.email,
-        avatar: copyValueToObjectIfDefined(args.avatar),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr),
     };
+
+    if (typeof args.avatar !== "undefined"){
+        await processUpload(args.avatar).then((url) => {
+            updateProfileData.avatar = url;
+        });
+    }
     
     var address = updateOrCreateAddressOnProfile(args, currentProfile);
     if(address != null){
