@@ -1,8 +1,7 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
-const countries = require('countryjs')
-const {processUpload} = require('./File-Upload')
+const {processUpload} = require("./File-Upload");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
@@ -16,7 +15,7 @@ async function createProfile(_, args, context, info){
     };
     
     if (args.avatar !== undefined){
-        await processUpload(args.avatar).then((url)=>
+        await processUpload(args.avatar).then((url) =>
         {
             createProfileData.avatar = url;
         })
@@ -75,7 +74,7 @@ async function modifyProfile(_, args, context, info){
     if (args.avatar !== undefined){
         await processUpload(args.avatar).then((url)=>
         {
-            upadteProfileData.avatar = url;
+            updateProfileData.avatar = url;
         })
     }
     
