@@ -69,7 +69,7 @@ if [[ $MAXUPLOADSIZE =~ $re ]]; then
 		sed -i -e "s/100M/${MAXUPLOADSIZE}M/g" /etc/php7/php.ini
 		sed -i -e "s/50M/${MAXUPLOADSIZE}M/g" /etc/nginx/conf.d/default.conf
 
-		MAXRAM=$(($MAXUPLOADSIZE + 30)) #30megs more than the upload size
+		MAXRAM=$((${MAXUPLOADSIZE} + 30)) #30megs more than the upload size
 		sed -i -e "s/128M/${MAXRAM}M/g" /etc/php7/php.ini
 		echo "[i] Also changing memory limit of PHP to ${MAXRAM}"
 

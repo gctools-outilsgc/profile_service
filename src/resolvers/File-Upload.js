@@ -14,11 +14,21 @@ const storeUpload = async ({ stream, filename }) => {
       .pipe(fs.createWriteStream(path))
       .on("finish", () => resolve(path))
       .on("error", reject),
-  )
+  );
 };
 
+function deletePictureFromTempFolder(path){
+  return new Promise((resolve, reject) => {
+    var deletePath = String(path);
+    if (fs.existsSync(deletePath), (err) => reject(err)){
+      fs.unlinkSync(deletePath, (err) => reject(err))
+    };
+    resolve();
+  });
+}
+
 const convertPicture = async (originPath) => {
-  destinationPath = `${originPath}.jpg`;
+  var destinationPath = `${originPath}.jpg`;
   // uploadPath = String(originPath);
 
   return new Promise((resolve, reject) => {
@@ -31,11 +41,10 @@ const convertPicture = async (originPath) => {
     })
     .then(function (err, info){
       if(err){
-        console.error(err);
-        reject(err)
+        reject(err);
       }
       else{
-        resolve(destinationPath)
+        resolve(destinationPath);
       }
     });
   });
@@ -54,7 +63,7 @@ const postImage = (path) => {
         reject();
       }
       else{
-        var bodyJson = JSON.parse(body)
+        var bodyJson = JSON.parse(body);
         var url = bodyJson.url;
         resolve(url);
       }
@@ -69,21 +78,11 @@ const createUploadFolderIfNeeded = async () => {
     if (!fs.existsSync(uploadDir)){
       fs.mkdirSync(uploadDir);
     }
-    resolve()
-  });
-}
-
-function deletePictureFromTempFolder(path){
-  return new Promise((resolve, reject) => {
-    var deletePath = String(path);
-    if (fs.existsSync(deletePath), err => reject(err)){
-      fs.unlinkSync(deletePath, (err)=>reject(err))
-    }
     resolve();
   });
-}
+};
 
-const processUpload = async upload => {
+const processUpload = async (upload) => {
   const { stream, filename } = await upload;
   await createUploadFolderIfNeeded();
   const originPath = await storeUpload({stream, filename});
@@ -93,4 +92,4 @@ const processUpload = async upload => {
   return url;
 }
 
-module.exports = {processUpload}
+module.exports = {processUpload};
