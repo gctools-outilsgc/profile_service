@@ -1,6 +1,5 @@
 FROM shito/alpine-nginx:edge
-MAINTAINER Christian Haschek <office@haschek-solutions.com>
-
+ 
 # Add PHP 7
 RUN apk upgrade -U && \
     apk --update --repository=http://dl-4.alpinelinux.org/alpine/edge/testing add \
