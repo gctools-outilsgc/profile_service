@@ -14,7 +14,7 @@ async function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
     
-    if (args.avatar !== undefined){
+    if (typeof args.avatar !== "undefined"){
         await processUpload(args.avatar).then((url) => {
             createProfileData.avatar = url;
         });
@@ -70,7 +70,7 @@ async function modifyProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr),
     };
 
-    if (args.avatar !== undefined){
+    if (typeof args.avatar !== "undefined"){
         await processUpload(args.avatar).then((url) => {
             updateProfileData.avatar = url;
         });
