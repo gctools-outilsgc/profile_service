@@ -38,7 +38,7 @@ test-report\.html
 
 tests/pictureconversion/folder/
 
-src/resolvers/convert/
+temp_convert
 
 tests/pictureconversion/sharpConvert/
 
