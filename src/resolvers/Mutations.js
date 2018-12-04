@@ -49,7 +49,7 @@ async function createProfile(_, args, context, info){
             },
         });
     }
-    return context.prisma.mutation.createProfile({
+    return await context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
 }
