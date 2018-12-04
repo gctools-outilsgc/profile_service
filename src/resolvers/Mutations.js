@@ -2,6 +2,7 @@ const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
 const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
+const {throwExceptionIfOrganizationIsNotDefined} = require("./helper/organizationHelper");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
@@ -133,8 +134,28 @@ function createOrganization(_, args, context, info){
     }, info);
 }
 
-function modifyOrganization(_, args, context, info){
-    
+async function modifyOrganization(_, args, context, info){
+    const currentOrganization = context.prisma.query.organizations(
+        {
+            where: {
+                id: args.idprofile
+            }
+        }
+    );
+    throwExceptionIfOrganizationIsNotDefined(currentOrganization);
+    var updateOrganizationData = {
+        nameEn: copyValueToObjectIfDefined(args.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.nameFr),
+        acronymEn: copyValueToObjectIfDefined(args.acronymEn),
+        acronymFr: copyValueToObjectIfDefined(args.acronymFr)
+    };
+
+    return await context.prisma.mutation.updateOrganization({
+        where: {
+            id: args.id
+        },
+        data: updateOrganizationData
+    }, info);    
 }
 
 function createOrgTier(_, args, context, info){
@@ -156,5 +177,6 @@ module.exports = {
     modifyProfile,
     deleteProfile,
     createOrganization,
+    modifyOrganization,
     createOrgTier
 };
