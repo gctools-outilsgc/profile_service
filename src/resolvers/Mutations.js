@@ -62,8 +62,8 @@ async function modifyProfile(_, args, context, info){
         });
     throwExceptionIfProfileIsNotDefined(currentProfile);
     var updateProfileData = {
-        name: args.name,
-        email: args.email,
+        name: copyValueToObjectIfDefined(args.name),
+        email: copyValueToObjectIfDefined(args.email),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
