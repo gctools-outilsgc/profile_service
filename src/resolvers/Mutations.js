@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 
@@ -60,7 +60,7 @@ async function modifyProfile(_, args, context, info){
                 gcId: args.gcId
             }            
         });
-    throwExceptionIfProfileIsNotDefine(currentProfile);
+    throwExceptionIfProfileIsNotDefined(currentProfile);
     var updateProfileData = {
         name: args.name,
         email: args.email,
