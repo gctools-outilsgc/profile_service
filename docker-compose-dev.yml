@@ -3,7 +3,7 @@ services:
   image:
     build: ./image-server
     volumes:
-      - image_server/upload:/usr/share/nginx/html/upload
+      - image_server:/usr/share/nginx/html/upload
     environment:
       - TITLE=OADW-Image-Server
       - DOMAIN=http://localhost:8007
