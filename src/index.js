@@ -37,12 +37,7 @@ const server = new ApolloServer({
     }),
   }),
 });
-const options = {
-  port: 4000,
-  endpoint: "/graphql",
-  subscriptions: "/subscriptions",
-  playground: "/playground",
-};
+
 // eslint-disable-next-line no-console
 server.listen().then(({ url }) => {
   console.log(`🚀 GraphQL Server ready at ${url}`);
