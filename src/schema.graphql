@@ -18,7 +18,7 @@ type Mutation {
   modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
   deleteOrgTier(id: ID!): String!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
-  modifyOrganization(organizationId: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
+  modifyOrganization(id: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
   deleteOrganization(id: ID!): String!
 }
 

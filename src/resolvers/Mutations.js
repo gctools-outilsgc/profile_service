@@ -1,7 +1,9 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefine} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
+const {throwExceptionIfOrganizationIsNotDefined} = require("./helper/organizationHelper");
+const {throwExceptionIfOrgIsNotDefined} = require("./helper/orgHelper");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
@@ -47,7 +49,7 @@ async function createProfile(_, args, context, info){
             },
         });
     }
-    return context.prisma.mutation.createProfile({
+    return await context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
 }
@@ -60,10 +62,10 @@ async function modifyProfile(_, args, context, info){
                 gcId: args.gcId
             }            
         });
-    throwExceptionIfProfileIsNotDefine(currentProfile);
+    throwExceptionIfProfileIsNotDefined(currentProfile);
     var updateProfileData = {
-        name: args.name,
-        email: args.email,
+        name: copyValueToObjectIfDefined(args.name),
+        email: copyValueToObjectIfDefined(args.email),
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
@@ -133,8 +135,28 @@ function createOrganization(_, args, context, info){
     }, info);
 }
 
-function modifyOrganization(_, args, context, info){
-    
+async function modifyOrganization(_, args, context, info){
+    const currentOrganization = context.prisma.query.organizations(
+        {
+            where: {
+                id: args.idprofile
+            }
+        }
+    );
+    throwExceptionIfOrganizationIsNotDefined(currentOrganization);
+    var updateOrganizationData = {
+        nameEn: copyValueToObjectIfDefined(args.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.nameFr),
+        acronymEn: copyValueToObjectIfDefined(args.acronymEn),
+        acronymFr: copyValueToObjectIfDefined(args.acronymFr)
+    };
+
+    return await context.prisma.mutation.updateOrganization({
+        where: {
+            id: args.id
+        },
+        data: updateOrganizationData
+    }, info);    
 }
 
 function createOrgTier(_, args, context, info){
@@ -147,8 +169,47 @@ function createOrgTier(_, args, context, info){
     }, info);
 }
 
-function modifyOrgTier(_, args, context, info){
+async function modifyOrgTier(_, args, context, info){
+    const currentOrgTier = await context.prisma.query.orgTiers({
+        where :{
+            id: args.id
+        }
+    });
+    throwExceptionIfOrgIsNotDefined(currentOrgTier);
+    var updateOrgTierData = {
+        nameEn: copyValueToObjectIfDefined(args.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.nameFr)
+    };
+    if (typeof args.organization !== "undefined"){
+        updateOrgTierData.push({
+            organization: {
+                connect:{
+                    id: args.organization.id
+                }                
+            }
+        });
+    }
 
+    if (typeof args.owner !== "undefined"){
+        var updateOwnerData = {
+            gcId: copyValueToObjectIfDefined(args.owner.gcId),
+            email: copyValueToObjectIfDefined(args.owner.email)
+        };
+        updateOrgTierData.push({
+            ownerID: {
+                connect: {
+                    updateOwnerData
+                }
+            } 
+        });
+    }
+
+    return await context.prisma.mutation.updateOrgTier({
+        where: {
+            id: args.id
+        },
+        data: updateOrgTierData
+    }, info);
 }
 
 module.exports = {
@@ -156,5 +217,7 @@ module.exports = {
     modifyProfile,
     deleteProfile,
     createOrganization,
-    createOrgTier
+    modifyOrganization,
+    createOrgTier,
+    modifyOrgTier
 };
