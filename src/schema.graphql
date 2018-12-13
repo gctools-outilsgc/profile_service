@@ -1,11 +1,7 @@
-# import Address from './generated/prisma.graphql'
-
 scalar Email
 scalar PhoneNumber
-scalar Country
-scalar Province
-scalar PostalCode
 scalar Upload
+scalar PostalCode
 
 type Query {
   profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
@@ -38,6 +34,15 @@ type Profile {
   titleFr: String
   supervisor: Profile 
   org: OrgTier     
+}
+
+type Address{
+  id: ID!
+  streetAddress: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  country: String!
 }
 
 type OrgTier {
@@ -80,6 +85,6 @@ input AddressInput {
   streetAddress: String
   city: String
   province: String
-  postalCode: String
-  country: Country
+  postalCode: PostalCode
+  country: String
 }
