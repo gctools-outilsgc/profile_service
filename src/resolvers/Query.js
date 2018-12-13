@@ -46,7 +46,7 @@ function addresses(_, args, context, info) {
 }
 
 function orgtiers(_, args, context, info) {
-  return context.prisma.query.orgtiers(
+  return context.prisma.query.orgTiers(
     {
       where:{
         id: args.id,
