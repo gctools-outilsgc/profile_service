@@ -4,26 +4,26 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  profiles(gcId: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  orgtiers(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [OrgTier!]!,
+  teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
 type Mutation {
-  createProfile(gcId: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  modifyProfile(gcId: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, org: OrgTierInput): Profile!
-  deleteProfile(gcId: String!): Boolean!
-  createOrgTier(nameEn: String!, nameFr: String!, organization: OrganizationInput , owner: OrgTierOwnerInput): OrgTier!
-  modifyOrgTier(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: OrgTierOwnerInput): OrgTier!
-  deleteOrgTier(id: ID!): String!
+  createProfile(gcID: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  modifyProfile(gcID: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  deleteProfile(gcID: String!): Boolean!
+  createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
+  modifyTeam(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: TeamOwnerInput): Team!
+  deleteTeam(id: ID!): String!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
   deleteOrganization(id: ID!): String!
 }
 
 type Profile {
-  gcId: String! 
+  gcID: String! 
   name: String!
   email: Email! 
   avatar: String
@@ -33,7 +33,7 @@ type Profile {
   titleEn: String
   titleFr: String
   supervisor: Profile 
-  org: OrgTier     
+  team: Team     
 }
 
 type Address{
@@ -45,7 +45,7 @@ type Address{
   country: String!
 }
 
-type OrgTier {
+type Team {
   id: ID! 
   nameEn: String!
   nameFr: String!
@@ -60,20 +60,20 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers: [OrgTier!]!
+  Teams: [Team!]!
 }
 
 input SupervisorInput {
-  gcId: String,
+  gcID: String,
   email: Email
 }
 
-input OrgTierOwnerInput {
-  gcId: String,
+input TeamOwnerInput {
+  gcID: String,
   email: Email
 }
 
-input OrgTierInput {
+input TeamInput {
   id: ID!
 }
 

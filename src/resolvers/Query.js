@@ -2,7 +2,7 @@ function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
     {
       where:{
-        gcId: args.gcId,
+        gcID: args.gcID,
         // eslint-disable-next-line camelcase
         name_contains: args.name,
         email: args.email,
@@ -45,8 +45,8 @@ function addresses(_, args, context, info) {
   );
 }
 
-function orgtiers(_, args, context, info) {
-  return context.prisma.query.orgTiers(
+function teams(_, args, context, info) {
+  return context.prisma.query.teams(
     {
       where:{
         id: args.id,
@@ -81,6 +81,6 @@ function organizations(_, args, context, info){
 module.exports = {
     profiles,
     addresses,
-    orgtiers,
+    teams,
     organizations,
 };
