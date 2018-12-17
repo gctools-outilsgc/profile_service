@@ -10,7 +10,10 @@
     "start": "node src/cluster.js",
     "dev": "node src/index.js",
     "eslint": "eslint src/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand"
+  },
+  "jest": {
+    "verbose": true
   },
   "keywords": [],
   "author": "Bryan Robitaille - GCTools/OutilsGC",
@@ -23,6 +26,7 @@
     "eslint": "^5.10.0",
     "express-jwt": "^5.3.1",
     "graphql": "^14.0.2",
+    "graphql-cli": "^2.17.0",
     "node-fetch": "^2.3.0",
     "prisma": "^1.22.2",
     "prisma-binding": "^2.2.10",
@@ -32,6 +36,9 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1"
+    "babel-eslint": "^10.0.1",
+    "jest": "^23.6.0",
+    "jest-html-reporter": "^2.4.2",
+    "ts-jest": "^23.10.5"
   }
 }
