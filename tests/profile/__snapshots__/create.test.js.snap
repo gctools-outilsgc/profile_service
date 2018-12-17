@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create Organization 1`] = `
+Object {
+  "acronymEn": "OTEN",
+  "acronymFr": "OTFR",
+  "nameEn": "Organization Test EN",
+  "nameFr": "Organization Test FR",
+}
+`;
+
+exports[`Create profile without avatar 1`] = `
+Object {
+  "address": Object {
+    "city": "somewhere",
+    "country": "Canada",
+    "postalCode": "H0H 0H0",
+    "province": "Ontario",
+    "streetAddress": "98 where",
+  },
+  "email": "awesome.user@somewhere.com",
+  "gcID": "asdf123456",
+  "mobilePhone": "613-999-0897",
+  "name": "Awesome User",
+  "officePhone": "(879) 234-2341",
+  "titleEn": "Super Dave",
+  "titleFr": "Super Dave in French",
+}
+`;
