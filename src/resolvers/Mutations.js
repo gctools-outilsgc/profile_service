@@ -3,11 +3,11 @@ const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper")
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const {throwExceptionIfOrganizationIsNotDefined} = require("./helper/organizationHelper");
-const {throwExceptionIfOrgIsNotDefined} = require("./helper/orgHelper");
+const {throwExceptionIfTeamIsNotDefined} = require("./helper/teamHelper");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
-        gcId: args.gcId,
+        gcID: args.gcID,
         name: args.name,
         email: args.email,
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
@@ -28,7 +28,7 @@ async function createProfile(_, args, context, info){
     }
     if (typeof args.supervisor !== "undefined") {
         var createSupervisorData = {
-            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
             email: copyValueToObjectIfDefined(args.supervisor.email)
         };
         createProfileData.push({
@@ -40,11 +40,11 @@ async function createProfile(_, args, context, info){
         });
     }
 
-    if (typeof args.org !== "undefined"){
+    if (typeof args.team !== "undefined"){
         createProfileData.push({
-            org :{
+            team :{
                 connect: {
-                    id: args.org.id
+                    id: args.team.id
                 },
             },
         });
@@ -59,7 +59,7 @@ async function modifyProfile(_, args, context, info){
     const currentProfile = await context.prisma.query.profiles(
         {
             where: {
-                gcId: args.gcId
+                gcID: args.gcID
             }            
         });
     throwExceptionIfProfileIsNotDefined(currentProfile);
@@ -85,7 +85,7 @@ async function modifyProfile(_, args, context, info){
        
     if (typeof args.supervisor !== "undefined") {
         var updateSupervisorData = {
-            gcId: copyValueToObjectIfDefined(args.supervisor.gcId),
+            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
             email: copyValueToObjectIfDefined(args.supervisor.email)
         };
 
@@ -98,11 +98,11 @@ async function modifyProfile(_, args, context, info){
         });
     }
     
-    if (typeof args.org !== "undefined"){
+    if (typeof args.team !== "undefined"){
         updateProfileData.push({
-            org :{
+            team :{
                 connect: {
-                    id: args.org.id
+                    id: args.team.id
                 }
             }
         });
@@ -110,7 +110,7 @@ async function modifyProfile(_, args, context, info){
 
     return await context.prisma.mutation.updateProfile({
         where:{
-        gcId: args.gcId
+        gcID: args.gcID
         },
         data: updateProfileData   
     }, info);    
@@ -119,7 +119,7 @@ async function modifyProfile(_, args, context, info){
 async function deleteProfile(_, args, context){
     return await context.prisma.mutation.deleteProfile({
         where:{
-            gcId: args.gcId
+            gcID: args.gcID
         }
     });
 }
@@ -159,8 +159,16 @@ async function modifyOrganization(_, args, context, info){
     }, info);    
 }
 
-function createOrgTier(_, args, context, info){
-    return context.prisma.mutation.createOrgTier({
+async function deleteOrganization(_, args, context){
+    return await context.prisma.mutation.deleteOrganization({
+        where:{
+            gcID: args.id
+        }
+    });
+}
+
+function createTeam(_, args, context, info){
+    return context.prisma.mutation.createTeam({
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
@@ -169,19 +177,19 @@ function createOrgTier(_, args, context, info){
     }, info);
 }
 
-async function modifyOrgTier(_, args, context, info){
-    const currentOrgTier = await context.prisma.query.orgTiers({
+async function modifyTeam(_, args, context, info){
+    const currentTeam = await context.prisma.query.teams({
         where :{
             id: args.id
         }
     });
-    throwExceptionIfOrgIsNotDefined(currentOrgTier);
-    var updateOrgTierData = {
+    throwExceptionIfTeamIsNotDefined(currentTeam);
+    var updateTeamData = {
         nameEn: copyValueToObjectIfDefined(args.nameEn),
         nameFr: copyValueToObjectIfDefined(args.nameFr)
     };
     if (typeof args.organization !== "undefined"){
-        updateOrgTierData.push({
+        updateTeamData.push({
             organization: {
                 connect:{
                     id: args.organization.id
@@ -192,10 +200,10 @@ async function modifyOrgTier(_, args, context, info){
 
     if (typeof args.owner !== "undefined"){
         var updateOwnerData = {
-            gcId: copyValueToObjectIfDefined(args.owner.gcId),
+            gcID: copyValueToObjectIfDefined(args.owner.gcID),
             email: copyValueToObjectIfDefined(args.owner.email)
         };
-        updateOrgTierData.push({
+        updateTeamData.push({
             ownerID: {
                 connect: {
                     updateOwnerData
@@ -204,12 +212,20 @@ async function modifyOrgTier(_, args, context, info){
         });
     }
 
-    return await context.prisma.mutation.updateOrgTier({
+    return await context.prisma.mutation.updateTeam({
         where: {
             id: args.id
         },
-        data: updateOrgTierData
+        data: updateTeamData
     }, info);
+}
+
+async function deleteTeam(_, args, context){
+    return await context.prisma.mutation.deleteTeam({
+        where:{
+            gcID: args.id
+        }
+    });
 }
 
 module.exports = {
@@ -218,6 +234,7 @@ module.exports = {
     deleteProfile,
     createOrganization,
     modifyOrganization,
-    createOrgTier,
-    modifyOrgTier
+    createTeam,
+    modifyTeam,
+    deleteTeam
 };

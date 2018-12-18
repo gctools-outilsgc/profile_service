@@ -402,7 +402,7 @@ type AggregateOrganization {
   count: Int!
 }
 
-type AggregateOrgTier {
+type AggregateTeam {
   count: Int!
 }
 
@@ -422,27 +422,27 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createOrgTier(data: OrgTierCreateInput!): OrgTier!
+  createTeam(data: TeamCreateInput!): Team!
   createOrganization(data: OrganizationCreateInput!): Organization!
   createProfile(data: ProfileCreateInput!): Profile!
   createAddress(data: AddressCreateInput!): Address!
-  updateOrgTier(data: OrgTierUpdateInput!, where: OrgTierWhereUniqueInput!): OrgTier
+  updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization
   updateProfile(data: ProfileUpdateInput!, where: ProfileWhereUniqueInput!): Profile
   updateAddress(data: AddressUpdateInput!, where: AddressWhereUniqueInput!): Address
-  deleteOrgTier(where: OrgTierWhereUniqueInput!): OrgTier
+  deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteOrganization(where: OrganizationWhereUniqueInput!): Organization
   deleteProfile(where: ProfileWhereUniqueInput!): Profile
   deleteAddress(where: AddressWhereUniqueInput!): Address
-  upsertOrgTier(where: OrgTierWhereUniqueInput!, create: OrgTierCreateInput!, update: OrgTierUpdateInput!): OrgTier!
+  upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertOrganization(where: OrganizationWhereUniqueInput!, create: OrganizationCreateInput!, update: OrganizationUpdateInput!): Organization!
   upsertProfile(where: ProfileWhereUniqueInput!, create: ProfileCreateInput!, update: ProfileUpdateInput!): Profile!
   upsertAddress(where: AddressWhereUniqueInput!, create: AddressCreateInput!, update: AddressUpdateInput!): Address!
-  updateManyOrgTiers(data: OrgTierUpdateInput!, where: OrgTierWhereInput): BatchPayload!
+  updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyOrganizations(data: OrganizationUpdateInput!, where: OrganizationWhereInput): BatchPayload!
   updateManyProfiles(data: ProfileUpdateInput!, where: ProfileWhereInput): BatchPayload!
   updateManyAddresses(data: AddressUpdateInput!, where: AddressWhereInput): BatchPayload!
-  deleteManyOrgTiers(where: OrgTierWhereInput): BatchPayload!
+  deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyOrganizations(where: OrganizationWhereInput): BatchPayload!
   deleteManyProfiles(where: ProfileWhereInput): BatchPayload!
   deleteManyAddresses(where: AddressWhereInput): BatchPayload!
@@ -466,7 +466,7 @@ type Organization implements Node {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier!]
+  Teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
 }
 
 """A connection to a list of items."""
@@ -484,15 +484,15 @@ input OrganizationCreateInput {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers: OrgTierCreateManyWithoutOrganizationInput
+  Teams: TeamCreateManyWithoutOrganizationInput
 }
 
-input OrganizationCreateOneWithoutOrgTiersInput {
-  create: OrganizationCreateWithoutOrgTiersInput
+input OrganizationCreateOneWithoutTeamsInput {
+  create: OrganizationCreateWithoutTeamsInput
   connect: OrganizationWhereUniqueInput
 }
 
-input OrganizationCreateWithoutOrgTiersInput {
+input OrganizationCreateWithoutTeamsInput {
   nameEn: String!
   nameFr: String!
   acronymEn: String!
@@ -577,27 +577,27 @@ input OrganizationUpdateInput {
   nameFr: String
   acronymEn: String
   acronymFr: String
-  orgTiers: OrgTierUpdateManyWithoutOrganizationInput
+  Teams: TeamUpdateManyWithoutOrganizationInput
 }
 
-input OrganizationUpdateOneWithoutOrgTiersInput {
-  create: OrganizationCreateWithoutOrgTiersInput
+input OrganizationUpdateOneWithoutTeamsInput {
+  create: OrganizationCreateWithoutTeamsInput
   connect: OrganizationWhereUniqueInput
   delete: Boolean
-  update: OrganizationUpdateWithoutOrgTiersDataInput
-  upsert: OrganizationUpsertWithoutOrgTiersInput
+  update: OrganizationUpdateWithoutTeamsDataInput
+  upsert: OrganizationUpsertWithoutTeamsInput
 }
 
-input OrganizationUpdateWithoutOrgTiersDataInput {
+input OrganizationUpdateWithoutTeamsDataInput {
   nameEn: String
   nameFr: String
   acronymEn: String
   acronymFr: String
 }
 
-input OrganizationUpsertWithoutOrgTiersInput {
-  update: OrganizationUpdateWithoutOrgTiersDataInput!
-  create: OrganizationCreateWithoutOrgTiersInput!
+input OrganizationUpsertWithoutTeamsInput {
+  update: OrganizationUpdateWithoutTeamsDataInput!
+  create: OrganizationCreateWithoutTeamsInput!
 }
 
 input OrganizationWhereInput {
@@ -809,16 +809,16 @@ input OrganizationWhereInput {
 
   """All values not ending with the given string."""
   acronymFr_not_ends_with: String
-  orgTiers_every: OrgTierWhereInput
-  orgTiers_some: OrgTierWhereInput
-  orgTiers_none: OrgTierWhereInput
+  Teams_every: TeamWhereInput
+  Teams_some: TeamWhereInput
+  Teams_none: TeamWhereInput
 }
 
 input OrganizationWhereUniqueInput {
   id: ID
 }
 
-type OrgTier implements Node {
+type Team implements Node {
   id: ID!
   nameEn: String!
   nameFr: String!
@@ -828,69 +828,69 @@ type OrgTier implements Node {
 }
 
 """A connection to a list of items."""
-type OrgTierConnection {
+type TeamConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [OrgTierEdge]!
-  aggregate: AggregateOrgTier!
+  edges: [TeamEdge]!
+  aggregate: AggregateTeam!
 }
 
-input OrgTierCreateInput {
+input TeamCreateInput {
   nameEn: String!
   nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
+  organization: OrganizationCreateOneWithoutTeamsInput!
+  ownerID: ProfileCreateOneWithoutTeamsInput
   members: ProfileCreateManyWithoutOrgInput
 }
 
-input OrgTierCreateManyWithoutOrganizationInput {
-  create: [OrgTierCreateWithoutOrganizationInput!]
-  connect: [OrgTierWhereUniqueInput!]
+input TeamCreateManyWithoutOrganizationInput {
+  create: [TeamCreateWithoutOrganizationInput!]
+  connect: [TeamWhereUniqueInput!]
 }
 
-input OrgTierCreateManyWithoutOwnerIDInput {
-  create: [OrgTierCreateWithoutOwnerIDInput!]
-  connect: [OrgTierWhereUniqueInput!]
+input TeamCreateManyWithoutOwnerIDInput {
+  create: [TeamCreateWithoutOwnerIDInput!]
+  connect: [TeamWhereUniqueInput!]
 }
 
-input OrgTierCreateOneWithoutMembersInput {
-  create: OrgTierCreateWithoutMembersInput
-  connect: OrgTierWhereUniqueInput
+input TeamCreateOneWithoutMembersInput {
+  create: TeamCreateWithoutMembersInput
+  connect: TeamWhereUniqueInput
 }
 
-input OrgTierCreateWithoutMembersInput {
+input TeamCreateWithoutMembersInput {
   nameEn: String!
   nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
+  organization: OrganizationCreateOneWithoutTeamsInput!
+  ownerID: ProfileCreateOneWithoutTeamsInput
 }
 
-input OrgTierCreateWithoutOrganizationInput {
+input TeamCreateWithoutOrganizationInput {
   nameEn: String!
   nameFr: String!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
+  ownerID: ProfileCreateOneWithoutTeamsInput
   members: ProfileCreateManyWithoutOrgInput
 }
 
-input OrgTierCreateWithoutOwnerIDInput {
+input TeamCreateWithoutOwnerIDInput {
   nameEn: String!
   nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
+  organization: OrganizationCreateOneWithoutTeamsInput!
   members: ProfileCreateManyWithoutOrgInput
 }
 
 """An edge in a connection."""
-type OrgTierEdge {
+type TeamEdge {
   """The item at the end of the edge."""
-  node: OrgTier!
+  node: Team!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum OrgTierOrderByInput {
+enum TeamOrderByInput {
   id_ASC
   id_DESC
   nameEn_ASC
@@ -903,28 +903,28 @@ enum OrgTierOrderByInput {
   createdAt_DESC
 }
 
-type OrgTierPreviousValues {
+type TeamPreviousValues {
   id: ID!
   nameEn: String!
   nameFr: String!
 }
 
-type OrgTierSubscriptionPayload {
+type TeamSubscriptionPayload {
   mutation: MutationType!
-  node: OrgTier
+  node: Team
   updatedFields: [String!]
-  previousValues: OrgTierPreviousValues
+  previousValues: TeamPreviousValues
 }
 
-input OrgTierSubscriptionWhereInput {
+input TeamSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [OrgTierSubscriptionWhereInput!]
+  AND: [TeamSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [OrgTierSubscriptionWhereInput!]
+  OR: [TeamSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [OrgTierSubscriptionWhereInput!]
+  NOT: [TeamSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -945,101 +945,101 @@ input OrgTierSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: OrgTierWhereInput
+  node: TeamWhereInput
 }
 
-input OrgTierUpdateInput {
+input TeamUpdateInput {
   nameEn: String
   nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
+  organization: OrganizationUpdateOneWithoutTeamsInput
+  ownerID: ProfileUpdateOneWithoutTeamsInput
   members: ProfileUpdateManyWithoutOrgInput
 }
 
-input OrgTierUpdateManyWithoutOrganizationInput {
-  create: [OrgTierCreateWithoutOrganizationInput!]
-  connect: [OrgTierWhereUniqueInput!]
-  disconnect: [OrgTierWhereUniqueInput!]
-  delete: [OrgTierWhereUniqueInput!]
-  update: [OrgTierUpdateWithWhereUniqueWithoutOrganizationInput!]
-  upsert: [OrgTierUpsertWithWhereUniqueWithoutOrganizationInput!]
+input TeamUpdateManyWithoutOrganizationInput {
+  create: [TeamCreateWithoutOrganizationInput!]
+  connect: [TeamWhereUniqueInput!]
+  disconnect: [TeamWhereUniqueInput!]
+  delete: [TeamWhereUniqueInput!]
+  update: [TeamUpdateWithWhereUniqueWithoutOrganizationInput!]
+  upsert: [TeamUpsertWithWhereUniqueWithoutOrganizationInput!]
 }
 
-input OrgTierUpdateManyWithoutOwnerIDInput {
-  create: [OrgTierCreateWithoutOwnerIDInput!]
-  connect: [OrgTierWhereUniqueInput!]
-  disconnect: [OrgTierWhereUniqueInput!]
-  delete: [OrgTierWhereUniqueInput!]
-  update: [OrgTierUpdateWithWhereUniqueWithoutOwnerIDInput!]
-  upsert: [OrgTierUpsertWithWhereUniqueWithoutOwnerIDInput!]
+input TeamUpdateManyWithoutOwnerIDInput {
+  create: [TeamCreateWithoutOwnerIDInput!]
+  connect: [TeamWhereUniqueInput!]
+  disconnect: [TeamWhereUniqueInput!]
+  delete: [TeamWhereUniqueInput!]
+  update: [TeamUpdateWithWhereUniqueWithoutOwnerIDInput!]
+  upsert: [TeamUpsertWithWhereUniqueWithoutOwnerIDInput!]
 }
 
-input OrgTierUpdateOneWithoutMembersInput {
-  create: OrgTierCreateWithoutMembersInput
-  connect: OrgTierWhereUniqueInput
+input TeamUpdateOneWithoutMembersInput {
+  create: TeamCreateWithoutMembersInput
+  connect: TeamWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: OrgTierUpdateWithoutMembersDataInput
-  upsert: OrgTierUpsertWithoutMembersInput
+  update: TeamUpdateWithoutMembersDataInput
+  upsert: TeamUpsertWithoutMembersInput
 }
 
-input OrgTierUpdateWithoutMembersDataInput {
+input TeamUpdateWithoutMembersDataInput {
   nameEn: String
   nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
+  organization: OrganizationUpdateOneWithoutTeamsInput
+  ownerID: ProfileUpdateOneWithoutTeamsInput
 }
 
-input OrgTierUpdateWithoutOrganizationDataInput {
+input TeamUpdateWithoutOrganizationDataInput {
   nameEn: String
   nameFr: String
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
+  ownerID: ProfileUpdateOneWithoutTeamsInput
   members: ProfileUpdateManyWithoutOrgInput
 }
 
-input OrgTierUpdateWithoutOwnerIDDataInput {
+input TeamUpdateWithoutOwnerIDDataInput {
   nameEn: String
   nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
+  organization: OrganizationUpdateOneWithoutTeamsInput
   members: ProfileUpdateManyWithoutOrgInput
 }
 
-input OrgTierUpdateWithWhereUniqueWithoutOrganizationInput {
-  where: OrgTierWhereUniqueInput!
-  data: OrgTierUpdateWithoutOrganizationDataInput!
+input TeamUpdateWithWhereUniqueWithoutOrganizationInput {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateWithoutOrganizationDataInput!
 }
 
-input OrgTierUpdateWithWhereUniqueWithoutOwnerIDInput {
-  where: OrgTierWhereUniqueInput!
-  data: OrgTierUpdateWithoutOwnerIDDataInput!
+input TeamUpdateWithWhereUniqueWithoutOwnerIDInput {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateWithoutOwnerIDDataInput!
 }
 
-input OrgTierUpsertWithoutMembersInput {
-  update: OrgTierUpdateWithoutMembersDataInput!
-  create: OrgTierCreateWithoutMembersInput!
+input TeamUpsertWithoutMembersInput {
+  update: TeamUpdateWithoutMembersDataInput!
+  create: TeamCreateWithoutMembersInput!
 }
 
-input OrgTierUpsertWithWhereUniqueWithoutOrganizationInput {
-  where: OrgTierWhereUniqueInput!
-  update: OrgTierUpdateWithoutOrganizationDataInput!
-  create: OrgTierCreateWithoutOrganizationInput!
+input TeamUpsertWithWhereUniqueWithoutOrganizationInput {
+  where: TeamWhereUniqueInput!
+  update: TeamUpdateWithoutOrganizationDataInput!
+  create: TeamCreateWithoutOrganizationInput!
 }
 
-input OrgTierUpsertWithWhereUniqueWithoutOwnerIDInput {
-  where: OrgTierWhereUniqueInput!
-  update: OrgTierUpdateWithoutOwnerIDDataInput!
-  create: OrgTierCreateWithoutOwnerIDInput!
+input TeamUpsertWithWhereUniqueWithoutOwnerIDInput {
+  where: TeamWhereUniqueInput!
+  update: TeamUpdateWithoutOwnerIDDataInput!
+  create: TeamCreateWithoutOwnerIDInput!
 }
 
-input OrgTierWhereInput {
+input TeamWhereInput {
   """Logical AND on all given filters."""
-  AND: [OrgTierWhereInput!]
+  AND: [TeamWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [OrgTierWhereInput!]
+  OR: [TeamWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [OrgTierWhereInput!]
+  NOT: [TeamWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -1167,7 +1167,7 @@ input OrgTierWhereInput {
   members_none: ProfileWhereInput
 }
 
-input OrgTierWhereUniqueInput {
+input TeamWhereUniqueInput {
   id: ID
 }
 
@@ -1188,7 +1188,7 @@ type PageInfo {
 
 type Profile implements Node {
   id: ID!
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1198,8 +1198,8 @@ type Profile implements Node {
   titleEn: String
   titleFr: String
   supervisor(where: ProfileWhereInput): Profile
-  org(where: OrgTierWhereInput): OrgTier
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier!]
+  org(where: TeamWhereInput): Team
+  Teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
 }
 
 """A connection to a list of items."""
@@ -1213,7 +1213,7 @@ type ProfileConnection {
 }
 
 input ProfileCreateInput {
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1223,8 +1223,8 @@ input ProfileCreateInput {
   titleFr: String
   address: AddressCreateOneInput
   supervisor: ProfileCreateOneInput
-  org: OrgTierCreateOneWithoutMembersInput
-  orgTiers: OrgTierCreateManyWithoutOwnerIDInput
+  org: TeamCreateOneWithoutMembersInput
+  Teams: TeamCreateManyWithoutOwnerIDInput
 }
 
 input ProfileCreateManyWithoutOrgInput {
@@ -1237,13 +1237,13 @@ input ProfileCreateOneInput {
   connect: ProfileWhereUniqueInput
 }
 
-input ProfileCreateOneWithoutOrgTiersInput {
-  create: ProfileCreateWithoutOrgTiersInput
+input ProfileCreateOneWithoutTeamsInput {
+  create: ProfileCreateWithoutTeamsInput
   connect: ProfileWhereUniqueInput
 }
 
 input ProfileCreateWithoutOrgInput {
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1253,11 +1253,11 @@ input ProfileCreateWithoutOrgInput {
   titleFr: String
   address: AddressCreateOneInput
   supervisor: ProfileCreateOneInput
-  orgTiers: OrgTierCreateManyWithoutOwnerIDInput
+  Teams: TeamCreateManyWithoutOwnerIDInput
 }
 
-input ProfileCreateWithoutOrgTiersInput {
-  gcId: String!
+input ProfileCreateWithoutTeamsInput {
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1267,7 +1267,7 @@ input ProfileCreateWithoutOrgTiersInput {
   titleFr: String
   address: AddressCreateOneInput
   supervisor: ProfileCreateOneInput
-  org: OrgTierCreateOneWithoutMembersInput
+  org: TeamCreateOneWithoutMembersInput
 }
 
 """An edge in a connection."""
@@ -1282,8 +1282,8 @@ type ProfileEdge {
 enum ProfileOrderByInput {
   id_ASC
   id_DESC
-  gcId_ASC
-  gcId_DESC
+  gcID_ASC
+  gcID_DESC
   name_ASC
   name_DESC
   email_ASC
@@ -1306,7 +1306,7 @@ enum ProfileOrderByInput {
 
 type ProfilePreviousValues {
   id: ID!
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1356,7 +1356,7 @@ input ProfileSubscriptionWhereInput {
 }
 
 input ProfileUpdateDataInput {
-  gcId: String
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1366,12 +1366,12 @@ input ProfileUpdateDataInput {
   titleFr: String
   address: AddressUpdateOneInput
   supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
+  org: TeamUpdateOneWithoutMembersInput
+  Teams: TeamUpdateManyWithoutOwnerIDInput
 }
 
 input ProfileUpdateInput {
-  gcId: String
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1381,8 +1381,8 @@ input ProfileUpdateInput {
   titleFr: String
   address: AddressUpdateOneInput
   supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
+  org: TeamUpdateOneWithoutMembersInput
+  Teams: TeamUpdateManyWithoutOwnerIDInput
 }
 
 input ProfileUpdateManyWithoutOrgInput {
@@ -1403,17 +1403,17 @@ input ProfileUpdateOneInput {
   upsert: ProfileUpsertNestedInput
 }
 
-input ProfileUpdateOneWithoutOrgTiersInput {
-  create: ProfileCreateWithoutOrgTiersInput
+input ProfileUpdateOneWithoutTeamsInput {
+  create: ProfileCreateWithoutTeamsInput
   connect: ProfileWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: ProfileUpdateWithoutOrgTiersDataInput
-  upsert: ProfileUpsertWithoutOrgTiersInput
+  update: ProfileUpdateWithoutTeamsDataInput
+  upsert: ProfileUpsertWithoutTeamsInput
 }
 
 input ProfileUpdateWithoutOrgDataInput {
-  gcId: String
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1423,11 +1423,11 @@ input ProfileUpdateWithoutOrgDataInput {
   titleFr: String
   address: AddressUpdateOneInput
   supervisor: ProfileUpdateOneInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
+  Teams: TeamUpdateManyWithoutOwnerIDInput
 }
 
-input ProfileUpdateWithoutOrgTiersDataInput {
-  gcId: String
+input ProfileUpdateWithoutTeamsDataInput {
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1437,7 +1437,7 @@ input ProfileUpdateWithoutOrgTiersDataInput {
   titleFr: String
   address: AddressUpdateOneInput
   supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
+  org: TeamUpdateOneWithoutMembersInput
 }
 
 input ProfileUpdateWithWhereUniqueWithoutOrgInput {
@@ -1450,9 +1450,9 @@ input ProfileUpsertNestedInput {
   create: ProfileCreateInput!
 }
 
-input ProfileUpsertWithoutOrgTiersInput {
-  update: ProfileUpdateWithoutOrgTiersDataInput!
-  create: ProfileCreateWithoutOrgTiersInput!
+input ProfileUpsertWithoutTeamsInput {
+  update: ProfileUpdateWithoutTeamsDataInput!
+  create: ProfileCreateWithoutTeamsInput!
 }
 
 input ProfileUpsertWithWhereUniqueWithoutOrgInput {
@@ -1510,46 +1510,46 @@ input ProfileWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  gcId: String
+  gcID: String
 
   """All values that are not equal to given value."""
-  gcId_not: String
+  gcID_not: String
 
   """All values that are contained in given list."""
-  gcId_in: [String!]
+  gcID_in: [String!]
 
   """All values that are not contained in given list."""
-  gcId_not_in: [String!]
+  gcID_not_in: [String!]
 
   """All values less than the given value."""
-  gcId_lt: String
+  gcID_lt: String
 
   """All values less than or equal the given value."""
-  gcId_lte: String
+  gcID_lte: String
 
   """All values greater than the given value."""
-  gcId_gt: String
+  gcID_gt: String
 
   """All values greater than or equal the given value."""
-  gcId_gte: String
+  gcID_gte: String
 
   """All values containing the given string."""
-  gcId_contains: String
+  gcID_contains: String
 
   """All values not containing the given string."""
-  gcId_not_contains: String
+  gcID_not_contains: String
 
   """All values starting with the given string."""
-  gcId_starts_with: String
+  gcID_starts_with: String
 
   """All values not starting with the given string."""
-  gcId_not_starts_with: String
+  gcID_not_starts_with: String
 
   """All values ending with the given string."""
-  gcId_ends_with: String
+  gcID_ends_with: String
 
   """All values not ending with the given string."""
-  gcId_not_ends_with: String
+  gcID_not_ends_with: String
   name: String
 
   """All values that are not equal to given value."""
@@ -1832,28 +1832,28 @@ input ProfileWhereInput {
   titleFr_not_ends_with: String
   address: AddressWhereInput
   supervisor: ProfileWhereInput
-  org: OrgTierWhereInput
-  orgTiers_every: OrgTierWhereInput
-  orgTiers_some: OrgTierWhereInput
-  orgTiers_none: OrgTierWhereInput
+  org: TeamWhereInput
+  Teams_every: TeamWhereInput
+  Teams_some: TeamWhereInput
+  Teams_none: TeamWhereInput
 }
 
 input ProfileWhereUniqueInput {
   id: ID
-  gcId: String
+  gcID: String
   email: String
 }
 
 type Query {
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier]!
+  Teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   organizations(where: OrganizationWhereInput, orderBy: OrganizationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Organization]!
   profiles(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile]!
   addresses(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Address]!
-  orgTier(where: OrgTierWhereUniqueInput!): OrgTier
+  Team(where: TeamWhereUniqueInput!): Team
   organization(where: OrganizationWhereUniqueInput!): Organization
   profile(where: ProfileWhereUniqueInput!): Profile
   address(where: AddressWhereUniqueInput!): Address
-  orgTiersConnection(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgTierConnection!
+  TeamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   organizationsConnection(where: OrganizationWhereInput, orderBy: OrganizationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrganizationConnection!
   profilesConnection(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProfileConnection!
   addressesConnection(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AddressConnection!
@@ -1866,7 +1866,7 @@ type Query {
 }
 
 type Subscription {
-  orgTier(where: OrgTierSubscriptionWhereInput): OrgTierSubscriptionPayload
+  Team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   organization(where: OrganizationSubscriptionWhereInput): OrganizationSubscriptionPayload
   profile(where: ProfileSubscriptionWhereInput): ProfileSubscriptionPayload
   address(where: AddressSubscriptionWhereInput): AddressSubscriptionPayload
