@@ -43,3 +43,5 @@ temp_convert
 tests/pictureconversion/sharpConvert/
 
 jest_*/
+
+postgres/
