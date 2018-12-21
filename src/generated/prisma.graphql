@@ -509,7 +509,7 @@ input ProfileCreateInput {
   titleFr: String
   supervisor: ProfileCreateOneWithoutSupervisorInput
   team: TeamCreateOneWithoutMembersInput
-  ownerofTeams: TeamCreateManyWithoutOwnerIDInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
 }
 
 input ProfileCreateManyWithoutTeamInput {
@@ -552,7 +552,7 @@ input ProfileCreateWithoutSupervisorInput {
   titleEn: String
   titleFr: String
   team: TeamCreateOneWithoutMembersInput
-  ownerofTeams: TeamCreateManyWithoutOwnerIDInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
 }
 
 input ProfileCreateWithoutTeamInput {
@@ -566,7 +566,7 @@ input ProfileCreateWithoutTeamInput {
   titleEn: String
   titleFr: String
   supervisor: ProfileCreateOneWithoutSupervisorInput
-  ownerofTeams: TeamCreateManyWithoutOwnerIDInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
 }
 
 type ProfileEdge {
@@ -773,7 +773,7 @@ input ProfileUpdateInput {
   titleFr: String
   supervisor: ProfileUpdateOneWithoutSupervisorInput
   team: TeamUpdateOneWithoutMembersInput
-  ownerofTeams: TeamUpdateManyWithoutOwnerIDInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
 }
 
 input ProfileUpdateManyDataInput {
@@ -857,7 +857,7 @@ input ProfileUpdateWithoutSupervisorDataInput {
   titleEn: String
   titleFr: String
   team: TeamUpdateOneWithoutMembersInput
-  ownerofTeams: TeamUpdateManyWithoutOwnerIDInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
 }
 
 input ProfileUpdateWithoutTeamDataInput {
@@ -871,7 +871,7 @@ input ProfileUpdateWithoutTeamDataInput {
   titleEn: String
   titleFr: String
   supervisor: ProfileUpdateOneWithoutSupervisorInput
-  ownerofTeams: TeamUpdateManyWithoutOwnerIDInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
 }
 
 input ProfileUpdateWithWhereUniqueWithoutTeamInput {
@@ -1067,7 +1067,7 @@ type Team {
   nameEn: String!
   nameFr: String!
   organization: Organization!
-  ownerID: Profile
+  owner: Profile
   members(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile!]
 }
 
@@ -1081,7 +1081,7 @@ input TeamCreateInput {
   nameEn: String!
   nameFr: String!
   organization: OrganizationCreateOneWithoutTeamsInput!
-  ownerID: ProfileCreateOneWithoutOwnerofTeamsInput
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
   members: ProfileCreateManyWithoutTeamInput
 }
 
@@ -1090,8 +1090,8 @@ input TeamCreateManyWithoutOrganizationInput {
   connect: [TeamWhereUniqueInput!]
 }
 
-input TeamCreateManyWithoutOwnerIDInput {
-  create: [TeamCreateWithoutOwnerIDInput!]
+input TeamCreateManyWithoutOwnerInput {
+  create: [TeamCreateWithoutOwnerInput!]
   connect: [TeamWhereUniqueInput!]
 }
 
@@ -1104,17 +1104,17 @@ input TeamCreateWithoutMembersInput {
   nameEn: String!
   nameFr: String!
   organization: OrganizationCreateOneWithoutTeamsInput!
-  ownerID: ProfileCreateOneWithoutOwnerofTeamsInput
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
 }
 
 input TeamCreateWithoutOrganizationInput {
   nameEn: String!
   nameFr: String!
-  ownerID: ProfileCreateOneWithoutOwnerofTeamsInput
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
   members: ProfileCreateManyWithoutTeamInput
 }
 
-input TeamCreateWithoutOwnerIDInput {
+input TeamCreateWithoutOwnerInput {
   nameEn: String!
   nameFr: String!
   organization: OrganizationCreateOneWithoutTeamsInput!
@@ -1215,7 +1215,7 @@ input TeamUpdateInput {
   nameEn: String
   nameFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
-  ownerID: ProfileUpdateOneWithoutOwnerofTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
 }
 
@@ -1240,13 +1240,13 @@ input TeamUpdateManyWithoutOrganizationInput {
   updateMany: [TeamUpdateManyWithWhereNestedInput!]
 }
 
-input TeamUpdateManyWithoutOwnerIDInput {
-  create: [TeamCreateWithoutOwnerIDInput!]
+input TeamUpdateManyWithoutOwnerInput {
+  create: [TeamCreateWithoutOwnerInput!]
   delete: [TeamWhereUniqueInput!]
   connect: [TeamWhereUniqueInput!]
   disconnect: [TeamWhereUniqueInput!]
-  update: [TeamUpdateWithWhereUniqueWithoutOwnerIDInput!]
-  upsert: [TeamUpsertWithWhereUniqueWithoutOwnerIDInput!]
+  update: [TeamUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [TeamUpsertWithWhereUniqueWithoutOwnerInput!]
   deleteMany: [TeamScalarWhereInput!]
   updateMany: [TeamUpdateManyWithWhereNestedInput!]
 }
@@ -1269,17 +1269,17 @@ input TeamUpdateWithoutMembersDataInput {
   nameEn: String
   nameFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
-  ownerID: ProfileUpdateOneWithoutOwnerofTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
 }
 
 input TeamUpdateWithoutOrganizationDataInput {
   nameEn: String
   nameFr: String
-  ownerID: ProfileUpdateOneWithoutOwnerofTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
 }
 
-input TeamUpdateWithoutOwnerIDDataInput {
+input TeamUpdateWithoutOwnerDataInput {
   nameEn: String
   nameFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
@@ -1291,9 +1291,9 @@ input TeamUpdateWithWhereUniqueWithoutOrganizationInput {
   data: TeamUpdateWithoutOrganizationDataInput!
 }
 
-input TeamUpdateWithWhereUniqueWithoutOwnerIDInput {
+input TeamUpdateWithWhereUniqueWithoutOwnerInput {
   where: TeamWhereUniqueInput!
-  data: TeamUpdateWithoutOwnerIDDataInput!
+  data: TeamUpdateWithoutOwnerDataInput!
 }
 
 input TeamUpsertWithoutMembersInput {
@@ -1307,10 +1307,10 @@ input TeamUpsertWithWhereUniqueWithoutOrganizationInput {
   create: TeamCreateWithoutOrganizationInput!
 }
 
-input TeamUpsertWithWhereUniqueWithoutOwnerIDInput {
+input TeamUpsertWithWhereUniqueWithoutOwnerInput {
   where: TeamWhereUniqueInput!
-  update: TeamUpdateWithoutOwnerIDDataInput!
-  create: TeamCreateWithoutOwnerIDInput!
+  update: TeamUpdateWithoutOwnerDataInput!
+  create: TeamCreateWithoutOwnerInput!
 }
 
 input TeamWhereInput {
@@ -1357,7 +1357,7 @@ input TeamWhereInput {
   nameFr_ends_with: String
   nameFr_not_ends_with: String
   organization: OrganizationWhereInput
-  ownerID: ProfileWhereInput
+  owner: ProfileWhereInput
   members_every: ProfileWhereInput
   members_some: ProfileWhereInput
   members_none: ProfileWhereInput

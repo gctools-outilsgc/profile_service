@@ -44,7 +44,7 @@
     "graphql": "^14.0.2",
     "graphql-cli": "^2.17.0",
     "node-fetch": "^2.3.0",
-    "prisma": "^1.23.0",
+    "prisma": "^1.23.2",
     "prisma-binding": "^2.2.11",
     "request": "^2.88.0",
     "sharp": "^0.21.1",

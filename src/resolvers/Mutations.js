@@ -105,11 +105,17 @@ async function modifyProfile(_, args, context, info){
 }
 
 async function deleteProfile(_, args, context){
-    return await context.prisma.mutation.deleteProfile({
-        where:{
+    try {
+        await context.prisma.mutation.deleteProfile({
+            where:{
             gcID: args.gcID
-        }
-    });
+            }
+        });
+    } catch(e){
+        return e;
+    }
+    return true;
+
 }
 
 function createOrganization(_, args, context, info){            
@@ -133,10 +139,10 @@ async function modifyOrganization(_, args, context, info){
     );
     throwExceptionIfOrganizationIsNotDefined(currentOrganization);
     var updateOrganizationData = {
-        nameEn: copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr),
-        acronymEn: copyValueToObjectIfDefined(args.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.acronymFr)
+        nameEn: copyValueToObjectIfDefined(args.data.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.data.nameFr),
+        acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
+        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr)
     };
 
     return await context.prisma.mutation.updateOrganization({
@@ -148,11 +154,18 @@ async function modifyOrganization(_, args, context, info){
 }
 
 async function deleteOrganization(_, args, context){
-    return await context.prisma.mutation.deleteOrganization({
-        where:{
-            gcID: args.id
-        }
-    });
+    try {
+        await context.prisma.mutation.deleteOrganization({
+            where:{
+                gcID: args.id
+            }
+        });
+    } catch(e){
+        return e;
+    }
+    return true;
+
+
 }
 
 function createTeam(_, args, context, info){
@@ -161,7 +174,7 @@ function createTeam(_, args, context, info){
             nameEn: args.nameEn,
             nameFr: args.nameFr,
             organization: {connect: {id: args.organization.id}},
-            ownerID: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
+            owner: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
         }
     }, info);
 }
@@ -210,12 +223,18 @@ async function modifyTeam(_, args, context, info){
 }
 
 async function deleteTeam(_, args, context){
-    return await context.prisma.mutation.deleteTeam({
-        where:{
-            gcID: args.id
-        }
-    });
+    try {
+        await context.prisma.mutation.deleteTeam({
+            where:{
+                gcID: args.id
+            }
+        });
+    } catch(e){
+        return e;
+    }
+    return true;
 }
+
 
 module.exports = {
     createProfile,

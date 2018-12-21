@@ -28,7 +28,7 @@ type Team {
   nameEn: String!
   nameFr: String!
   organization: Organization! @relation(name:"Teams")
-  ownerID: Profile @relation(name:"OwnerOfTeam")
+  owner: Profile @relation(name:"OwnerOfTeam")
   members: [Profile!]! @relation(name:"TeamMembers")
 }
 
