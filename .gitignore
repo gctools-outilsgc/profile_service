@@ -45,3 +45,5 @@ tests/
 image-server/uploads
 
 jest_*/
+
+postgres/
