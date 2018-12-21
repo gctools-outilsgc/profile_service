@@ -25,7 +25,7 @@ The profile as a service playground endpoint can now be reached at http://localh
 # Tests
 To run tests from the root of the project:
 `sudo docker-compose -f docker-compose-test.yml up -d`
-`sudo npm test`
+`npm test`
 
 # Validation
 
