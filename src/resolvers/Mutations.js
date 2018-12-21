@@ -1,9 +1,9 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, getSupervisorFromArgs} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const {throwExceptionIfOrganizationIsNotDefined} = require("./helper/organizationHelper");
-const {throwExceptionIfTeamIsNotDefined} = require("./helper/teamHelper");
+const {throwExceptionIfTeamIsNotDefined, getTeamFromArgs} = require("./helper/teamHelper");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
@@ -26,29 +26,17 @@ async function createProfile(_, args, context, info){
     if(address != null) {
         createProfileData.address = {create:address};
     }
-    if (typeof args.supervisor !== "undefined") {
-        var createSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.supervisor.email)
-        };
-        createProfileData.push({
-            supervisor: {
-                connect: {
-                    createSupervisorData,
-                },
-            },
-        });
+
+    var supervisor = getSupervisorFromArgs(args);
+    if (supervisor != null) {
+        createProfileData.supervisor = {connect:supervisor};
     }
 
-    if (typeof args.team !== "undefined"){
-        createProfileData.push({
-            team :{
-                connect: {
-                    id: args.team.id
-                },
-            },
-        });
+    var team = getTeamFromArgs(args);
+    if (team != null) {
+        createProfileData.team = {connect:team};
     }
+
     return await context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
@@ -139,7 +127,7 @@ async function modifyOrganization(_, args, context, info){
     const currentOrganization = context.prisma.query.organizations(
         {
             where: {
-                id: args.idprofile
+                id: args.id
             }
         }
     );
@@ -172,7 +160,8 @@ function createTeam(_, args, context, info){
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
-            organization: {connect: {id: args.organization.id}}
+            organization: {connect: {id: args.organization.id}},
+            ownerID: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
         }
     }, info);
 }
@@ -234,6 +223,7 @@ module.exports = {
     deleteProfile,
     createOrganization,
     modifyOrganization,
+    deleteOrganization,
     createTeam,
     modifyTeam,
     deleteTeam
