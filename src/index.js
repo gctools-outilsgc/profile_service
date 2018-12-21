@@ -1,26 +1,33 @@
-const { GraphQLServer } = require("graphql-yoga");
+const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
 const { Prisma } = require("prisma-binding");
 const {EmailAddress, PostalCode} =  require("@okgrow/graphql-scalars");
 const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutations");
-const {Country, Province, PhoneNumber} = require("./resolvers/Scalars");
+const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
+const fs = require("fs");
 
 const resolvers = {
   Query,
   Mutation,
-  Country, Province,
   Email : EmailAddress,
   PhoneNumber,
   PostalCode
 };
 
-const server = new GraphQLServer({
-  typeDefs: "./src/schema.graphql",
+const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}`;
+
+const schema = makeExecutableSchema({
+  typeDefs,
   resolvers,
   resolverValidationOptions: {
     requireResolversForResolveType: false 
-  },
+  }
+});
+
+
+const server = new ApolloServer({
+  schema,
   context: (req) => ({
     ...req,
     prisma: new Prisma({
@@ -30,11 +37,8 @@ const server = new GraphQLServer({
     }),
   }),
 });
-const options = {
-  port: 4000,
-  endpoint: "/graphql",
-  subscriptions: "/subscriptions",
-  playground: "/playground",
-};
+
 // eslint-disable-next-line no-console
-server.start(options,() => console.log("GraphQL server is running on http://localhost:4000"));
+server.listen().then(({ url }) => {
+  console.log(`🚀 GraphQL Server ready at ${url}`);
+});

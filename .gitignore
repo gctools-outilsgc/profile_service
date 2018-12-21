@@ -40,7 +40,9 @@ tests/pictureconversion/folder/
 
 temp_convert
 
-tests/pictureconversion/sharpConvert/
+tests/
+
+image-server/uploads
 
 jest_*/
 
