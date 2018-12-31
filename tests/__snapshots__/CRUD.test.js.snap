@@ -78,6 +78,51 @@ Object {
 }
 `;
 
+exports[`Modify Profile 1`] = `
+Object {
+  "address": Object {
+    "city": "Vallhala",
+    "country": "Greece",
+    "postalCode": "Z9P 8A0",
+    "province": "Crete",
+    "streetAddress": "101 Kratos",
+  },
+  "email": "kratos@somewhere.com",
+  "gcID": "asdf123456",
+  "mobilePhone": "819-234-6345",
+  "name": "Kratos",
+  "officePhone": "(613) 295-9093",
+  "supervisor": Object {
+    "email": "supervisor2@somewhere.com",
+    "gcID": "9283982",
+    "name": "Supervisor Test 2",
+  },
+  "team": Object {
+    "members": Array [
+      Object {
+        "email": "kratos@somewhere.com",
+        "gcID": "asdf123456",
+        "name": "Kratos",
+      },
+    ],
+    "nameEn": "Team Name EN - Mod 1",
+    "nameFr": "Team Name FR - Mod 1",
+    "organization": Object {
+      "acronymEn": "OTEN 2",
+      "acronymFr": "OTFR 2",
+      "nameEn": "Organization Test EN 2",
+      "nameFr": "Organization Test FR 2",
+    },
+    "owner": Object {
+      "email": "supervisor2@somewhere.com",
+      "name": "Supervisor Test 2",
+    },
+  },
+  "titleEn": "God of War",
+  "titleFr": "Dieu de la guerre",
+}
+`;
+
 exports[`Modify Team 1`] = `
 Object {
   "nameEn": "Team Name EN - Mod 1",

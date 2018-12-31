@@ -44,56 +44,51 @@ async function createProfile(_, args, context, info){
 
 async function modifyProfile(_, args, context, info){
     // eslint-disable-next-line new-cap
-    const currentProfile = await context.prisma.query.profiles(
+    const currentProfile = await context.prisma.query.profile(
         {
             where: {
                 gcID: args.gcID
             }            
-        });
+        },"{gcID, address{id}}");
+
     throwExceptionIfProfileIsNotDefined(currentProfile);
     var updateProfileData = {
-        name: copyValueToObjectIfDefined(args.name),
-        email: copyValueToObjectIfDefined(args.email),
-        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
-        officePhone: copyValueToObjectIfDefined(args.officePhone),
-        titleEn: copyValueToObjectIfDefined(args.titleEn),
-        titleFr: copyValueToObjectIfDefined(args.titleFr),
+        name: copyValueToObjectIfDefined(args.data.name),
+        email: copyValueToObjectIfDefined(args.data.email),
+        mobilePhone: copyValueToObjectIfDefined(args.data.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.data.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.data.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.data.titleFr),
     };
 
     if (typeof args.avatar !== "undefined"){
-        await processUpload(args.avatar).then((url) => {
+        await processUpload(args.data.avatar).then((url) => {
             updateProfileData.avatar = url;
         });
     }
     
-    var address = updateOrCreateAddressOnProfile(args, currentProfile);
+    var address = updateOrCreateAddressOnProfile(args.data, currentProfile);
     if(address != null){
         updateProfileData.address = address;
     }
        
-    if (typeof args.supervisor !== "undefined") {
+    if (typeof args.data.supervisor !== "undefined") {
         var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.supervisor.email)
+            gcID: copyValueToObjectIfDefined(args.data.supervisor.gcID),
+            email: copyValueToObjectIfDefined(args.data.supervisor.email)
         };
 
-        updateProfileData.push({
-            supervisor: {
-                connect: {
-                    updateSupervisorData
-                }
-            }
-        });
+        updateProfileData.supervisor = {
+                connect: updateSupervisorData
+        };
     }
     
-    if (typeof args.team !== "undefined"){
-        updateProfileData.push({
-            team :{
+    if (typeof args.data.team !== "undefined"){
+        updateProfileData.team = {
                 connect: {
-                    id: args.team.id
+                    id: args.data.team.id
                 }
-            }
-        });
+        };
     }
 
     return await context.prisma.mutation.updateProfile({

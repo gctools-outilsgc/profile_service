@@ -138,5 +138,44 @@ test("Modify Team", async() => {
 });
 
 test("Modify Profile", async() => {
+    var argAddress = {
+        streetAddress: "101 Kratos",
+        city: "Vallhala",
+        postalCode: "Z9P 8A0",
+        province: "Crete",
+        country: "Greece"
+    };
+
+    var supervisorID = {
+        gcID: "9283982"
+    };
+
+    const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
+    
+    const args = {
+            gcID: "asdf123456",
+            data: {
+                name: "Kratos",
+                email: "kratos@somewhere.com",
+                mobilePhone: "819-234-6345",
+                officePhone: "(613) 295-9093",
+                titleEn: "God of War",
+                titleFr: "Dieu de la guerre",
+                address: argAddress,
+                supervisor: supervisorID,
+                team: {
+                    id: teamID[0].id
+                }
+            }
+    };
+
+    const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
+    "address {streetAddress, city, province, postalCode, country}," +
+    "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
+    "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
+
+    expect(
+        await mutations.modifyProfile(parent, args, ctx, info)
+    ).toMatchSnapshot();
 
 });

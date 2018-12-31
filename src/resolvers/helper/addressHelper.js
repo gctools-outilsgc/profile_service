@@ -36,7 +36,7 @@ function updateExistingAddress(args){
 
 function updateOrCreateAddressOnProfile(args, profile){
     if(typeof args.address !== "undefined"){
-        if (profile.address.id !== null){
+        if ("address" in profile){
             return updateExistingAddress(args);
         }
         var newAddress = getNewAddressFromArgs(args);
