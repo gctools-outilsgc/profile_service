@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create Organization 1`] = `
+Object {
+  "acronymEn": "OTEN",
+  "acronymFr": "OTFR",
+  "nameEn": "Organization Test EN",
+  "nameFr": "Organization Test FR",
+}
+`;
+
+exports[`Create a Team 1`] = `
+Object {
+  "nameEn": "Team Name EN",
+  "nameFr": "Team Name FR",
+  "organization": Object {
+    "nameEn": "Organization Test EN",
+  },
+  "owner": Object {
+    "email": "supervisor@somewhere.com",
+    "gcID": "0834haf",
+    "name": "Supervisor Test",
+  },
+}
+`;
+
+exports[`Create profile without avatar 1`] = `
+Object {
+  "address": Object {
+    "city": "somewhere",
+    "country": "Canada",
+    "postalCode": "H0H 0H0",
+    "province": "Ontario",
+    "streetAddress": "98 where",
+  },
+  "email": "awesome.user@somewhere.com",
+  "gcID": "asdf123456",
+  "mobilePhone": "613-999-0897",
+  "name": "Awesome User",
+  "officePhone": "(879) 234-2341",
+  "supervisor": Object {
+    "email": "supervisor@somewhere.com",
+    "gcID": "0834haf",
+    "name": "Supervisor Test",
+  },
+  "team": Object {
+    "members": Array [
+      Object {
+        "email": "awesome.user@somewhere.com",
+        "gcID": "asdf123456",
+        "name": "Awesome User",
+      },
+    ],
+    "nameEn": "Team Name EN",
+    "nameFr": "Team Name FR",
+    "organization": Object {
+      "acronymEn": "OTEN",
+      "acronymFr": "OTFR",
+      "nameEn": "Organization Test EN",
+      "nameFr": "Organization Test FR",
+    },
+    "owner": Object {
+      "email": "supervisor@somewhere.com",
+      "name": "Supervisor Test",
+    },
+  },
+  "titleEn": "Super Dave",
+  "titleFr": "Super Dave in French",
+}
+`;
+
+exports[`Modify Organization 1`] = `
+Object {
+  "acronymEn": "OTEN - Mod 1",
+  "acronymFr": "OTFR - Mod 1",
+  "nameEn": "Organization Test EN - Mod 1",
+  "nameFr": "Organization Test FR - Mod 1",
+}
+`;
+
+exports[`Modify Team 1`] = `
+Object {
+  "nameEn": "Team Name EN - Mod 1",
+  "nameFr": "Team Name FR - Mod 1",
+  "organization": Object {
+    "nameEn": "Organization Test EN 2",
+  },
+  "owner": Object {
+    "email": "supervisor2@somewhere.com",
+    "gcID": "9283982",
+    "name": "Supervisor Test 2",
+  },
+}
+`;
