@@ -187,31 +187,26 @@ async function modifyTeam(_, args, context, info){
     });
     throwExceptionIfTeamIsNotDefined(currentTeam);
     var updateTeamData = {
-        nameEn: copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr)
+        nameEn: copyValueToObjectIfDefined(args.data.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.data.nameFr),
+
     };
-    if (typeof args.organization !== "undefined"){
-        updateTeamData.push({
-            organization: {
-                connect:{
-                    id: args.organization.id
-                }                
-            }
-        });
+    if (typeof args.data.organization !== "undefined"){
+        updateTeamData.organization = {
+            connect:{
+                id: args.data.organization.id
+            }      
+        };
     }
 
-    if (typeof args.owner !== "undefined"){
+    if (typeof args.data.owner !== "undefined"){
         var updateOwnerData = {
-            gcID: copyValueToObjectIfDefined(args.owner.gcID),
-            email: copyValueToObjectIfDefined(args.owner.email)
+            gcID: copyValueToObjectIfDefined(args.data.owner.gcID),
+            email: copyValueToObjectIfDefined(args.data.owner.email)
         };
-        updateTeamData.push({
-            ownerID: {
-                connect: {
-                    updateOwnerData
-                }
-            } 
-        });
+        updateTeamData.owner = {
+            connect: updateOwnerData
+        };
     }
 
     return await context.prisma.mutation.updateTeam({
