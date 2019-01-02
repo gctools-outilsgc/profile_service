@@ -69,6 +69,45 @@ Object {
 }
 `;
 
+exports[`Delete Organization 1`] = `
+Object {
+  "success": true,
+}
+`;
+
+exports[`Delete Organization that does not exist 1`] = `
+Object {
+  "error": [GraphQLError: No Node for the model Organization with value 2345677 for id found.],
+  "success": false,
+}
+`;
+
+exports[`Delete Profile 1`] = `
+Object {
+  "success": true,
+}
+`;
+
+exports[`Delete Profile that doesn't exist 1`] = `
+Object {
+  "error": [GraphQLError: No Node for the model Profile with value aaadddfff for gcID found.],
+  "success": false,
+}
+`;
+
+exports[`Delete Team 1`] = `
+Object {
+  "success": true,
+}
+`;
+
+exports[`Delete Team that doesn't exist 1`] = `
+Object {
+  "error": [GraphQLError: No Node for the model Team with value 234 for id found.],
+  "success": false,
+}
+`;
+
 exports[`Modify Organization 1`] = `
 Object {
   "acronymEn": "OTEN - Mod 1",
@@ -136,4 +175,92 @@ Object {
     "name": "Supervisor Test 2",
   },
 }
+`;
+
+exports[`Query Addresses 1`] = `
+Array [
+  Object {
+    "city": "Vallhala",
+    "country": "Greece",
+    "postalCode": "Z9P 8A0",
+    "province": "Crete",
+    "resident": Object {
+      "email": "kratos@somewhere.com",
+      "gcID": "asdf123456",
+      "name": "Kratos",
+    },
+    "streetAddress": "101 Kratos",
+  },
+]
+`;
+
+exports[`Query Profiles 1`] = `
+Array [
+  Object {
+    "address": null,
+    "email": "supervisor@somewhere.com",
+    "gcID": "0834haf",
+    "mobilePhone": null,
+    "name": "Supervisor Test",
+    "officePhone": null,
+    "supervisor": null,
+    "team": null,
+    "titleEn": null,
+    "titleFr": null,
+  },
+  Object {
+    "address": Object {
+      "city": "Vallhala",
+      "country": "Greece",
+      "postalCode": "Z9P 8A0",
+      "province": "Crete",
+      "streetAddress": "101 Kratos",
+    },
+    "email": "kratos@somewhere.com",
+    "gcID": "asdf123456",
+    "mobilePhone": "819-234-6345",
+    "name": "Kratos",
+    "officePhone": "(613) 295-9093",
+    "supervisor": Object {
+      "email": "supervisor2@somewhere.com",
+      "gcID": "9283982",
+      "name": "Supervisor Test 2",
+    },
+    "team": Object {
+      "members": Array [
+        Object {
+          "email": "kratos@somewhere.com",
+          "gcID": "asdf123456",
+          "name": "Kratos",
+        },
+      ],
+      "nameEn": "Team Name EN - Mod 1",
+      "nameFr": "Team Name FR - Mod 1",
+      "organization": Object {
+        "acronymEn": "OTEN 2",
+        "acronymFr": "OTFR 2",
+        "nameEn": "Organization Test EN 2",
+        "nameFr": "Organization Test FR 2",
+      },
+      "owner": Object {
+        "email": "supervisor2@somewhere.com",
+        "name": "Supervisor Test 2",
+      },
+    },
+    "titleEn": "God of War",
+    "titleFr": "Dieu de la guerre",
+  },
+  Object {
+    "address": null,
+    "email": "supervisor2@somewhere.com",
+    "gcID": "9283982",
+    "mobilePhone": null,
+    "name": "Supervisor Test 2",
+    "officePhone": null,
+    "supervisor": null,
+    "team": null,
+    "titleEn": null,
+    "titleFr": null,
+  },
+]
 `;

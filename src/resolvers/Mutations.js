@@ -106,10 +106,10 @@ async function deleteProfile(_, args, context){
             gcID: args.gcID
             }
         });
-    } catch(e){
-        return e;
+    } catch(error){
+        return {error, success: false};
     }
-    return true;
+    return {success: true};
 
 }
 
@@ -152,13 +152,13 @@ async function deleteOrganization(_, args, context){
     try {
         await context.prisma.mutation.deleteOrganization({
             where:{
-                gcID: args.id
+                id: args.id
             }
         });
-    } catch(e){
-        return e;
+    } catch(error){
+        return {error, success: false};
     }
-    return true;
+    return {success: true};
 
 
 }
@@ -216,13 +216,13 @@ async function deleteTeam(_, args, context){
     try {
         await context.prisma.mutation.deleteTeam({
             where:{
-                gcID: args.id
+                id: args.id
             }
         });
-    } catch(e){
-        return e;
+    } catch(error){
+        return {error, success: false};
     }
-    return true;
+    return {success: true};
 }
 
 

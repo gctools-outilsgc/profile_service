@@ -1,10 +1,6 @@
 const mutations = require("../src/resolvers/Mutations");
 const { getPrismaTestInstance } = require("./init/prismaTestInstance");
 
-afterEach(async () => {
-    await getPrismaTestInstance().mutation.deleteManyProfiles({});
-});
-
 test("create a basic profile with mandatory fields",  async() => {
     const parent = {};
     const args = {
@@ -22,6 +18,8 @@ test("create a basic profile with mandatory fields",  async() => {
     expect(
         await mutations.createProfile(parent, args, ctx, info),
     ).toMatchSnapshot();
+
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"asdf123456"}});
 });
 
 test("fail profile creation due to missing gcID", async() => {

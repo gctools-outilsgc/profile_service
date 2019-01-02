@@ -8,9 +8,11 @@ const ctx = {
 };
 
 afterAll(async () => {
-    await getPrismaTestInstance().mutation.deleteManyProfiles({});
-    await getPrismaTestInstance().mutation.deleteManyTeams({});
-    await getPrismaTestInstance().mutation.deleteManyOrganizations({});
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"0834haf"}});
+    await getPrismaTestInstance().mutation.deleteManyTeams();
+    await getPrismaTestInstance().mutation.deleteManyOrganizations();
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"asdf123456"}});   
+
 });
 
 test("Create Organization", async() => {
@@ -178,4 +180,84 @@ test("Modify Profile", async() => {
         await mutations.modifyProfile(parent, args, ctx, info)
     ).toMatchSnapshot();
 
+});
+
+// Query everything in system
+
+test("Query Profiles", async() => {
+
+    const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
+    "address {streetAddress, city, province, postalCode, country}," +
+    "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
+    "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
+
+    expect(
+        await querys.profiles(parent, {}, ctx, info)
+    ).toMatchSnapshot();
+});
+
+test("Query Addresses", async() => {
+    const info = "{streetAddress, city, province, postalCode, country, resident{gcID,name,email}}";
+
+    expect(
+        await querys.addresses(parent, {}, ctx, info)
+    ).toMatchSnapshot();
+});
+
+test("Delete Profile", async() => {
+const args = {gcID:"9283982"};
+
+const info = "{gcID}";
+
+expect(
+    await mutations.deleteProfile(parent, args, ctx)
+).toMatchSnapshot();
+
+});
+
+test("Delete Profile that doesn't exist", async() => {
+    const args = {gcID:"aaadddfff"};
+     
+    expect(
+        await mutations.deleteProfile(parent, args, ctx)
+    ).toMatchSnapshot();
+    
+});
+
+test("Delete Team", async() => {
+    const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
+    const args = {id: teamID[0].id};
+
+    expect(
+        await mutations.deleteTeam(parent, args, ctx)
+    ).toMatchSnapshot();
+
+});
+
+test("Delete Team that doesn't exist", async() => {
+    const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
+    const args = {id: "234"};
+
+    expect(
+        await mutations.deleteTeam(parent, args, ctx)
+    ).toMatchSnapshot();
+
+});
+
+test("Delete Organization", async() => {
+    const organizationID = await querys.organizations(parent, {nameEn:"Organization Test EN - Mod 1"}, ctx, "{id}");
+    const args = {id: organizationID[0].id};
+
+    expect(
+        await mutations.deleteOrganization(parent, args, ctx)
+    ).toMatchSnapshot();
+});
+
+test("Delete Organization that does not exist", async() => {
+    const organizationID = "2345677";
+    const args = {id: organizationID};
+
+    expect(
+        await mutations.deleteOrganization(parent, args, ctx)
+    ).toMatchSnapshot();
 });

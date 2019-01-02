@@ -42,7 +42,8 @@ type Address{
   city: String!
   province: String!
   postalCode: String!
-  country: String!
+  country: String!,
+  resident: Profile!
 }
 
 type Team {

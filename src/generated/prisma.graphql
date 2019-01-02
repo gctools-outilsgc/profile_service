@@ -5,6 +5,7 @@ type Address {
   province: String!
   postalCode: String!
   country: String!
+  resident: Profile!
 }
 
 type AddressConnection {
@@ -19,11 +20,20 @@ input AddressCreateInput {
   province: String!
   postalCode: String!
   country: String!
+  resident: ProfileCreateOneWithoutAddressInput!
 }
 
-input AddressCreateOneInput {
-  create: AddressCreateInput
+input AddressCreateOneWithoutResidentInput {
+  create: AddressCreateWithoutResidentInput
   connect: AddressWhereUniqueInput
+}
+
+input AddressCreateWithoutResidentInput {
+  streetAddress: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  country: String!
 }
 
 type AddressEdge {
@@ -77,20 +87,13 @@ input AddressSubscriptionWhereInput {
   NOT: [AddressSubscriptionWhereInput!]
 }
 
-input AddressUpdateDataInput {
-  streetAddress: String
-  city: String
-  province: String
-  postalCode: String
-  country: String
-}
-
 input AddressUpdateInput {
   streetAddress: String
   city: String
   province: String
   postalCode: String
   country: String
+  resident: ProfileUpdateOneRequiredWithoutAddressInput
 }
 
 input AddressUpdateManyMutationInput {
@@ -101,18 +104,26 @@ input AddressUpdateManyMutationInput {
   country: String
 }
 
-input AddressUpdateOneInput {
-  create: AddressCreateInput
-  update: AddressUpdateDataInput
-  upsert: AddressUpsertNestedInput
+input AddressUpdateOneWithoutResidentInput {
+  create: AddressCreateWithoutResidentInput
+  update: AddressUpdateWithoutResidentDataInput
+  upsert: AddressUpsertWithoutResidentInput
   delete: Boolean
   disconnect: Boolean
   connect: AddressWhereUniqueInput
 }
 
-input AddressUpsertNestedInput {
-  update: AddressUpdateDataInput!
-  create: AddressCreateInput!
+input AddressUpdateWithoutResidentDataInput {
+  streetAddress: String
+  city: String
+  province: String
+  postalCode: String
+  country: String
+}
+
+input AddressUpsertWithoutResidentInput {
+  update: AddressUpdateWithoutResidentDataInput!
+  create: AddressCreateWithoutResidentInput!
 }
 
 input AddressWhereInput {
@@ -200,6 +211,7 @@ input AddressWhereInput {
   country_not_starts_with: String
   country_ends_with: String
   country_not_ends_with: String
+  resident: ProfileWhereInput
   AND: [AddressWhereInput!]
   OR: [AddressWhereInput!]
   NOT: [AddressWhereInput!]
@@ -504,7 +516,7 @@ input ProfileCreateInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressCreateOneInput
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileCreateOneWithoutSupervisorInput
@@ -517,6 +529,11 @@ input ProfileCreateManyWithoutTeamInput {
   connect: [ProfileWhereUniqueInput!]
 }
 
+input ProfileCreateOneWithoutAddressInput {
+  create: ProfileCreateWithoutAddressInput
+  connect: ProfileWhereUniqueInput
+}
+
 input ProfileCreateOneWithoutOwnerofTeamsInput {
   create: ProfileCreateWithoutOwnerofTeamsInput
   connect: ProfileWhereUniqueInput
@@ -527,6 +544,20 @@ input ProfileCreateOneWithoutSupervisorInput {
   connect: ProfileWhereUniqueInput
 }
 
+input ProfileCreateWithoutAddressInput {
+  gcID: String!
+  name: String!
+  email: String!
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  titleEn: String
+  titleFr: String
+  supervisor: ProfileCreateOneWithoutSupervisorInput
+  team: TeamCreateOneWithoutMembersInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
+}
+
 input ProfileCreateWithoutOwnerofTeamsInput {
   gcID: String!
   name: String!
@@ -534,7 +565,7 @@ input ProfileCreateWithoutOwnerofTeamsInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressCreateOneInput
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileCreateOneWithoutSupervisorInput
@@ -548,7 +579,7 @@ input ProfileCreateWithoutSupervisorInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressCreateOneInput
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   team: TeamCreateOneWithoutMembersInput
@@ -562,7 +593,7 @@ input ProfileCreateWithoutTeamInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressCreateOneInput
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileCreateOneWithoutSupervisorInput
@@ -768,7 +799,7 @@ input ProfileUpdateInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressUpdateOneInput
+  address: AddressUpdateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileUpdateOneWithoutSupervisorInput
@@ -814,6 +845,13 @@ input ProfileUpdateManyWithWhereNestedInput {
   data: ProfileUpdateManyDataInput!
 }
 
+input ProfileUpdateOneRequiredWithoutAddressInput {
+  create: ProfileCreateWithoutAddressInput
+  update: ProfileUpdateWithoutAddressDataInput
+  upsert: ProfileUpsertWithoutAddressInput
+  connect: ProfileWhereUniqueInput
+}
+
 input ProfileUpdateOneWithoutOwnerofTeamsInput {
   create: ProfileCreateWithoutOwnerofTeamsInput
   update: ProfileUpdateWithoutOwnerofTeamsDataInput
@@ -832,6 +870,20 @@ input ProfileUpdateOneWithoutSupervisorInput {
   connect: ProfileWhereUniqueInput
 }
 
+input ProfileUpdateWithoutAddressDataInput {
+  gcID: String
+  name: String
+  email: String
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  titleEn: String
+  titleFr: String
+  supervisor: ProfileUpdateOneWithoutSupervisorInput
+  team: TeamUpdateOneWithoutMembersInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
+}
+
 input ProfileUpdateWithoutOwnerofTeamsDataInput {
   gcID: String
   name: String
@@ -839,7 +891,7 @@ input ProfileUpdateWithoutOwnerofTeamsDataInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressUpdateOneInput
+  address: AddressUpdateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileUpdateOneWithoutSupervisorInput
@@ -853,7 +905,7 @@ input ProfileUpdateWithoutSupervisorDataInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressUpdateOneInput
+  address: AddressUpdateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   team: TeamUpdateOneWithoutMembersInput
@@ -867,7 +919,7 @@ input ProfileUpdateWithoutTeamDataInput {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: AddressUpdateOneInput
+  address: AddressUpdateOneWithoutResidentInput
   titleEn: String
   titleFr: String
   supervisor: ProfileUpdateOneWithoutSupervisorInput
@@ -877,6 +929,11 @@ input ProfileUpdateWithoutTeamDataInput {
 input ProfileUpdateWithWhereUniqueWithoutTeamInput {
   where: ProfileWhereUniqueInput!
   data: ProfileUpdateWithoutTeamDataInput!
+}
+
+input ProfileUpsertWithoutAddressInput {
+  update: ProfileUpdateWithoutAddressDataInput!
+  create: ProfileCreateWithoutAddressInput!
 }
 
 input ProfileUpsertWithoutOwnerofTeamsInput {

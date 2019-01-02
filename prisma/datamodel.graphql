@@ -6,7 +6,7 @@ type Profile {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: Address
+  address: Address @relation(name:"Resident", onDelete: CASCADE)
   titleEn: String
   titleFr: String
   supervisor: Profile @relation(name:"Employees")
@@ -21,6 +21,7 @@ type Address {
   province: String!
   postalCode: String!
   country: String!
+  resident: Profile! @relation(name:"Resident")
 }
 
 type Team {
