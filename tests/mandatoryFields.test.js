@@ -1,16 +1,17 @@
 const mutations = require("../src/resolvers/Mutations");
 const { getPrismaTestInstance } = require("./init/prismaTestInstance");
 
+const parent = {};
+const ctx = {
+    prisma: getPrismaTestInstance()
+};
+
+
 test("create a basic profile with mandatory fields",  async() => {
-    const parent = {};
     const args = {
-            gcID: "asdf123456",
+            gcID: "09ujilkjlkiid",
             name: "Awesome User",
             email: "awesome.user@somewhere.com"
-    };
-
-    const ctx = {
-        prisma: getPrismaTestInstance()
     };
 
     const info = "{ gcID, name, email }";
@@ -19,68 +20,48 @@ test("create a basic profile with mandatory fields",  async() => {
         await mutations.createProfile(parent, args, ctx, info),
     ).toMatchSnapshot();
 
-    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"asdf123456"}});
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"09ujilkjlkiid"}});
 });
 
 test("fail profile creation due to missing gcID", async() => {
-    try {
-        const parent = {};
-        const args = {
-            name: "Awesome User",
-            email: "awesome.user@somewhere.com"
-        };
-        
-        const ctx = {
-            prisma: getPrismaTestInstance()
-        };
-        
-        const info = "{ gcID, name, email }";
-        
-        const result = await mutations.createProfile(parent, args, ctx, info);
-        expect(0).toBe(1);
-    } catch (e) {
-        expect(e.toString()).toMatchSnapshot();
-    }
+    const args = {
+        name: "Awesome User",
+        email: "awesome.user@somewhere.com"
+    };
+     
+    const info = "{ gcID, name, email }";
+    
+    await expect(
+        mutations.createProfile(parent, args, ctx, info)
+    ).rejects.toThrowErrorMatchingSnapshot();
+
 });
 
 test("fail profile creation due to missing name", async() => {
-    try {
-        const parent = {};
-        const args = {
-            gcID: "asdf123456",
+
+    const args = {
+            gcID: "09ujilkjlkiid",
             email: "awesome.user@somewhere.com"
         };
-        
-        const ctx = {
-            prisma: getPrismaTestInstance()
-        };
-        
+               
         const info = "{ gcID, name, email }";
-        
-        const result = await mutations.createProfile(parent, args, ctx, info);
-        expect(0).toBe(1);
-    } catch (e) {
-        expect(e.toString()).toMatchSnapshot();
-    }
+
+    await expect(
+        mutations.createProfile(parent, args, ctx, info)
+    ).rejects.toThrowErrorMatchingSnapshot();
 });
 
 test("fail profile creation due to missing email", async() => {
-    try {
-        const parent = {};
+
         const args = {
-            gcID: "asdf123456",
+            gcID: "09ujilkjlkiid",
             name: "Awesome User",
-        };
-        
-        const ctx = {
-            prisma: getPrismaTestInstance()
         };
         
         const info = "{ gcID, name, email }";
         
-        const result = await mutations.createProfile(parent, args, ctx, info);
-        expect(0).toBe(1);
-    } catch (e) {
-        expect(e.toString()).toMatchSnapshot();
-    }
+    await expect(
+        mutations.createProfile(parent, args, ctx, info)
+    ).rejects.toThrowErrorMatchingSnapshot();
+
 });

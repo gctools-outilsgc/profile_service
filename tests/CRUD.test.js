@@ -11,7 +11,8 @@ afterAll(async () => {
     await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"0834haf"}});
     await getPrismaTestInstance().mutation.deleteManyTeams();
     await getPrismaTestInstance().mutation.deleteManyOrganizations();
-    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"asdf123456"}});   
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"kjsdf09iklasd"}});
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"3948371"}});   
 
 });
 
@@ -67,18 +68,18 @@ test("Create profile without avatar", async() => {
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN"}, ctx, "{id}");
     
     const args = {
-            gcID: "asdf123456",
-            name: "Awesome User",
-            email: "awesome.user@somewhere.com",
-            mobilePhone: "613-999-0897",
-            officePhone: "(879) 234-2341",
-            titleEn: "Super Dave",
-            titleFr: "Super Dave in French",
-            address: argAddress,
-            supervisor: supervisorID,
-            team: {
-                id: teamID[0].id
-            }
+        gcID: "kjsdf09iklasd",
+        name: "Awesome User",
+        email: "awesome.user@somewhere.com",
+        mobilePhone: "613-999-0897",
+        officePhone: "(879) 234-2341",
+        titleEn: "Super Dave",
+        titleFr: "Super Dave in French",
+        address: argAddress,
+        supervisor: supervisorID,
+        team: {
+            id: teamID[0].id
+        }
     };
 
     const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
@@ -155,7 +156,7 @@ test("Modify Profile", async() => {
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
     
     const args = {
-            gcID: "asdf123456",
+            gcID: "kjsdf09iklasd",
             data: {
                 name: "Kratos",
                 email: "kratos@somewhere.com",
@@ -178,6 +179,35 @@ test("Modify Profile", async() => {
 
     expect(
         await mutations.modifyProfile(parent, args, ctx, info)
+    ).toMatchSnapshot();
+
+});
+
+test("Modify Profile without existing Address", async() => {
+    const info = "{gcID, name, email, address{streetAddress, city, province, postalCode, country}}";
+    const profileArgs = {
+        gcID:"3948371",
+        name:"Camera Man",
+        email:"cameraman@somewhere.com"
+    };
+
+    const modifyProfileArgs = {
+        gcID:"3948371",
+        data:{
+            address:{
+                streetAddress:"322 Princess Way",
+                city: "Moncton",
+                province:"New Brunswick",
+                postalCode:"F3S 6D3",
+                country:"Canada"
+            }
+        }
+    };
+
+    await mutations.createProfile(parent, profileArgs, ctx, "{gcID, name, email}");
+
+    expect(
+        await mutations.modifyProfile(parent, modifyProfileArgs, ctx, info)
     ).toMatchSnapshot();
 
 });
@@ -218,9 +248,9 @@ expect(
 test("Delete Profile that doesn't exist", async() => {
     const args = {gcID:"aaadddfff"};
      
-    expect(
-        await mutations.deleteProfile(parent, args, ctx)
-    ).toMatchSnapshot();
+    await expect(
+        mutations.deleteProfile(parent, args, ctx)
+    ).rejects.toThrowErrorMatchingSnapshot();
     
 });
 
@@ -238,9 +268,9 @@ test("Delete Team that doesn't exist", async() => {
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
     const args = {id: "234"};
 
-    expect(
-        await mutations.deleteTeam(parent, args, ctx)
-    ).toMatchSnapshot();
+    await expect(
+        mutations.deleteTeam(parent, args, ctx)
+    ).rejects.toThrowErrorMatchingSnapshot();
 
 });
 
@@ -257,7 +287,7 @@ test("Delete Organization that does not exist", async() => {
     const organizationID = "2345677";
     const args = {id: organizationID};
 
-    expect(
-        await mutations.deleteOrganization(parent, args, ctx)
-    ).toMatchSnapshot();
+    await expect(
+        mutations.deleteOrganization(parent, args, ctx)
+    ).rejects.toThrowErrorMatchingSnapshot();
 });

@@ -34,7 +34,7 @@ Object {
     "streetAddress": "98 where",
   },
   "email": "awesome.user@somewhere.com",
-  "gcID": "asdf123456",
+  "gcID": "kjsdf09iklasd",
   "mobilePhone": "613-999-0897",
   "name": "Awesome User",
   "officePhone": "(879) 234-2341",
@@ -47,7 +47,7 @@ Object {
     "members": Array [
       Object {
         "email": "awesome.user@somewhere.com",
-        "gcID": "asdf123456",
+        "gcID": "kjsdf09iklasd",
         "name": "Awesome User",
       },
     ],
@@ -69,44 +69,17 @@ Object {
 }
 `;
 
-exports[`Delete Organization 1`] = `
-Object {
-  "success": true,
-}
-`;
+exports[`Delete Organization 1`] = `true`;
 
-exports[`Delete Organization that does not exist 1`] = `
-Object {
-  "error": [GraphQLError: No Node for the model Organization with value 2345677 for id found.],
-  "success": false,
-}
-`;
+exports[`Delete Organization that does not exist 1`] = `"Organization does not exist"`;
 
-exports[`Delete Profile 1`] = `
-Object {
-  "success": true,
-}
-`;
+exports[`Delete Profile 1`] = `true`;
 
-exports[`Delete Profile that doesn't exist 1`] = `
-Object {
-  "error": [GraphQLError: No Node for the model Profile with value aaadddfff for gcID found.],
-  "success": false,
-}
-`;
+exports[`Delete Profile that doesn't exist 1`] = `"Profile does not exist"`;
 
-exports[`Delete Team 1`] = `
-Object {
-  "success": true,
-}
-`;
+exports[`Delete Team 1`] = `true`;
 
-exports[`Delete Team that doesn't exist 1`] = `
-Object {
-  "error": [GraphQLError: No Node for the model Team with value 234 for id found.],
-  "success": false,
-}
-`;
+exports[`Delete Team that doesn't exist 1`] = `"Team does not exist"`;
 
 exports[`Modify Organization 1`] = `
 Object {
@@ -127,7 +100,7 @@ Object {
     "streetAddress": "101 Kratos",
   },
   "email": "kratos@somewhere.com",
-  "gcID": "asdf123456",
+  "gcID": "kjsdf09iklasd",
   "mobilePhone": "819-234-6345",
   "name": "Kratos",
   "officePhone": "(613) 295-9093",
@@ -140,7 +113,7 @@ Object {
     "members": Array [
       Object {
         "email": "kratos@somewhere.com",
-        "gcID": "asdf123456",
+        "gcID": "kjsdf09iklasd",
         "name": "Kratos",
       },
     ],
@@ -159,6 +132,21 @@ Object {
   },
   "titleEn": "God of War",
   "titleFr": "Dieu de la guerre",
+}
+`;
+
+exports[`Modify Profile without existing Address 1`] = `
+Object {
+  "address": Object {
+    "city": "Moncton",
+    "country": "Canada",
+    "postalCode": "F3S 6D3",
+    "province": "New Brunswick",
+    "streetAddress": "322 Princess Way",
+  },
+  "email": "cameraman@somewhere.com",
+  "gcID": "3948371",
+  "name": "Camera Man",
 }
 `;
 
@@ -186,10 +174,22 @@ Array [
     "province": "Crete",
     "resident": Object {
       "email": "kratos@somewhere.com",
-      "gcID": "asdf123456",
+      "gcID": "kjsdf09iklasd",
       "name": "Kratos",
     },
     "streetAddress": "101 Kratos",
+  },
+  Object {
+    "city": "Moncton",
+    "country": "Canada",
+    "postalCode": "F3S 6D3",
+    "province": "New Brunswick",
+    "resident": Object {
+      "email": "cameraman@somewhere.com",
+      "gcID": "3948371",
+      "name": "Camera Man",
+    },
+    "streetAddress": "322 Princess Way",
   },
 ]
 `;
@@ -217,7 +217,7 @@ Array [
       "streetAddress": "101 Kratos",
     },
     "email": "kratos@somewhere.com",
-    "gcID": "asdf123456",
+    "gcID": "kjsdf09iklasd",
     "mobilePhone": "819-234-6345",
     "name": "Kratos",
     "officePhone": "(613) 295-9093",
@@ -230,7 +230,7 @@ Array [
       "members": Array [
         Object {
           "email": "kratos@somewhere.com",
-          "gcID": "asdf123456",
+          "gcID": "kjsdf09iklasd",
           "name": "Kratos",
         },
       ],
@@ -256,6 +256,24 @@ Array [
     "gcID": "9283982",
     "mobilePhone": null,
     "name": "Supervisor Test 2",
+    "officePhone": null,
+    "supervisor": null,
+    "team": null,
+    "titleEn": null,
+    "titleFr": null,
+  },
+  Object {
+    "address": Object {
+      "city": "Moncton",
+      "country": "Canada",
+      "postalCode": "F3S 6D3",
+      "province": "New Brunswick",
+      "streetAddress": "322 Princess Way",
+    },
+    "email": "cameraman@somewhere.com",
+    "gcID": "3948371",
+    "mobilePhone": null,
+    "name": "Camera Man",
     "officePhone": null,
     "supervisor": null,
     "team": null,

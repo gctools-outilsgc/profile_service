@@ -18,7 +18,7 @@ type Mutation {
   modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
-  modifyOrganization(id: ID!, data: modifyOrganizationInput): Organization!
+  modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
 }
 
@@ -115,7 +115,7 @@ input ModifyTeamInput {
   owner: OwnerInput
 }
 
-input modifyOrganizationInput {
+input ModifyOrganizationInput {
   nameEn: String
   nameFr: String
   acronymEn: String

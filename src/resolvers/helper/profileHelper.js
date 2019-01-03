@@ -1,32 +1,12 @@
-const {validateRequiredField} = require("./objectHelper");
+const {propertyRequired} = require("./objectHelper");
+const { UserInputError } = require("apollo-server");
 
 const throwExceptionIfProfileIsNotDefined = (profile) => {
     if (profile === null || typeof profile === "undefined"){
-        throw new Error("Could not find profile with gcID provided");
+        throw new UserInputError("Profile does not exist");
     }
-};
-
-const getSupervisorFromArgs = (args) => {
-    if (typeof args.supervisor === "undefined") {
-        return null;
-    }
-
-    var errors = [
-    validateRequiredField(args.supervisor, "gcID")
-    ];
-
-    errors = errors.filter(function (el) {
-        return el !== null && typeof el !== "undefined" && el !== "";
-      });
-
-    if (errors.length > 0) {
-        throw new Error(errors);
-    }
-  
-      return args.supervisor;
 };
 
 module.exports ={
-  throwExceptionIfProfileIsNotDefined,
-  getSupervisorFromArgs
+  throwExceptionIfProfileIsNotDefined
 };
