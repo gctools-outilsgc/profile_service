@@ -241,8 +241,8 @@ async function modifyTeam(_, args, context, info){
 }
 
 async function deleteTeam(_, args, context){
+    
     // eslint-disable-next-line new-cap
-
     if (await context.prisma.exists.Team({id:args.id})){
         try {
             await context.prisma.mutation.deleteTeam({
