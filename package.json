@@ -10,10 +10,26 @@
     "start": "node src/cluster.js",
     "dev": "node src/index.js",
     "eslint": "eslint src/",
-    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand"
+    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage"
   },
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "coveragePathIgnorePatterns": [
+      "/postgres",
+      "/image-server",
+      "/node_modules",
+      "/temp_convert",
+      "/docker",
+      "/coverage"
+    ],
+    "watchPathIgnorePatterns": [
+      "/postgres",
+      "/image-server",
+      "/node_modules",
+      "/temp_convert",
+      "/docker",
+      "/coverage"
+    ]
   },
   "keywords": [],
   "author": "Bryan Robitaille - GCTools/OutilsGC",
@@ -28,8 +44,8 @@
     "graphql": "^14.0.2",
     "graphql-cli": "^2.17.0",
     "node-fetch": "^2.3.0",
-    "prisma": "^1.22.2",
-    "prisma-binding": "^2.2.10",
+    "prisma": "^1.23.2",
+    "prisma-binding": "^2.2.11",
     "request": "^2.88.0",
     "sharp": "^0.21.1",
     "shortid": "^2.2.14",

@@ -1,9 +1,8 @@
-const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined} = require("./helper/profileHelper");
+const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
+const { throwExceptionIfProfileIsNotDefined, getSupervisorFromArgs} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
-const {throwExceptionIfOrganizationIsNotDefined} = require("./helper/organizationHelper");
-const {throwExceptionIfTeamIsNotDefined} = require("./helper/teamHelper");
+const { UserInputError } = require("apollo-server");
 
 async function createProfile(_, args, context, info){
     var createProfileData = {
@@ -16,39 +15,41 @@ async function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
     
-    if (typeof args.avatar !== "undefined"){
+    if ( propertyExists(args, "avatar")){
         await processUpload(args.avatar).then((url) => {
             createProfileData.avatar = url;
         });
     }
-    
-    var address = getNewAddressFromArgs(args);
-    if(address != null) {
-        createProfileData.address = {create:address};
+
+    if (propertyExists(args, "address")){
+        var address = getNewAddressFromArgs(args);
+        if(address != null) {
+            createProfileData.address = {create:address};
+        }
     }
-    if (typeof args.supervisor !== "undefined") {
-        var createSupervisorData = {
+
+
+
+    if (propertyExists(args, "supervisor")) {
+        var updateSupervisorData = {
             gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
             email: copyValueToObjectIfDefined(args.supervisor.email)
         };
-        createProfileData.push({
-            supervisor: {
-                connect: {
-                    createSupervisorData,
-                },
-            },
-        });
+
+        createProfileData.supervisor = {
+                connect: updateSupervisorData
+        };
     }
 
-    if (typeof args.team !== "undefined"){
-        createProfileData.push({
-            team :{
+    if (propertyExists(args, "team")){
+        createProfileData.team = {
                 connect: {
                     id: args.team.id
-                },
-            },
-        });
+                }
+        };
     }
+      
+
     return await context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
@@ -56,56 +57,54 @@ async function createProfile(_, args, context, info){
 
 async function modifyProfile(_, args, context, info){
     // eslint-disable-next-line new-cap
-    const currentProfile = await context.prisma.query.profiles(
+    const currentProfile = await context.prisma.query.profile(
         {
             where: {
                 gcID: args.gcID
             }            
-        });
+        },"{gcID, address{id}}");
+
     throwExceptionIfProfileIsNotDefined(currentProfile);
     var updateProfileData = {
-        name: copyValueToObjectIfDefined(args.name),
-        email: copyValueToObjectIfDefined(args.email),
-        mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
-        officePhone: copyValueToObjectIfDefined(args.officePhone),
-        titleEn: copyValueToObjectIfDefined(args.titleEn),
-        titleFr: copyValueToObjectIfDefined(args.titleFr),
+        name: copyValueToObjectIfDefined(args.data.name),
+        email: copyValueToObjectIfDefined(args.data.email),
+        mobilePhone: copyValueToObjectIfDefined(args.data.mobilePhone),
+        officePhone: copyValueToObjectIfDefined(args.data.officePhone),
+        titleEn: copyValueToObjectIfDefined(args.data.titleEn),
+        titleFr: copyValueToObjectIfDefined(args.data.titleFr),
     };
 
-    if (typeof args.avatar !== "undefined"){
-        await processUpload(args.avatar).then((url) => {
+    if (propertyExists(args.data, "avatar")){
+        await processUpload(args.data.avatar).then((url) => {
             updateProfileData.avatar = url;
         });
     }
     
-    var address = updateOrCreateAddressOnProfile(args, currentProfile);
-    if(address != null){
-        updateProfileData.address = address;
+    if (propertyExists(args.data, "address")){
+        var address = updateOrCreateAddressOnProfile(args, currentProfile);
+        if(address != null){
+            updateProfileData.address = address;
+        }        
     }
+
        
-    if (typeof args.supervisor !== "undefined") {
+    if (propertyExists(args.data, "supervisor")) {
         var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.supervisor.email)
+            gcID: copyValueToObjectIfDefined(args.data.supervisor.gcID),
+            email: copyValueToObjectIfDefined(args.data.supervisor.email)
         };
 
-        updateProfileData.push({
-            supervisor: {
-                connect: {
-                    updateSupervisorData
-                }
-            }
-        });
+        updateProfileData.supervisor = {
+                connect: updateSupervisorData
+        };
     }
     
-    if (typeof args.team !== "undefined"){
-        updateProfileData.push({
-            team :{
+    if (propertyExists(args.data, "team")){
+        updateProfileData.team = {
                 connect: {
-                    id: args.team.id
+                    id: args.data.team.id
                 }
-            }
-        });
+        };
     }
 
     return await context.prisma.mutation.updateProfile({
@@ -117,12 +116,26 @@ async function modifyProfile(_, args, context, info){
 }
 
 async function deleteProfile(_, args, context){
-    return await context.prisma.mutation.deleteProfile({
-        where:{
-            gcID: args.gcID
+
+    // eslint-disable-next-line new-cap
+    if (await context.prisma.exists.Profile({gcID:args.gcID})){
+        try {
+            await context.prisma.mutation.deleteProfile({
+                where:{
+                gcID: args.gcID
+                }
+            });
+
+        } catch(e){
+            return false;
         }
-    });
+        return true;
+    }
+    throw new UserInputError("Profile does not exist")
+;
 }
+
+
 
 function createOrganization(_, args, context, info){            
     return context.prisma.mutation.createOrganization({            
@@ -136,19 +149,17 @@ function createOrganization(_, args, context, info){
 }
 
 async function modifyOrganization(_, args, context, info){
-    const currentOrganization = context.prisma.query.organizations(
-        {
-            where: {
-                id: args.idprofile
-            }
-        }
-    );
-    throwExceptionIfOrganizationIsNotDefined(currentOrganization);
+
+    // eslint-disable-next-line new-cap
+    if (!context.prisma.exists.Organization({id:args.id})){
+        throw new UserInputError("Organization does not Exist");
+    }
+
     var updateOrganizationData = {
-        nameEn: copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr),
-        acronymEn: copyValueToObjectIfDefined(args.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.acronymFr)
+        nameEn: copyValueToObjectIfDefined(args.data.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.data.nameFr),
+        acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
+        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr)
     };
 
     return await context.prisma.mutation.updateOrganization({
@@ -160,11 +171,24 @@ async function modifyOrganization(_, args, context, info){
 }
 
 async function deleteOrganization(_, args, context){
-    return await context.prisma.mutation.deleteOrganization({
-        where:{
-            gcID: args.id
+
+    // eslint-disable-next-line new-cap
+    if (await context.prisma.exists.Organization({id:args.id})){
+        try {
+            await context.prisma.mutation.deleteOrganization({
+                where:{
+                    id: args.id
+                }
+            });
+        } catch(e){
+            return false;
         }
-    });
+        return true;
+    }
+    throw new UserInputError("Organization does not exist");
+
+
+
 }
 
 function createTeam(_, args, context, info){
@@ -172,44 +196,40 @@ function createTeam(_, args, context, info){
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
-            organization: {connect: {id: args.organization.id}}
+            organization: {connect: {id: args.organization.id}},
+            owner: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
         }
     }, info);
 }
 
 async function modifyTeam(_, args, context, info){
-    const currentTeam = await context.prisma.query.teams({
-        where :{
-            id: args.id
-        }
-    });
-    throwExceptionIfTeamIsNotDefined(currentTeam);
-    var updateTeamData = {
-        nameEn: copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr)
-    };
-    if (typeof args.organization !== "undefined"){
-        updateTeamData.push({
-            organization: {
-                connect:{
-                    id: args.organization.id
-                }                
-            }
-        });
+
+    // eslint-disable-next-line new-cap
+    if (!context.prisma.exists.Team({id:args.id})){
+        throw new UserInputError("Team does not exist");
     }
 
-    if (typeof args.owner !== "undefined"){
-        var updateOwnerData = {
-            gcID: copyValueToObjectIfDefined(args.owner.gcID),
-            email: copyValueToObjectIfDefined(args.owner.email)
+    var updateTeamData = {
+        nameEn: copyValueToObjectIfDefined(args.data.nameEn),
+        nameFr: copyValueToObjectIfDefined(args.data.nameFr),
+
+    };
+    if (typeof args.data.organization !== "undefined"){
+        updateTeamData.organization = {
+            connect:{
+                id: args.data.organization.id
+            }      
         };
-        updateTeamData.push({
-            ownerID: {
-                connect: {
-                    updateOwnerData
-                }
-            } 
-        });
+    }
+
+    if (typeof args.data.owner !== "undefined"){
+        var updateOwnerData = {
+            gcID: copyValueToObjectIfDefined(args.data.owner.gcID),
+            email: copyValueToObjectIfDefined(args.data.owner.email)
+        };
+        updateTeamData.owner = {
+            connect: updateOwnerData
+        };
     }
 
     return await context.prisma.mutation.updateTeam({
@@ -221,12 +241,23 @@ async function modifyTeam(_, args, context, info){
 }
 
 async function deleteTeam(_, args, context){
-    return await context.prisma.mutation.deleteTeam({
-        where:{
-            gcID: args.id
+    
+    // eslint-disable-next-line new-cap
+    if (await context.prisma.exists.Team({id:args.id})){
+        try {
+            await context.prisma.mutation.deleteTeam({
+                where:{
+                    id: args.id
+                }
+            });
+        } catch(e){
+        return false;
         }
-    });
+        return true;
+    }  
+    throw new UserInputError("Team does not exist");              
 }
+
 
 module.exports = {
     createProfile,
@@ -234,6 +265,7 @@ module.exports = {
     deleteProfile,
     createOrganization,
     modifyOrganization,
+    deleteOrganization,
     createTeam,
     modifyTeam,
     deleteTeam

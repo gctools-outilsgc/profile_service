@@ -11,15 +11,15 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcID: String!, name: String!, email: Email!, avatar: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, titleEn: String, titleFr: String, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
-  modifyProfile(gcID: String!, name: String, email: Email, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
   deleteProfile(gcID: String!): Boolean!
   createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
-  modifyTeam(id: ID!, nameEn: String, nameFr: String, organization: OrganizationInput, owner: TeamOwnerInput): Team!
-  deleteTeam(id: ID!): String!
+  modifyTeam(id: ID!, data: ModifyTeamInput): Team!
+  deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
-  modifyOrganization(id: ID!, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String): Organization!
-  deleteOrganization(id: ID!): String!
+  modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
+  deleteOrganization(id: ID!): Boolean!
 }
 
 type Profile {
@@ -42,7 +42,8 @@ type Address{
   city: String!
   province: String!
   postalCode: String!
-  country: String!
+  country: String!,
+  resident: Profile!
 }
 
 type Team {
@@ -50,7 +51,7 @@ type Team {
   nameEn: String!
   nameFr: String!
   organization: Organization!
-  ownerID: Profile
+  owner: Profile
   members: [Profile!]!
 }
 
@@ -81,10 +82,42 @@ input OrganizationInput {
   id: ID!
 }
 
+input OwnerInput{
+  gcID: String
+  email: String
+}
+
 input AddressInput {
   streetAddress: String
   city: String
   province: String
   postalCode: PostalCode
   country: String
+}
+
+input ModifyProfileInput {
+  name: String
+  email: Email
+  avatar: Upload
+  mobilePhone: PhoneNumber
+  officePhone: PhoneNumber
+  address: AddressInput
+  titleEn: String
+  titleFr: String
+  supervisor: SupervisorInput 
+  team: TeamInput   
+}
+
+input ModifyTeamInput {
+  nameEn: String
+  nameFr: String
+  organization: OrganizationInput
+  owner: OwnerInput
+}
+
+input ModifyOrganizationInput {
+  nameEn: String
+  nameFr: String
+  acronymEn: String
+  acronymFr: String
 }

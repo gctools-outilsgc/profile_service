@@ -36,11 +36,7 @@ test-report\.html
 
 \.idea/
 
-tests/pictureconversion/folder/
-
 temp_convert
-
-tests/
 
 image-server/uploads
 

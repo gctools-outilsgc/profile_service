@@ -38,7 +38,8 @@ const server = new ApolloServer({
   }),
 });
 
-// eslint-disable-next-line no-console
-server.listen().then(({ url }) => {
+
+server.listen().then(({ url }) => { 
+  // eslint-disable-next-line no-console
   console.log(`🚀 GraphQL Server ready at ${url}`);
 });

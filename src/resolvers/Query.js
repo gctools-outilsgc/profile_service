@@ -1,22 +1,24 @@
+const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
+
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
     {
       where:{
-        gcID: args.gcID,
+        gcID: copyValueToObjectIfDefined(args.gcID),
         // eslint-disable-next-line camelcase
-        name_contains: args.name,
-        email: args.email,
+        name_contains: copyValueToObjectIfDefined(args.name),
+        email: copyValueToObjectIfDefined(args.email),
         // eslint-disable-next-line camelcase
-        mobilePhone_contains: args.mobilePhone,
+        mobilePhone_contains: copyValueToObjectIfDefined(args.mobilePhone),
         // eslint-disable-next-line camelcase
-        officePhone_contains: args.officePhone,
+        officePhone_contains: copyValueToObjectIfDefined(args.officePhone),
         // eslint-disable-next-line camelcase
-        titleEn_contains: args.titleEn,
+        titleEn_contains: copyValueToObjectIfDefined(args.titleEn),
         // eslint-disable-next-line camelcase
-        titleFr_contains: args.titleFr,                        
+        titleFr_contains: copyValueToObjectIfDefined(args.titleFr),                        
       },
-      skip: args.skip,
-      first: args.first,        
+      skip: copyValueToObjectIfDefined(args.skip),
+      first: copyValueToObjectIfDefined(args.first),        
     },
     info
   );

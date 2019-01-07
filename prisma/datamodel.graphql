@@ -6,12 +6,12 @@ type Profile {
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: Address
+  address: Address @relation(name:"Resident", onDelete: CASCADE)
   titleEn: String
   titleFr: String
   supervisor: Profile @relation(name:"Employees")
-  organization: Team @relation(name:"OrganizationMembers")
-  Teams: [Team!]! @relation(name:"OwnerOfTeam")  
+  team: Team @relation(name:"TeamMembers")
+  ownerofTeams: [Team!]! @relation(name:"OwnerOfTeam")  
 }
 
 type Address {
@@ -21,6 +21,7 @@ type Address {
   province: String!
   postalCode: String!
   country: String!
+  resident: Profile! @relation(name:"Resident")
 }
 
 type Team {
@@ -28,8 +29,8 @@ type Team {
   nameEn: String!
   nameFr: String!
   organization: Organization! @relation(name:"Teams")
-  ownerID: Profile @relation(name:"OwnerOfTeam")
-  members: [Profile!]! @relation(name:"OrganizationMembers")
+  owner: Profile @relation(name:"OwnerOfTeam")
+  members: [Profile!]! @relation(name:"TeamMembers")
 }
 
 type Organization {
@@ -38,6 +39,6 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  Teams: [Team!]! @relation(name:"Teams")
+  teams: [Team!]! @relation(name:"Teams")
 }
 
