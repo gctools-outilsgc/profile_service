@@ -1,6 +1,20 @@
-const account = require('./AccountMsConnector')
-const { SchemaDirectiveVisitor } = require('graphql-tools');
-const { defaultFieldResolver } = require('graphql');
+const account = require("./AccountMsConnector");
+const { SchemaDirectiveVisitor } = require("apollo-server");
+const { defaultFieldResolver } = require("graphql");
+
+function getOwner(query){
+  // Get the gcId either trough the query or by using the ID on the query and finding the user with Prisma.
+  try{
+    if(query["gcId"]){
+      return query["gcId"];
+    } else {
+      checkPrisma;
+    }
+  } catch(e){
+      console.error("The @isOwner directive should only be used on resolvers that have a gcId or ID requirement");
+      console.error(e);
+  }
+}
 
 class AuthenticatedDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
@@ -13,10 +27,10 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
         const result = await resolve.apply(this, args);
         return result;
       } else {
-        throw new Error('Access Token is not valid or system error')
+        throw new Error("Access Token is not valid or system error");
       }
-    }
-  };
+    };
+  }
 }
 
 class OwnerDirective extends SchemaDirectiveVisitor{
@@ -32,29 +46,14 @@ class OwnerDirective extends SchemaDirectiveVisitor{
         const result = await resolve.apply(this, args);
         return result;      
       } else {
-        throw new Error('Must be owner of the data to access');
+        throw new Error("Must be owner of the data to access");
       }
 
-    }
+    };
   }
 }
 
-function getOwner(query){
-  // Get the gcId either trough the query or by using the ID on the query and finding the user with Prisma.
-  try{
-    if(query['gcId']){
-      return query['gcId'];
-    } else {
-      checkPrisma
-    }
-  } catch(e){
-      console.error('The @isOwner directive should only be used on resolvers that have a gcId or ID requirement');
-      console.error(e);
-  }
-}
-
-
-  module.exports = {
-    AuthenticatedDirective,
-    OwnerDirective,
-  }
+module.exports = {
+  AuthenticatedDirective,
+  OwnerDirective,
+};
