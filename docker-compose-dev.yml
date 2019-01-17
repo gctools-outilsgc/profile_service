@@ -1,5 +1,15 @@
 version: '3'
 services:
+  image:
+    build: ./image-server
+    volumes:
+      - image_server:/usr/share/nginx/html/upload
+    environment:
+      - TITLE=OADW-Image-Server
+      - DOMAIN=http://localhost:8007
+      - LOWPROFILE=True
+    ports:
+    - "8007:80"
   prisma:
     image: prismagraphql/prisma:1.16
     ports:
@@ -21,7 +31,7 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres
+    image: postgres:10.6
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
@@ -29,3 +39,4 @@ services:
       - postgres:/var/lib/postgresql/data
 volumes:
   postgres:
+  image_server:

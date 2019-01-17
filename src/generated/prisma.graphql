@@ -1,21 +1,15 @@
-# source: http://prisma:4466/profile/dev
-# timestamp: Wed Jun 13 2018 15:47:56 GMT-0400 (EDT)
-
-type Address implements Node {
+type Address {
   id: ID!
   streetAddress: String!
   city: String!
   province: String!
   postalCode: String!
   country: String!
+  resident: Profile!
 }
 
-"""A connection to a list of items."""
 type AddressConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [AddressEdge]!
   aggregate: AggregateAddress!
 }
@@ -26,19 +20,24 @@ input AddressCreateInput {
   province: String!
   postalCode: String!
   country: String!
+  resident: ProfileCreateOneWithoutAddressInput!
 }
 
-input AddressCreateOneInput {
-  create: AddressCreateInput
+input AddressCreateOneWithoutResidentInput {
+  create: AddressCreateWithoutResidentInput
   connect: AddressWhereUniqueInput
 }
 
-"""An edge in a connection."""
-type AddressEdge {
-  """The item at the end of the edge."""
-  node: Address!
+input AddressCreateWithoutResidentInput {
+  streetAddress: String!
+  city: String!
+  province: String!
+  postalCode: String!
+  country: String!
+}
 
-  """A cursor for use in pagination."""
+type AddressEdge {
+  node: Address!
   cursor: String!
 }
 
@@ -55,10 +54,10 @@ enum AddressOrderByInput {
   postalCode_DESC
   country_ASC
   country_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type AddressPreviousValues {
@@ -78,43 +77,14 @@ type AddressSubscriptionPayload {
 }
 
 input AddressSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [AddressSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [AddressSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [AddressSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: AddressWhereInput
-}
-
-input AddressUpdateDataInput {
-  streetAddress: String
-  city: String
-  province: String
-  postalCode: String
-  country: String
+  AND: [AddressSubscriptionWhereInput!]
+  OR: [AddressSubscriptionWhereInput!]
+  NOT: [AddressSubscriptionWhereInput!]
 }
 
 input AddressUpdateInput {
@@ -123,271 +93,128 @@ input AddressUpdateInput {
   province: String
   postalCode: String
   country: String
+  resident: ProfileUpdateOneRequiredWithoutAddressInput
 }
 
-input AddressUpdateOneInput {
-  create: AddressCreateInput
-  connect: AddressWhereUniqueInput
-  disconnect: Boolean
+input AddressUpdateManyMutationInput {
+  streetAddress: String
+  city: String
+  province: String
+  postalCode: String
+  country: String
+}
+
+input AddressUpdateOneWithoutResidentInput {
+  create: AddressCreateWithoutResidentInput
+  update: AddressUpdateWithoutResidentDataInput
+  upsert: AddressUpsertWithoutResidentInput
   delete: Boolean
-  update: AddressUpdateDataInput
-  upsert: AddressUpsertNestedInput
+  disconnect: Boolean
+  connect: AddressWhereUniqueInput
 }
 
-input AddressUpsertNestedInput {
-  update: AddressUpdateDataInput!
-  create: AddressCreateInput!
+input AddressUpdateWithoutResidentDataInput {
+  streetAddress: String
+  city: String
+  province: String
+  postalCode: String
+  country: String
+}
+
+input AddressUpsertWithoutResidentInput {
+  update: AddressUpdateWithoutResidentDataInput!
+  create: AddressCreateWithoutResidentInput!
 }
 
 input AddressWhereInput {
-  """Logical AND on all given filters."""
-  AND: [AddressWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [AddressWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [AddressWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   streetAddress: String
-
-  """All values that are not equal to given value."""
   streetAddress_not: String
-
-  """All values that are contained in given list."""
   streetAddress_in: [String!]
-
-  """All values that are not contained in given list."""
   streetAddress_not_in: [String!]
-
-  """All values less than the given value."""
   streetAddress_lt: String
-
-  """All values less than or equal the given value."""
   streetAddress_lte: String
-
-  """All values greater than the given value."""
   streetAddress_gt: String
-
-  """All values greater than or equal the given value."""
   streetAddress_gte: String
-
-  """All values containing the given string."""
   streetAddress_contains: String
-
-  """All values not containing the given string."""
   streetAddress_not_contains: String
-
-  """All values starting with the given string."""
   streetAddress_starts_with: String
-
-  """All values not starting with the given string."""
   streetAddress_not_starts_with: String
-
-  """All values ending with the given string."""
   streetAddress_ends_with: String
-
-  """All values not ending with the given string."""
   streetAddress_not_ends_with: String
   city: String
-
-  """All values that are not equal to given value."""
   city_not: String
-
-  """All values that are contained in given list."""
   city_in: [String!]
-
-  """All values that are not contained in given list."""
   city_not_in: [String!]
-
-  """All values less than the given value."""
   city_lt: String
-
-  """All values less than or equal the given value."""
   city_lte: String
-
-  """All values greater than the given value."""
   city_gt: String
-
-  """All values greater than or equal the given value."""
   city_gte: String
-
-  """All values containing the given string."""
   city_contains: String
-
-  """All values not containing the given string."""
   city_not_contains: String
-
-  """All values starting with the given string."""
   city_starts_with: String
-
-  """All values not starting with the given string."""
   city_not_starts_with: String
-
-  """All values ending with the given string."""
   city_ends_with: String
-
-  """All values not ending with the given string."""
   city_not_ends_with: String
   province: String
-
-  """All values that are not equal to given value."""
   province_not: String
-
-  """All values that are contained in given list."""
   province_in: [String!]
-
-  """All values that are not contained in given list."""
   province_not_in: [String!]
-
-  """All values less than the given value."""
   province_lt: String
-
-  """All values less than or equal the given value."""
   province_lte: String
-
-  """All values greater than the given value."""
   province_gt: String
-
-  """All values greater than or equal the given value."""
   province_gte: String
-
-  """All values containing the given string."""
   province_contains: String
-
-  """All values not containing the given string."""
   province_not_contains: String
-
-  """All values starting with the given string."""
   province_starts_with: String
-
-  """All values not starting with the given string."""
   province_not_starts_with: String
-
-  """All values ending with the given string."""
   province_ends_with: String
-
-  """All values not ending with the given string."""
   province_not_ends_with: String
   postalCode: String
-
-  """All values that are not equal to given value."""
   postalCode_not: String
-
-  """All values that are contained in given list."""
   postalCode_in: [String!]
-
-  """All values that are not contained in given list."""
   postalCode_not_in: [String!]
-
-  """All values less than the given value."""
   postalCode_lt: String
-
-  """All values less than or equal the given value."""
   postalCode_lte: String
-
-  """All values greater than the given value."""
   postalCode_gt: String
-
-  """All values greater than or equal the given value."""
   postalCode_gte: String
-
-  """All values containing the given string."""
   postalCode_contains: String
-
-  """All values not containing the given string."""
   postalCode_not_contains: String
-
-  """All values starting with the given string."""
   postalCode_starts_with: String
-
-  """All values not starting with the given string."""
   postalCode_not_starts_with: String
-
-  """All values ending with the given string."""
   postalCode_ends_with: String
-
-  """All values not ending with the given string."""
   postalCode_not_ends_with: String
   country: String
-
-  """All values that are not equal to given value."""
   country_not: String
-
-  """All values that are contained in given list."""
   country_in: [String!]
-
-  """All values that are not contained in given list."""
   country_not_in: [String!]
-
-  """All values less than the given value."""
   country_lt: String
-
-  """All values less than or equal the given value."""
   country_lte: String
-
-  """All values greater than the given value."""
   country_gt: String
-
-  """All values greater than or equal the given value."""
   country_gte: String
-
-  """All values containing the given string."""
   country_contains: String
-
-  """All values not containing the given string."""
   country_not_contains: String
-
-  """All values starting with the given string."""
   country_starts_with: String
-
-  """All values not starting with the given string."""
   country_not_starts_with: String
-
-  """All values ending with the given string."""
   country_ends_with: String
-
-  """All values not ending with the given string."""
   country_not_ends_with: String
+  resident: ProfileWhereInput
+  AND: [AddressWhereInput!]
+  OR: [AddressWhereInput!]
+  NOT: [AddressWhereInput!]
 }
 
 input AddressWhereUniqueInput {
@@ -402,50 +229,45 @@ type AggregateOrganization {
   count: Int!
 }
 
-type AggregateOrgTier {
-  count: Int!
-}
-
 type AggregateProfile {
   count: Int!
 }
 
+type AggregateTeam {
+  count: Int!
+}
+
 type BatchPayload {
-  """The number of nodes that have been affected by the Batch operation."""
   count: Long!
 }
 
-"""
-The `Long` scalar type represents non-fractional signed whole numeric values.
-Long can represent values between -(2^63) and 2^63 - 1.
-"""
 scalar Long
 
 type Mutation {
-  createProfile(data: ProfileCreateInput!): Profile!
   createAddress(data: AddressCreateInput!): Address!
-  createOrgTier(data: OrgTierCreateInput!): OrgTier!
-  createOrganization(data: OrganizationCreateInput!): Organization!
-  updateProfile(data: ProfileUpdateInput!, where: ProfileWhereUniqueInput!): Profile
   updateAddress(data: AddressUpdateInput!, where: AddressWhereUniqueInput!): Address
-  updateOrgTier(data: OrgTierUpdateInput!, where: OrgTierWhereUniqueInput!): OrgTier
-  updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization
-  deleteProfile(where: ProfileWhereUniqueInput!): Profile
-  deleteAddress(where: AddressWhereUniqueInput!): Address
-  deleteOrgTier(where: OrgTierWhereUniqueInput!): OrgTier
-  deleteOrganization(where: OrganizationWhereUniqueInput!): Organization
-  upsertProfile(where: ProfileWhereUniqueInput!, create: ProfileCreateInput!, update: ProfileUpdateInput!): Profile!
+  updateManyAddresses(data: AddressUpdateManyMutationInput!, where: AddressWhereInput): BatchPayload!
   upsertAddress(where: AddressWhereUniqueInput!, create: AddressCreateInput!, update: AddressUpdateInput!): Address!
-  upsertOrgTier(where: OrgTierWhereUniqueInput!, create: OrgTierCreateInput!, update: OrgTierUpdateInput!): OrgTier!
-  upsertOrganization(where: OrganizationWhereUniqueInput!, create: OrganizationCreateInput!, update: OrganizationUpdateInput!): Organization!
-  updateManyProfiles(data: ProfileUpdateInput!, where: ProfileWhereInput): BatchPayload!
-  updateManyAddresses(data: AddressUpdateInput!, where: AddressWhereInput): BatchPayload!
-  updateManyOrgTiers(data: OrgTierUpdateInput!, where: OrgTierWhereInput): BatchPayload!
-  updateManyOrganizations(data: OrganizationUpdateInput!, where: OrganizationWhereInput): BatchPayload!
-  deleteManyProfiles(where: ProfileWhereInput): BatchPayload!
+  deleteAddress(where: AddressWhereUniqueInput!): Address
   deleteManyAddresses(where: AddressWhereInput): BatchPayload!
-  deleteManyOrgTiers(where: OrgTierWhereInput): BatchPayload!
+  createOrganization(data: OrganizationCreateInput!): Organization!
+  updateOrganization(data: OrganizationUpdateInput!, where: OrganizationWhereUniqueInput!): Organization
+  updateManyOrganizations(data: OrganizationUpdateManyMutationInput!, where: OrganizationWhereInput): BatchPayload!
+  upsertOrganization(where: OrganizationWhereUniqueInput!, create: OrganizationCreateInput!, update: OrganizationUpdateInput!): Organization!
+  deleteOrganization(where: OrganizationWhereUniqueInput!): Organization
   deleteManyOrganizations(where: OrganizationWhereInput): BatchPayload!
+  createProfile(data: ProfileCreateInput!): Profile!
+  updateProfile(data: ProfileUpdateInput!, where: ProfileWhereUniqueInput!): Profile
+  updateManyProfiles(data: ProfileUpdateManyMutationInput!, where: ProfileWhereInput): BatchPayload!
+  upsertProfile(where: ProfileWhereUniqueInput!, create: ProfileCreateInput!, update: ProfileUpdateInput!): Profile!
+  deleteProfile(where: ProfileWhereUniqueInput!): Profile
+  deleteManyProfiles(where: ProfileWhereInput): BatchPayload!
+  createTeam(data: TeamCreateInput!): Team!
+  updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
+  updateManyTeams(data: TeamUpdateManyMutationInput!, where: TeamWhereInput): BatchPayload!
+  upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
+  deleteTeam(where: TeamWhereUniqueInput!): Team
+  deleteManyTeams(where: TeamWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -454,27 +276,21 @@ enum MutationType {
   DELETED
 }
 
-"""An object with an ID"""
 interface Node {
-  """The id of the object."""
   id: ID!
 }
 
-type Organization implements Node {
+type Organization {
   id: ID!
   nameEn: String!
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier!]
+  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
 }
 
-"""A connection to a list of items."""
 type OrganizationConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [OrganizationEdge]!
   aggregate: AggregateOrganization!
 }
@@ -484,27 +300,23 @@ input OrganizationCreateInput {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers: OrgTierCreateManyWithoutOrganizationInput
+  teams: TeamCreateManyWithoutOrganizationInput
 }
 
-input OrganizationCreateOneWithoutOrgTiersInput {
-  create: OrganizationCreateWithoutOrgTiersInput
+input OrganizationCreateOneWithoutTeamsInput {
+  create: OrganizationCreateWithoutTeamsInput
   connect: OrganizationWhereUniqueInput
 }
 
-input OrganizationCreateWithoutOrgTiersInput {
+input OrganizationCreateWithoutTeamsInput {
   nameEn: String!
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
 }
 
-"""An edge in a connection."""
 type OrganizationEdge {
-  """The item at the end of the edge."""
   node: Organization!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
@@ -519,10 +331,10 @@ enum OrganizationOrderByInput {
   acronymEn_DESC
   acronymFr_ASC
   acronymFr_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type OrganizationPreviousValues {
@@ -541,35 +353,14 @@ type OrganizationSubscriptionPayload {
 }
 
 input OrganizationSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [OrganizationSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [OrganizationSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [OrganizationSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: OrganizationWhereInput
+  AND: [OrganizationSubscriptionWhereInput!]
+  OR: [OrganizationSubscriptionWhereInput!]
+  NOT: [OrganizationSubscriptionWhereInput!]
 }
 
 input OrganizationUpdateInput {
@@ -577,673 +368,184 @@ input OrganizationUpdateInput {
   nameFr: String
   acronymEn: String
   acronymFr: String
-  orgTiers: OrgTierUpdateManyWithoutOrganizationInput
+  teams: TeamUpdateManyWithoutOrganizationInput
 }
 
-input OrganizationUpdateOneWithoutOrgTiersInput {
-  create: OrganizationCreateWithoutOrgTiersInput
-  connect: OrganizationWhereUniqueInput
-  delete: Boolean
-  update: OrganizationUpdateWithoutOrgTiersDataInput
-  upsert: OrganizationUpsertWithoutOrgTiersInput
-}
-
-input OrganizationUpdateWithoutOrgTiersDataInput {
+input OrganizationUpdateManyMutationInput {
   nameEn: String
   nameFr: String
   acronymEn: String
   acronymFr: String
 }
 
-input OrganizationUpsertWithoutOrgTiersInput {
-  update: OrganizationUpdateWithoutOrgTiersDataInput!
-  create: OrganizationCreateWithoutOrgTiersInput!
+input OrganizationUpdateOneRequiredWithoutTeamsInput {
+  create: OrganizationCreateWithoutTeamsInput
+  update: OrganizationUpdateWithoutTeamsDataInput
+  upsert: OrganizationUpsertWithoutTeamsInput
+  connect: OrganizationWhereUniqueInput
+}
+
+input OrganizationUpdateWithoutTeamsDataInput {
+  nameEn: String
+  nameFr: String
+  acronymEn: String
+  acronymFr: String
+}
+
+input OrganizationUpsertWithoutTeamsInput {
+  update: OrganizationUpdateWithoutTeamsDataInput!
+  create: OrganizationCreateWithoutTeamsInput!
 }
 
 input OrganizationWhereInput {
-  """Logical AND on all given filters."""
-  AND: [OrganizationWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [OrganizationWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [OrganizationWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
   nameEn: String
-
-  """All values that are not equal to given value."""
   nameEn_not: String
-
-  """All values that are contained in given list."""
   nameEn_in: [String!]
-
-  """All values that are not contained in given list."""
   nameEn_not_in: [String!]
-
-  """All values less than the given value."""
   nameEn_lt: String
-
-  """All values less than or equal the given value."""
   nameEn_lte: String
-
-  """All values greater than the given value."""
   nameEn_gt: String
-
-  """All values greater than or equal the given value."""
   nameEn_gte: String
-
-  """All values containing the given string."""
   nameEn_contains: String
-
-  """All values not containing the given string."""
   nameEn_not_contains: String
-
-  """All values starting with the given string."""
   nameEn_starts_with: String
-
-  """All values not starting with the given string."""
   nameEn_not_starts_with: String
-
-  """All values ending with the given string."""
   nameEn_ends_with: String
-
-  """All values not ending with the given string."""
   nameEn_not_ends_with: String
   nameFr: String
-
-  """All values that are not equal to given value."""
   nameFr_not: String
-
-  """All values that are contained in given list."""
   nameFr_in: [String!]
-
-  """All values that are not contained in given list."""
   nameFr_not_in: [String!]
-
-  """All values less than the given value."""
   nameFr_lt: String
-
-  """All values less than or equal the given value."""
   nameFr_lte: String
-
-  """All values greater than the given value."""
   nameFr_gt: String
-
-  """All values greater than or equal the given value."""
   nameFr_gte: String
-
-  """All values containing the given string."""
   nameFr_contains: String
-
-  """All values not containing the given string."""
   nameFr_not_contains: String
-
-  """All values starting with the given string."""
   nameFr_starts_with: String
-
-  """All values not starting with the given string."""
   nameFr_not_starts_with: String
-
-  """All values ending with the given string."""
   nameFr_ends_with: String
-
-  """All values not ending with the given string."""
   nameFr_not_ends_with: String
   acronymEn: String
-
-  """All values that are not equal to given value."""
   acronymEn_not: String
-
-  """All values that are contained in given list."""
   acronymEn_in: [String!]
-
-  """All values that are not contained in given list."""
   acronymEn_not_in: [String!]
-
-  """All values less than the given value."""
   acronymEn_lt: String
-
-  """All values less than or equal the given value."""
   acronymEn_lte: String
-
-  """All values greater than the given value."""
   acronymEn_gt: String
-
-  """All values greater than or equal the given value."""
   acronymEn_gte: String
-
-  """All values containing the given string."""
   acronymEn_contains: String
-
-  """All values not containing the given string."""
   acronymEn_not_contains: String
-
-  """All values starting with the given string."""
   acronymEn_starts_with: String
-
-  """All values not starting with the given string."""
   acronymEn_not_starts_with: String
-
-  """All values ending with the given string."""
   acronymEn_ends_with: String
-
-  """All values not ending with the given string."""
   acronymEn_not_ends_with: String
   acronymFr: String
-
-  """All values that are not equal to given value."""
   acronymFr_not: String
-
-  """All values that are contained in given list."""
   acronymFr_in: [String!]
-
-  """All values that are not contained in given list."""
   acronymFr_not_in: [String!]
-
-  """All values less than the given value."""
   acronymFr_lt: String
-
-  """All values less than or equal the given value."""
   acronymFr_lte: String
-
-  """All values greater than the given value."""
   acronymFr_gt: String
-
-  """All values greater than or equal the given value."""
   acronymFr_gte: String
-
-  """All values containing the given string."""
   acronymFr_contains: String
-
-  """All values not containing the given string."""
   acronymFr_not_contains: String
-
-  """All values starting with the given string."""
   acronymFr_starts_with: String
-
-  """All values not starting with the given string."""
   acronymFr_not_starts_with: String
-
-  """All values ending with the given string."""
   acronymFr_ends_with: String
-
-  """All values not ending with the given string."""
   acronymFr_not_ends_with: String
-  orgTiers_every: OrgTierWhereInput
-  orgTiers_some: OrgTierWhereInput
-  orgTiers_none: OrgTierWhereInput
+  teams_every: TeamWhereInput
+  teams_some: TeamWhereInput
+  teams_none: TeamWhereInput
+  AND: [OrganizationWhereInput!]
+  OR: [OrganizationWhereInput!]
+  NOT: [OrganizationWhereInput!]
 }
 
 input OrganizationWhereUniqueInput {
   id: ID
 }
 
-type OrgTier implements Node {
-  id: ID!
-  nameEn: String!
-  nameFr: String!
-  organization(where: OrganizationWhereInput): Organization!
-  ownerID(where: ProfileWhereInput): Profile
-  members(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile!]
-}
-
-"""A connection to a list of items."""
-type OrgTierConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [OrgTierEdge]!
-  aggregate: AggregateOrgTier!
-}
-
-input OrgTierCreateInput {
-  nameEn: String!
-  nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
-  members: ProfileCreateManyWithoutOrgInput
-}
-
-input OrgTierCreateManyWithoutOrganizationInput {
-  create: [OrgTierCreateWithoutOrganizationInput!]
-  connect: [OrgTierWhereUniqueInput!]
-}
-
-input OrgTierCreateManyWithoutOwnerIDInput {
-  create: [OrgTierCreateWithoutOwnerIDInput!]
-  connect: [OrgTierWhereUniqueInput!]
-}
-
-input OrgTierCreateOneWithoutMembersInput {
-  create: OrgTierCreateWithoutMembersInput
-  connect: OrgTierWhereUniqueInput
-}
-
-input OrgTierCreateWithoutMembersInput {
-  nameEn: String!
-  nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
-}
-
-input OrgTierCreateWithoutOrganizationInput {
-  nameEn: String!
-  nameFr: String!
-  ownerID: ProfileCreateOneWithoutOrgTiersInput
-  members: ProfileCreateManyWithoutOrgInput
-}
-
-input OrgTierCreateWithoutOwnerIDInput {
-  nameEn: String!
-  nameFr: String!
-  organization: OrganizationCreateOneWithoutOrgTiersInput!
-  members: ProfileCreateManyWithoutOrgInput
-}
-
-"""An edge in a connection."""
-type OrgTierEdge {
-  """The item at the end of the edge."""
-  node: OrgTier!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum OrgTierOrderByInput {
-  id_ASC
-  id_DESC
-  nameEn_ASC
-  nameEn_DESC
-  nameFr_ASC
-  nameFr_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type OrgTierPreviousValues {
-  id: ID!
-  nameEn: String!
-  nameFr: String!
-}
-
-type OrgTierSubscriptionPayload {
-  mutation: MutationType!
-  node: OrgTier
-  updatedFields: [String!]
-  previousValues: OrgTierPreviousValues
-}
-
-input OrgTierSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [OrgTierSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [OrgTierSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [OrgTierSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: OrgTierWhereInput
-}
-
-input OrgTierUpdateInput {
-  nameEn: String
-  nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
-  members: ProfileUpdateManyWithoutOrgInput
-}
-
-input OrgTierUpdateManyWithoutOrganizationInput {
-  create: [OrgTierCreateWithoutOrganizationInput!]
-  connect: [OrgTierWhereUniqueInput!]
-  disconnect: [OrgTierWhereUniqueInput!]
-  delete: [OrgTierWhereUniqueInput!]
-  update: [OrgTierUpdateWithWhereUniqueWithoutOrganizationInput!]
-  upsert: [OrgTierUpsertWithWhereUniqueWithoutOrganizationInput!]
-}
-
-input OrgTierUpdateManyWithoutOwnerIDInput {
-  create: [OrgTierCreateWithoutOwnerIDInput!]
-  connect: [OrgTierWhereUniqueInput!]
-  disconnect: [OrgTierWhereUniqueInput!]
-  delete: [OrgTierWhereUniqueInput!]
-  update: [OrgTierUpdateWithWhereUniqueWithoutOwnerIDInput!]
-  upsert: [OrgTierUpsertWithWhereUniqueWithoutOwnerIDInput!]
-}
-
-input OrgTierUpdateOneWithoutMembersInput {
-  create: OrgTierCreateWithoutMembersInput
-  connect: OrgTierWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: OrgTierUpdateWithoutMembersDataInput
-  upsert: OrgTierUpsertWithoutMembersInput
-}
-
-input OrgTierUpdateWithoutMembersDataInput {
-  nameEn: String
-  nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
-}
-
-input OrgTierUpdateWithoutOrganizationDataInput {
-  nameEn: String
-  nameFr: String
-  ownerID: ProfileUpdateOneWithoutOrgTiersInput
-  members: ProfileUpdateManyWithoutOrgInput
-}
-
-input OrgTierUpdateWithoutOwnerIDDataInput {
-  nameEn: String
-  nameFr: String
-  organization: OrganizationUpdateOneWithoutOrgTiersInput
-  members: ProfileUpdateManyWithoutOrgInput
-}
-
-input OrgTierUpdateWithWhereUniqueWithoutOrganizationInput {
-  where: OrgTierWhereUniqueInput!
-  data: OrgTierUpdateWithoutOrganizationDataInput!
-}
-
-input OrgTierUpdateWithWhereUniqueWithoutOwnerIDInput {
-  where: OrgTierWhereUniqueInput!
-  data: OrgTierUpdateWithoutOwnerIDDataInput!
-}
-
-input OrgTierUpsertWithoutMembersInput {
-  update: OrgTierUpdateWithoutMembersDataInput!
-  create: OrgTierCreateWithoutMembersInput!
-}
-
-input OrgTierUpsertWithWhereUniqueWithoutOrganizationInput {
-  where: OrgTierWhereUniqueInput!
-  update: OrgTierUpdateWithoutOrganizationDataInput!
-  create: OrgTierCreateWithoutOrganizationInput!
-}
-
-input OrgTierUpsertWithWhereUniqueWithoutOwnerIDInput {
-  where: OrgTierWhereUniqueInput!
-  update: OrgTierUpdateWithoutOwnerIDDataInput!
-  create: OrgTierCreateWithoutOwnerIDInput!
-}
-
-input OrgTierWhereInput {
-  """Logical AND on all given filters."""
-  AND: [OrgTierWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [OrgTierWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [OrgTierWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  nameEn: String
-
-  """All values that are not equal to given value."""
-  nameEn_not: String
-
-  """All values that are contained in given list."""
-  nameEn_in: [String!]
-
-  """All values that are not contained in given list."""
-  nameEn_not_in: [String!]
-
-  """All values less than the given value."""
-  nameEn_lt: String
-
-  """All values less than or equal the given value."""
-  nameEn_lte: String
-
-  """All values greater than the given value."""
-  nameEn_gt: String
-
-  """All values greater than or equal the given value."""
-  nameEn_gte: String
-
-  """All values containing the given string."""
-  nameEn_contains: String
-
-  """All values not containing the given string."""
-  nameEn_not_contains: String
-
-  """All values starting with the given string."""
-  nameEn_starts_with: String
-
-  """All values not starting with the given string."""
-  nameEn_not_starts_with: String
-
-  """All values ending with the given string."""
-  nameEn_ends_with: String
-
-  """All values not ending with the given string."""
-  nameEn_not_ends_with: String
-  nameFr: String
-
-  """All values that are not equal to given value."""
-  nameFr_not: String
-
-  """All values that are contained in given list."""
-  nameFr_in: [String!]
-
-  """All values that are not contained in given list."""
-  nameFr_not_in: [String!]
-
-  """All values less than the given value."""
-  nameFr_lt: String
-
-  """All values less than or equal the given value."""
-  nameFr_lte: String
-
-  """All values greater than the given value."""
-  nameFr_gt: String
-
-  """All values greater than or equal the given value."""
-  nameFr_gte: String
-
-  """All values containing the given string."""
-  nameFr_contains: String
-
-  """All values not containing the given string."""
-  nameFr_not_contains: String
-
-  """All values starting with the given string."""
-  nameFr_starts_with: String
-
-  """All values not starting with the given string."""
-  nameFr_not_starts_with: String
-
-  """All values ending with the given string."""
-  nameFr_ends_with: String
-
-  """All values not ending with the given string."""
-  nameFr_not_ends_with: String
-  organization: OrganizationWhereInput
-  ownerID: ProfileWhereInput
-  members_every: ProfileWhereInput
-  members_some: ProfileWhereInput
-  members_none: ProfileWhereInput
-}
-
-input OrgTierWhereUniqueInput {
-  id: ID
-}
-
-"""Information about pagination in a connection."""
 type PageInfo {
-  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
   startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
-type Profile implements Node {
+type Profile {
   id: ID!
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
   mobilePhone: String
   officePhone: String
-  address(where: AddressWhereInput): Address
+  address: Address
   titleEn: String
   titleFr: String
-  supervisor(where: ProfileWhereInput): Profile
-  org(where: OrgTierWhereInput): OrgTier
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier!]
+  supervisor: Profile
+  team: Team
+  ownerofTeams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team!]
 }
 
-"""A connection to a list of items."""
 type ProfileConnection {
-  """Information to aid in pagination."""
   pageInfo: PageInfo!
-
-  """A list of edges."""
   edges: [ProfileEdge]!
   aggregate: AggregateProfile!
 }
 
 input ProfileCreateInput {
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
   mobilePhone: String
   officePhone: String
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
-  address: AddressCreateOneInput
-  supervisor: ProfileCreateOneInput
-  org: OrgTierCreateOneWithoutMembersInput
-  orgTiers: OrgTierCreateManyWithoutOwnerIDInput
+  supervisor: ProfileCreateOneWithoutSupervisorInput
+  team: TeamCreateOneWithoutMembersInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
 }
 
-input ProfileCreateManyWithoutOrgInput {
-  create: [ProfileCreateWithoutOrgInput!]
+input ProfileCreateManyWithoutTeamInput {
+  create: [ProfileCreateWithoutTeamInput!]
   connect: [ProfileWhereUniqueInput!]
 }
 
-input ProfileCreateOneInput {
-  create: ProfileCreateInput
+input ProfileCreateOneWithoutAddressInput {
+  create: ProfileCreateWithoutAddressInput
   connect: ProfileWhereUniqueInput
 }
 
-input ProfileCreateOneWithoutOrgTiersInput {
-  create: ProfileCreateWithoutOrgTiersInput
+input ProfileCreateOneWithoutOwnerofTeamsInput {
+  create: ProfileCreateWithoutOwnerofTeamsInput
   connect: ProfileWhereUniqueInput
 }
 
-input ProfileCreateWithoutOrgInput {
-  gcId: String!
+input ProfileCreateOneWithoutSupervisorInput {
+  create: ProfileCreateWithoutSupervisorInput
+  connect: ProfileWhereUniqueInput
+}
+
+input ProfileCreateWithoutAddressInput {
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1251,39 +553,63 @@ input ProfileCreateWithoutOrgInput {
   officePhone: String
   titleEn: String
   titleFr: String
-  address: AddressCreateOneInput
-  supervisor: ProfileCreateOneInput
-  orgTiers: OrgTierCreateManyWithoutOwnerIDInput
+  supervisor: ProfileCreateOneWithoutSupervisorInput
+  team: TeamCreateOneWithoutMembersInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
 }
 
-input ProfileCreateWithoutOrgTiersInput {
-  gcId: String!
+input ProfileCreateWithoutOwnerofTeamsInput {
+  gcID: String!
   name: String!
   email: String!
   avatar: String
   mobilePhone: String
   officePhone: String
+  address: AddressCreateOneWithoutResidentInput
   titleEn: String
   titleFr: String
-  address: AddressCreateOneInput
-  supervisor: ProfileCreateOneInput
-  org: OrgTierCreateOneWithoutMembersInput
+  supervisor: ProfileCreateOneWithoutSupervisorInput
+  team: TeamCreateOneWithoutMembersInput
 }
 
-"""An edge in a connection."""
+input ProfileCreateWithoutSupervisorInput {
+  gcID: String!
+  name: String!
+  email: String!
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: AddressCreateOneWithoutResidentInput
+  titleEn: String
+  titleFr: String
+  team: TeamCreateOneWithoutMembersInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
+}
+
+input ProfileCreateWithoutTeamInput {
+  gcID: String!
+  name: String!
+  email: String!
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: AddressCreateOneWithoutResidentInput
+  titleEn: String
+  titleFr: String
+  supervisor: ProfileCreateOneWithoutSupervisorInput
+  ownerofTeams: TeamCreateManyWithoutOwnerInput
+}
+
 type ProfileEdge {
-  """The item at the end of the edge."""
   node: Profile!
-
-  """A cursor for use in pagination."""
   cursor: String!
 }
 
 enum ProfileOrderByInput {
   id_ASC
   id_DESC
-  gcId_ASC
-  gcId_DESC
+  gcID_ASC
+  gcID_DESC
   name_ASC
   name_DESC
   email_ASC
@@ -1298,15 +624,15 @@ enum ProfileOrderByInput {
   titleEn_DESC
   titleFr_ASC
   titleFr_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ProfilePreviousValues {
   id: ID!
-  gcId: String!
+  gcID: String!
   name: String!
   email: String!
   avatar: String
@@ -1314,6 +640,138 @@ type ProfilePreviousValues {
   officePhone: String
   titleEn: String
   titleFr: String
+}
+
+input ProfileScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  gcID: String
+  gcID_not: String
+  gcID_in: [String!]
+  gcID_not_in: [String!]
+  gcID_lt: String
+  gcID_lte: String
+  gcID_gt: String
+  gcID_gte: String
+  gcID_contains: String
+  gcID_not_contains: String
+  gcID_starts_with: String
+  gcID_not_starts_with: String
+  gcID_ends_with: String
+  gcID_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  avatar: String
+  avatar_not: String
+  avatar_in: [String!]
+  avatar_not_in: [String!]
+  avatar_lt: String
+  avatar_lte: String
+  avatar_gt: String
+  avatar_gte: String
+  avatar_contains: String
+  avatar_not_contains: String
+  avatar_starts_with: String
+  avatar_not_starts_with: String
+  avatar_ends_with: String
+  avatar_not_ends_with: String
+  mobilePhone: String
+  mobilePhone_not: String
+  mobilePhone_in: [String!]
+  mobilePhone_not_in: [String!]
+  mobilePhone_lt: String
+  mobilePhone_lte: String
+  mobilePhone_gt: String
+  mobilePhone_gte: String
+  mobilePhone_contains: String
+  mobilePhone_not_contains: String
+  mobilePhone_starts_with: String
+  mobilePhone_not_starts_with: String
+  mobilePhone_ends_with: String
+  mobilePhone_not_ends_with: String
+  officePhone: String
+  officePhone_not: String
+  officePhone_in: [String!]
+  officePhone_not_in: [String!]
+  officePhone_lt: String
+  officePhone_lte: String
+  officePhone_gt: String
+  officePhone_gte: String
+  officePhone_contains: String
+  officePhone_not_contains: String
+  officePhone_starts_with: String
+  officePhone_not_starts_with: String
+  officePhone_ends_with: String
+  officePhone_not_ends_with: String
+  titleEn: String
+  titleEn_not: String
+  titleEn_in: [String!]
+  titleEn_not_in: [String!]
+  titleEn_lt: String
+  titleEn_lte: String
+  titleEn_gt: String
+  titleEn_gte: String
+  titleEn_contains: String
+  titleEn_not_contains: String
+  titleEn_starts_with: String
+  titleEn_not_starts_with: String
+  titleEn_ends_with: String
+  titleEn_not_ends_with: String
+  titleFr: String
+  titleFr_not: String
+  titleFr_in: [String!]
+  titleFr_not_in: [String!]
+  titleFr_lt: String
+  titleFr_lte: String
+  titleFr_gt: String
+  titleFr_gte: String
+  titleFr_contains: String
+  titleFr_not_contains: String
+  titleFr_starts_with: String
+  titleFr_not_starts_with: String
+  titleFr_ends_with: String
+  titleFr_not_ends_with: String
+  AND: [ProfileScalarWhereInput!]
+  OR: [ProfileScalarWhereInput!]
+  NOT: [ProfileScalarWhereInput!]
 }
 
 type ProfileSubscriptionPayload {
@@ -1324,54 +782,33 @@ type ProfileSubscriptionPayload {
 }
 
 input ProfileSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProfileSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProfileSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProfileSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
   mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
   updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
   updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
   updatedFields_contains_some: [String!]
   node: ProfileWhereInput
-}
-
-input ProfileUpdateDataInput {
-  gcId: String
-  name: String
-  email: String
-  avatar: String
-  mobilePhone: String
-  officePhone: String
-  titleEn: String
-  titleFr: String
-  address: AddressUpdateOneInput
-  supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
+  AND: [ProfileSubscriptionWhereInput!]
+  OR: [ProfileSubscriptionWhereInput!]
+  NOT: [ProfileSubscriptionWhereInput!]
 }
 
 input ProfileUpdateInput {
-  gcId: String
+  gcID: String
+  name: String
+  email: String
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: AddressUpdateOneWithoutResidentInput
+  titleEn: String
+  titleFr: String
+  supervisor: ProfileUpdateOneWithoutSupervisorInput
+  team: TeamUpdateOneWithoutMembersInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
+}
+
+input ProfileUpdateManyDataInput {
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1379,41 +816,62 @@ input ProfileUpdateInput {
   officePhone: String
   titleEn: String
   titleFr: String
-  address: AddressUpdateOneInput
-  supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
 }
 
-input ProfileUpdateManyWithoutOrgInput {
-  create: [ProfileCreateWithoutOrgInput!]
+input ProfileUpdateManyMutationInput {
+  gcID: String
+  name: String
+  email: String
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  titleEn: String
+  titleFr: String
+}
+
+input ProfileUpdateManyWithoutTeamInput {
+  create: [ProfileCreateWithoutTeamInput!]
+  delete: [ProfileWhereUniqueInput!]
   connect: [ProfileWhereUniqueInput!]
   disconnect: [ProfileWhereUniqueInput!]
-  delete: [ProfileWhereUniqueInput!]
-  update: [ProfileUpdateWithWhereUniqueWithoutOrgInput!]
-  upsert: [ProfileUpsertWithWhereUniqueWithoutOrgInput!]
+  update: [ProfileUpdateWithWhereUniqueWithoutTeamInput!]
+  upsert: [ProfileUpsertWithWhereUniqueWithoutTeamInput!]
+  deleteMany: [ProfileScalarWhereInput!]
+  updateMany: [ProfileUpdateManyWithWhereNestedInput!]
 }
 
-input ProfileUpdateOneInput {
-  create: ProfileCreateInput
+input ProfileUpdateManyWithWhereNestedInput {
+  where: ProfileScalarWhereInput!
+  data: ProfileUpdateManyDataInput!
+}
+
+input ProfileUpdateOneRequiredWithoutAddressInput {
+  create: ProfileCreateWithoutAddressInput
+  update: ProfileUpdateWithoutAddressDataInput
+  upsert: ProfileUpsertWithoutAddressInput
   connect: ProfileWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: ProfileUpdateDataInput
-  upsert: ProfileUpsertNestedInput
 }
 
-input ProfileUpdateOneWithoutOrgTiersInput {
-  create: ProfileCreateWithoutOrgTiersInput
+input ProfileUpdateOneWithoutOwnerofTeamsInput {
+  create: ProfileCreateWithoutOwnerofTeamsInput
+  update: ProfileUpdateWithoutOwnerofTeamsDataInput
+  upsert: ProfileUpsertWithoutOwnerofTeamsInput
+  delete: Boolean
+  disconnect: Boolean
   connect: ProfileWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: ProfileUpdateWithoutOrgTiersDataInput
-  upsert: ProfileUpsertWithoutOrgTiersInput
 }
 
-input ProfileUpdateWithoutOrgDataInput {
-  gcId: String
+input ProfileUpdateOneWithoutSupervisorInput {
+  create: ProfileCreateWithoutSupervisorInput
+  update: ProfileUpdateWithoutSupervisorDataInput
+  upsert: ProfileUpsertWithoutSupervisorInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProfileWhereUniqueInput
+}
+
+input ProfileUpdateWithoutAddressDataInput {
+  gcID: String
   name: String
   email: String
   avatar: String
@@ -1421,453 +879,550 @@ input ProfileUpdateWithoutOrgDataInput {
   officePhone: String
   titleEn: String
   titleFr: String
-  address: AddressUpdateOneInput
-  supervisor: ProfileUpdateOneInput
-  orgTiers: OrgTierUpdateManyWithoutOwnerIDInput
+  supervisor: ProfileUpdateOneWithoutSupervisorInput
+  team: TeamUpdateOneWithoutMembersInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
 }
 
-input ProfileUpdateWithoutOrgTiersDataInput {
-  gcId: String
+input ProfileUpdateWithoutOwnerofTeamsDataInput {
+  gcID: String
   name: String
   email: String
   avatar: String
   mobilePhone: String
   officePhone: String
+  address: AddressUpdateOneWithoutResidentInput
   titleEn: String
   titleFr: String
-  address: AddressUpdateOneInput
-  supervisor: ProfileUpdateOneInput
-  org: OrgTierUpdateOneWithoutMembersInput
+  supervisor: ProfileUpdateOneWithoutSupervisorInput
+  team: TeamUpdateOneWithoutMembersInput
 }
 
-input ProfileUpdateWithWhereUniqueWithoutOrgInput {
+input ProfileUpdateWithoutSupervisorDataInput {
+  gcID: String
+  name: String
+  email: String
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: AddressUpdateOneWithoutResidentInput
+  titleEn: String
+  titleFr: String
+  team: TeamUpdateOneWithoutMembersInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
+}
+
+input ProfileUpdateWithoutTeamDataInput {
+  gcID: String
+  name: String
+  email: String
+  avatar: String
+  mobilePhone: String
+  officePhone: String
+  address: AddressUpdateOneWithoutResidentInput
+  titleEn: String
+  titleFr: String
+  supervisor: ProfileUpdateOneWithoutSupervisorInput
+  ownerofTeams: TeamUpdateManyWithoutOwnerInput
+}
+
+input ProfileUpdateWithWhereUniqueWithoutTeamInput {
   where: ProfileWhereUniqueInput!
-  data: ProfileUpdateWithoutOrgDataInput!
+  data: ProfileUpdateWithoutTeamDataInput!
 }
 
-input ProfileUpsertNestedInput {
-  update: ProfileUpdateDataInput!
-  create: ProfileCreateInput!
+input ProfileUpsertWithoutAddressInput {
+  update: ProfileUpdateWithoutAddressDataInput!
+  create: ProfileCreateWithoutAddressInput!
 }
 
-input ProfileUpsertWithoutOrgTiersInput {
-  update: ProfileUpdateWithoutOrgTiersDataInput!
-  create: ProfileCreateWithoutOrgTiersInput!
+input ProfileUpsertWithoutOwnerofTeamsInput {
+  update: ProfileUpdateWithoutOwnerofTeamsDataInput!
+  create: ProfileCreateWithoutOwnerofTeamsInput!
 }
 
-input ProfileUpsertWithWhereUniqueWithoutOrgInput {
+input ProfileUpsertWithoutSupervisorInput {
+  update: ProfileUpdateWithoutSupervisorDataInput!
+  create: ProfileCreateWithoutSupervisorInput!
+}
+
+input ProfileUpsertWithWhereUniqueWithoutTeamInput {
   where: ProfileWhereUniqueInput!
-  update: ProfileUpdateWithoutOrgDataInput!
-  create: ProfileCreateWithoutOrgInput!
+  update: ProfileUpdateWithoutTeamDataInput!
+  create: ProfileCreateWithoutTeamInput!
 }
 
 input ProfileWhereInput {
-  """Logical AND on all given filters."""
-  AND: [ProfileWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [ProfileWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [ProfileWhereInput!]
   id: ID
-
-  """All values that are not equal to given value."""
   id_not: ID
-
-  """All values that are contained in given list."""
   id_in: [ID!]
-
-  """All values that are not contained in given list."""
   id_not_in: [ID!]
-
-  """All values less than the given value."""
   id_lt: ID
-
-  """All values less than or equal the given value."""
   id_lte: ID
-
-  """All values greater than the given value."""
   id_gt: ID
-
-  """All values greater than or equal the given value."""
   id_gte: ID
-
-  """All values containing the given string."""
   id_contains: ID
-
-  """All values not containing the given string."""
   id_not_contains: ID
-
-  """All values starting with the given string."""
   id_starts_with: ID
-
-  """All values not starting with the given string."""
   id_not_starts_with: ID
-
-  """All values ending with the given string."""
   id_ends_with: ID
-
-  """All values not ending with the given string."""
   id_not_ends_with: ID
-  gcId: String
-
-  """All values that are not equal to given value."""
-  gcId_not: String
-
-  """All values that are contained in given list."""
-  gcId_in: [String!]
-
-  """All values that are not contained in given list."""
-  gcId_not_in: [String!]
-
-  """All values less than the given value."""
-  gcId_lt: String
-
-  """All values less than or equal the given value."""
-  gcId_lte: String
-
-  """All values greater than the given value."""
-  gcId_gt: String
-
-  """All values greater than or equal the given value."""
-  gcId_gte: String
-
-  """All values containing the given string."""
-  gcId_contains: String
-
-  """All values not containing the given string."""
-  gcId_not_contains: String
-
-  """All values starting with the given string."""
-  gcId_starts_with: String
-
-  """All values not starting with the given string."""
-  gcId_not_starts_with: String
-
-  """All values ending with the given string."""
-  gcId_ends_with: String
-
-  """All values not ending with the given string."""
-  gcId_not_ends_with: String
+  gcID: String
+  gcID_not: String
+  gcID_in: [String!]
+  gcID_not_in: [String!]
+  gcID_lt: String
+  gcID_lte: String
+  gcID_gt: String
+  gcID_gte: String
+  gcID_contains: String
+  gcID_not_contains: String
+  gcID_starts_with: String
+  gcID_not_starts_with: String
+  gcID_ends_with: String
+  gcID_not_ends_with: String
   name: String
-
-  """All values that are not equal to given value."""
   name_not: String
-
-  """All values that are contained in given list."""
   name_in: [String!]
-
-  """All values that are not contained in given list."""
   name_not_in: [String!]
-
-  """All values less than the given value."""
   name_lt: String
-
-  """All values less than or equal the given value."""
   name_lte: String
-
-  """All values greater than the given value."""
   name_gt: String
-
-  """All values greater than or equal the given value."""
   name_gte: String
-
-  """All values containing the given string."""
   name_contains: String
-
-  """All values not containing the given string."""
   name_not_contains: String
-
-  """All values starting with the given string."""
   name_starts_with: String
-
-  """All values not starting with the given string."""
   name_not_starts_with: String
-
-  """All values ending with the given string."""
   name_ends_with: String
-
-  """All values not ending with the given string."""
   name_not_ends_with: String
   email: String
-
-  """All values that are not equal to given value."""
   email_not: String
-
-  """All values that are contained in given list."""
   email_in: [String!]
-
-  """All values that are not contained in given list."""
   email_not_in: [String!]
-
-  """All values less than the given value."""
   email_lt: String
-
-  """All values less than or equal the given value."""
   email_lte: String
-
-  """All values greater than the given value."""
   email_gt: String
-
-  """All values greater than or equal the given value."""
   email_gte: String
-
-  """All values containing the given string."""
   email_contains: String
-
-  """All values not containing the given string."""
   email_not_contains: String
-
-  """All values starting with the given string."""
   email_starts_with: String
-
-  """All values not starting with the given string."""
   email_not_starts_with: String
-
-  """All values ending with the given string."""
   email_ends_with: String
-
-  """All values not ending with the given string."""
   email_not_ends_with: String
   avatar: String
-
-  """All values that are not equal to given value."""
   avatar_not: String
-
-  """All values that are contained in given list."""
   avatar_in: [String!]
-
-  """All values that are not contained in given list."""
   avatar_not_in: [String!]
-
-  """All values less than the given value."""
   avatar_lt: String
-
-  """All values less than or equal the given value."""
   avatar_lte: String
-
-  """All values greater than the given value."""
   avatar_gt: String
-
-  """All values greater than or equal the given value."""
   avatar_gte: String
-
-  """All values containing the given string."""
   avatar_contains: String
-
-  """All values not containing the given string."""
   avatar_not_contains: String
-
-  """All values starting with the given string."""
   avatar_starts_with: String
-
-  """All values not starting with the given string."""
   avatar_not_starts_with: String
-
-  """All values ending with the given string."""
   avatar_ends_with: String
-
-  """All values not ending with the given string."""
   avatar_not_ends_with: String
   mobilePhone: String
-
-  """All values that are not equal to given value."""
   mobilePhone_not: String
-
-  """All values that are contained in given list."""
   mobilePhone_in: [String!]
-
-  """All values that are not contained in given list."""
   mobilePhone_not_in: [String!]
-
-  """All values less than the given value."""
   mobilePhone_lt: String
-
-  """All values less than or equal the given value."""
   mobilePhone_lte: String
-
-  """All values greater than the given value."""
   mobilePhone_gt: String
-
-  """All values greater than or equal the given value."""
   mobilePhone_gte: String
-
-  """All values containing the given string."""
   mobilePhone_contains: String
-
-  """All values not containing the given string."""
   mobilePhone_not_contains: String
-
-  """All values starting with the given string."""
   mobilePhone_starts_with: String
-
-  """All values not starting with the given string."""
   mobilePhone_not_starts_with: String
-
-  """All values ending with the given string."""
   mobilePhone_ends_with: String
-
-  """All values not ending with the given string."""
   mobilePhone_not_ends_with: String
   officePhone: String
-
-  """All values that are not equal to given value."""
   officePhone_not: String
-
-  """All values that are contained in given list."""
   officePhone_in: [String!]
-
-  """All values that are not contained in given list."""
   officePhone_not_in: [String!]
-
-  """All values less than the given value."""
   officePhone_lt: String
-
-  """All values less than or equal the given value."""
   officePhone_lte: String
-
-  """All values greater than the given value."""
   officePhone_gt: String
-
-  """All values greater than or equal the given value."""
   officePhone_gte: String
-
-  """All values containing the given string."""
   officePhone_contains: String
-
-  """All values not containing the given string."""
   officePhone_not_contains: String
-
-  """All values starting with the given string."""
   officePhone_starts_with: String
-
-  """All values not starting with the given string."""
   officePhone_not_starts_with: String
-
-  """All values ending with the given string."""
   officePhone_ends_with: String
-
-  """All values not ending with the given string."""
   officePhone_not_ends_with: String
+  address: AddressWhereInput
   titleEn: String
-
-  """All values that are not equal to given value."""
   titleEn_not: String
-
-  """All values that are contained in given list."""
   titleEn_in: [String!]
-
-  """All values that are not contained in given list."""
   titleEn_not_in: [String!]
-
-  """All values less than the given value."""
   titleEn_lt: String
-
-  """All values less than or equal the given value."""
   titleEn_lte: String
-
-  """All values greater than the given value."""
   titleEn_gt: String
-
-  """All values greater than or equal the given value."""
   titleEn_gte: String
-
-  """All values containing the given string."""
   titleEn_contains: String
-
-  """All values not containing the given string."""
   titleEn_not_contains: String
-
-  """All values starting with the given string."""
   titleEn_starts_with: String
-
-  """All values not starting with the given string."""
   titleEn_not_starts_with: String
-
-  """All values ending with the given string."""
   titleEn_ends_with: String
-
-  """All values not ending with the given string."""
   titleEn_not_ends_with: String
   titleFr: String
-
-  """All values that are not equal to given value."""
   titleFr_not: String
-
-  """All values that are contained in given list."""
   titleFr_in: [String!]
-
-  """All values that are not contained in given list."""
   titleFr_not_in: [String!]
-
-  """All values less than the given value."""
   titleFr_lt: String
-
-  """All values less than or equal the given value."""
   titleFr_lte: String
-
-  """All values greater than the given value."""
   titleFr_gt: String
-
-  """All values greater than or equal the given value."""
   titleFr_gte: String
-
-  """All values containing the given string."""
   titleFr_contains: String
-
-  """All values not containing the given string."""
   titleFr_not_contains: String
-
-  """All values starting with the given string."""
   titleFr_starts_with: String
-
-  """All values not starting with the given string."""
   titleFr_not_starts_with: String
-
-  """All values ending with the given string."""
   titleFr_ends_with: String
-
-  """All values not ending with the given string."""
   titleFr_not_ends_with: String
-  address: AddressWhereInput
   supervisor: ProfileWhereInput
-  org: OrgTierWhereInput
-  orgTiers_every: OrgTierWhereInput
-  orgTiers_some: OrgTierWhereInput
-  orgTiers_none: OrgTierWhereInput
+  team: TeamWhereInput
+  ownerofTeams_every: TeamWhereInput
+  ownerofTeams_some: TeamWhereInput
+  ownerofTeams_none: TeamWhereInput
+  AND: [ProfileWhereInput!]
+  OR: [ProfileWhereInput!]
+  NOT: [ProfileWhereInput!]
 }
 
 input ProfileWhereUniqueInput {
   id: ID
-  gcId: String
+  gcID: String
   email: String
 }
 
 type Query {
-  profiles(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile]!
-  addresses(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Address]!
-  orgTiers(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OrgTier]!
-  organizations(where: OrganizationWhereInput, orderBy: OrganizationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Organization]!
-  profile(where: ProfileWhereUniqueInput!): Profile
   address(where: AddressWhereUniqueInput!): Address
-  orgTier(where: OrgTierWhereUniqueInput!): OrgTier
-  organization(where: OrganizationWhereUniqueInput!): Organization
-  profilesConnection(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProfileConnection!
+  addresses(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Address]!
   addressesConnection(where: AddressWhereInput, orderBy: AddressOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AddressConnection!
-  orgTiersConnection(where: OrgTierWhereInput, orderBy: OrgTierOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgTierConnection!
+  organization(where: OrganizationWhereUniqueInput!): Organization
+  organizations(where: OrganizationWhereInput, orderBy: OrganizationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Organization]!
   organizationsConnection(where: OrganizationWhereInput, orderBy: OrganizationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrganizationConnection!
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
+  profile(where: ProfileWhereUniqueInput!): Profile
+  profiles(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile]!
+  profilesConnection(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProfileConnection!
+  team(where: TeamWhereUniqueInput!): Team
+  teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
+  teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
+  node(id: ID!): Node
 }
 
 type Subscription {
-  profile(where: ProfileSubscriptionWhereInput): ProfileSubscriptionPayload
   address(where: AddressSubscriptionWhereInput): AddressSubscriptionPayload
-  orgTier(where: OrgTierSubscriptionWhereInput): OrgTierSubscriptionPayload
   organization(where: OrganizationSubscriptionWhereInput): OrganizationSubscriptionPayload
+  profile(where: ProfileSubscriptionWhereInput): ProfileSubscriptionPayload
+  team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
+}
+
+type Team {
+  id: ID!
+  nameEn: String!
+  nameFr: String!
+  organization: Organization!
+  owner: Profile
+  members(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile!]
+}
+
+type TeamConnection {
+  pageInfo: PageInfo!
+  edges: [TeamEdge]!
+  aggregate: AggregateTeam!
+}
+
+input TeamCreateInput {
+  nameEn: String!
+  nameFr: String!
+  organization: OrganizationCreateOneWithoutTeamsInput!
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
+  members: ProfileCreateManyWithoutTeamInput
+}
+
+input TeamCreateManyWithoutOrganizationInput {
+  create: [TeamCreateWithoutOrganizationInput!]
+  connect: [TeamWhereUniqueInput!]
+}
+
+input TeamCreateManyWithoutOwnerInput {
+  create: [TeamCreateWithoutOwnerInput!]
+  connect: [TeamWhereUniqueInput!]
+}
+
+input TeamCreateOneWithoutMembersInput {
+  create: TeamCreateWithoutMembersInput
+  connect: TeamWhereUniqueInput
+}
+
+input TeamCreateWithoutMembersInput {
+  nameEn: String!
+  nameFr: String!
+  organization: OrganizationCreateOneWithoutTeamsInput!
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
+}
+
+input TeamCreateWithoutOrganizationInput {
+  nameEn: String!
+  nameFr: String!
+  owner: ProfileCreateOneWithoutOwnerofTeamsInput
+  members: ProfileCreateManyWithoutTeamInput
+}
+
+input TeamCreateWithoutOwnerInput {
+  nameEn: String!
+  nameFr: String!
+  organization: OrganizationCreateOneWithoutTeamsInput!
+  members: ProfileCreateManyWithoutTeamInput
+}
+
+type TeamEdge {
+  node: Team!
+  cursor: String!
+}
+
+enum TeamOrderByInput {
+  id_ASC
+  id_DESC
+  nameEn_ASC
+  nameEn_DESC
+  nameFr_ASC
+  nameFr_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TeamPreviousValues {
+  id: ID!
+  nameEn: String!
+  nameFr: String!
+}
+
+input TeamScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  nameEn: String
+  nameEn_not: String
+  nameEn_in: [String!]
+  nameEn_not_in: [String!]
+  nameEn_lt: String
+  nameEn_lte: String
+  nameEn_gt: String
+  nameEn_gte: String
+  nameEn_contains: String
+  nameEn_not_contains: String
+  nameEn_starts_with: String
+  nameEn_not_starts_with: String
+  nameEn_ends_with: String
+  nameEn_not_ends_with: String
+  nameFr: String
+  nameFr_not: String
+  nameFr_in: [String!]
+  nameFr_not_in: [String!]
+  nameFr_lt: String
+  nameFr_lte: String
+  nameFr_gt: String
+  nameFr_gte: String
+  nameFr_contains: String
+  nameFr_not_contains: String
+  nameFr_starts_with: String
+  nameFr_not_starts_with: String
+  nameFr_ends_with: String
+  nameFr_not_ends_with: String
+  AND: [TeamScalarWhereInput!]
+  OR: [TeamScalarWhereInput!]
+  NOT: [TeamScalarWhereInput!]
+}
+
+type TeamSubscriptionPayload {
+  mutation: MutationType!
+  node: Team
+  updatedFields: [String!]
+  previousValues: TeamPreviousValues
+}
+
+input TeamSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TeamWhereInput
+  AND: [TeamSubscriptionWhereInput!]
+  OR: [TeamSubscriptionWhereInput!]
+  NOT: [TeamSubscriptionWhereInput!]
+}
+
+input TeamUpdateInput {
+  nameEn: String
+  nameFr: String
+  organization: OrganizationUpdateOneRequiredWithoutTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
+  members: ProfileUpdateManyWithoutTeamInput
+}
+
+input TeamUpdateManyDataInput {
+  nameEn: String
+  nameFr: String
+}
+
+input TeamUpdateManyMutationInput {
+  nameEn: String
+  nameFr: String
+}
+
+input TeamUpdateManyWithoutOrganizationInput {
+  create: [TeamCreateWithoutOrganizationInput!]
+  delete: [TeamWhereUniqueInput!]
+  connect: [TeamWhereUniqueInput!]
+  disconnect: [TeamWhereUniqueInput!]
+  update: [TeamUpdateWithWhereUniqueWithoutOrganizationInput!]
+  upsert: [TeamUpsertWithWhereUniqueWithoutOrganizationInput!]
+  deleteMany: [TeamScalarWhereInput!]
+  updateMany: [TeamUpdateManyWithWhereNestedInput!]
+}
+
+input TeamUpdateManyWithoutOwnerInput {
+  create: [TeamCreateWithoutOwnerInput!]
+  delete: [TeamWhereUniqueInput!]
+  connect: [TeamWhereUniqueInput!]
+  disconnect: [TeamWhereUniqueInput!]
+  update: [TeamUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [TeamUpsertWithWhereUniqueWithoutOwnerInput!]
+  deleteMany: [TeamScalarWhereInput!]
+  updateMany: [TeamUpdateManyWithWhereNestedInput!]
+}
+
+input TeamUpdateManyWithWhereNestedInput {
+  where: TeamScalarWhereInput!
+  data: TeamUpdateManyDataInput!
+}
+
+input TeamUpdateOneWithoutMembersInput {
+  create: TeamCreateWithoutMembersInput
+  update: TeamUpdateWithoutMembersDataInput
+  upsert: TeamUpsertWithoutMembersInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: TeamWhereUniqueInput
+}
+
+input TeamUpdateWithoutMembersDataInput {
+  nameEn: String
+  nameFr: String
+  organization: OrganizationUpdateOneRequiredWithoutTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
+}
+
+input TeamUpdateWithoutOrganizationDataInput {
+  nameEn: String
+  nameFr: String
+  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
+  members: ProfileUpdateManyWithoutTeamInput
+}
+
+input TeamUpdateWithoutOwnerDataInput {
+  nameEn: String
+  nameFr: String
+  organization: OrganizationUpdateOneRequiredWithoutTeamsInput
+  members: ProfileUpdateManyWithoutTeamInput
+}
+
+input TeamUpdateWithWhereUniqueWithoutOrganizationInput {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateWithoutOrganizationDataInput!
+}
+
+input TeamUpdateWithWhereUniqueWithoutOwnerInput {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateWithoutOwnerDataInput!
+}
+
+input TeamUpsertWithoutMembersInput {
+  update: TeamUpdateWithoutMembersDataInput!
+  create: TeamCreateWithoutMembersInput!
+}
+
+input TeamUpsertWithWhereUniqueWithoutOrganizationInput {
+  where: TeamWhereUniqueInput!
+  update: TeamUpdateWithoutOrganizationDataInput!
+  create: TeamCreateWithoutOrganizationInput!
+}
+
+input TeamUpsertWithWhereUniqueWithoutOwnerInput {
+  where: TeamWhereUniqueInput!
+  update: TeamUpdateWithoutOwnerDataInput!
+  create: TeamCreateWithoutOwnerInput!
+}
+
+input TeamWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  nameEn: String
+  nameEn_not: String
+  nameEn_in: [String!]
+  nameEn_not_in: [String!]
+  nameEn_lt: String
+  nameEn_lte: String
+  nameEn_gt: String
+  nameEn_gte: String
+  nameEn_contains: String
+  nameEn_not_contains: String
+  nameEn_starts_with: String
+  nameEn_not_starts_with: String
+  nameEn_ends_with: String
+  nameEn_not_ends_with: String
+  nameFr: String
+  nameFr_not: String
+  nameFr_in: [String!]
+  nameFr_not_in: [String!]
+  nameFr_lt: String
+  nameFr_lte: String
+  nameFr_gt: String
+  nameFr_gte: String
+  nameFr_contains: String
+  nameFr_not_contains: String
+  nameFr_starts_with: String
+  nameFr_not_starts_with: String
+  nameFr_ends_with: String
+  nameFr_not_ends_with: String
+  organization: OrganizationWhereInput
+  owner: ProfileWhereInput
+  members_every: ProfileWhereInput
+  members_some: ProfileWhereInput
+  members_none: ProfileWhereInput
+  AND: [TeamWhereInput!]
+  OR: [TeamWhereInput!]
+  NOT: [TeamWhereInput!]
+}
+
+input TeamWhereUniqueInput {
+  id: ID
 }

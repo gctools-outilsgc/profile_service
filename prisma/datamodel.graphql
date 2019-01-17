@@ -1,17 +1,17 @@
 type Profile {
   id: ID! @unique
-  gcId: String! @unique
+  gcID: String! @unique
   name: String!
   email: String! @unique
   avatar: String
   mobilePhone: String
   officePhone: String
-  address: Address
+  address: Address @relation(name:"Resident", onDelete: CASCADE)
   titleEn: String
   titleFr: String
   supervisor: Profile @relation(name:"Employees")
-  org: OrgTier @relation(name:"OrgMembers")
-  orgTiers: [OrgTier!]! @relation(name:"OwnerOfOrgTier")  
+  team: Team @relation(name:"TeamMembers")
+  ownerofTeams: [Team!]! @relation(name:"OwnerOfTeam")  
 }
 
 type Address {
@@ -21,15 +21,16 @@ type Address {
   province: String!
   postalCode: String!
   country: String!
+  resident: Profile! @relation(name:"Resident")
 }
 
-type OrgTier {
+type Team {
   id: ID! @unique
   nameEn: String!
   nameFr: String!
-  organization: Organization! @relation(name:"OrgTiers")
-  ownerID: Profile @relation(name:"OwnerOfOrgTier")
-  members: [Profile!]! @relation(name:"OrgMembers")
+  organization: Organization! @relation(name:"Teams")
+  owner: Profile @relation(name:"OwnerOfTeam")
+  members: [Profile!]! @relation(name:"TeamMembers")
 }
 
 type Organization {
@@ -38,6 +39,6 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  orgTiers: [OrgTier!]! @relation(name:"OrgTiers")
+  teams: [Team!]! @relation(name:"Teams")
 }
 

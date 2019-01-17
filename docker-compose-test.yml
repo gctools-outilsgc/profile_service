@@ -2,26 +2,16 @@ version: '3'
 services:
   image:
     build: ./image-server
-    volumes:
-      - ./image-server/upload:/usr/share/nginx/html/upload
     environment:
       - TITLE=OADW-Image-Server
-      - DOMAIN=https://avatar.gccollab.ca
+      - DOMAIN=http://localhost:8007
       - LOWPROFILE=True
     ports:
     - "8007:80"
-  yoga:
-    build: ./
-    image: profile-yoga
-    environment: 
-      NODE_ENV: "production"
-      PRISMA_API_ENDPOINT: 'prisma'
-    ports:
-    - "4000:4000"
-    depends_on: 
-      - prisma
   prisma:
     image: prismagraphql/prisma:1.16
+    ports:
+    - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -35,13 +25,14 @@ services:
             user: prisma
             password: prisma
             migrations: true
+
     depends_on:
       - postgres
-
   postgres:
-    image: postgres
+    image: postgres:10.6
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
+volumes:
+  postgres:
+  image_server:

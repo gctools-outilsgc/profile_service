@@ -30,5 +30,16 @@ node_modules
 # VS code directory settings
 .vscode/
 
-# ENV files
-.env
+\.env
+
+test-report\.html
+
+\.idea/
+
+temp_convert
+
+image-server/uploads
+
+jest_*/
+
+postgres/
