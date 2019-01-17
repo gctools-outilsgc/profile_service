@@ -11,19 +11,19 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
-  addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
-  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
+  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]! @isAuthenticated,
+  addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]! @isAuthenticated,
+  teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]! @isAuthenticated,
+  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]! @isAuthenticated,
 }
 
 type Mutation {
   createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
-  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
-  deleteProfile(gcID: String!): Boolean!
+  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile! @isOwner
+  deleteProfile(gcID: String!): Boolean! @isOwner
   createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
-  modifyTeam(id: ID!, data: ModifyTeamInput): Team!
-  deleteTeam(id: ID!): Boolean!
+  modifyTeam(id: ID!, data: ModifyTeamInput): Team! @isOwner
+  deleteTeam(id: ID!): Boolean! @isOwner
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
