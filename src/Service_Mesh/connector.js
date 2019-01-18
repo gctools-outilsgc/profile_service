@@ -14,6 +14,7 @@ function closeOnErr(err) {
     if (!err) {
         return false;
     }
+    // eslint-disable-next-line no-console
     console.error("[SMQ] error", err);
     amqpConn.close();
     return true;
@@ -26,9 +27,11 @@ function listenMessageQueue(){
             return;
         }
         ch.on("error", function(err) {
+        // eslint-disable-next-line no-console
         console.error("[SMQ] channel error", err.message);
         });
         ch.on("close", function() {
+        // eslint-disable-next-line no-console
         console.log("[SMQ] channel closed");
         });
         
@@ -59,8 +62,6 @@ function listenMessageQueue(){
                 });
 
             }, {noAck: false}); 
-
-            console.log(" [*] Waiting for logs. To exit press CTRL+C");
         });
     });
 }
@@ -70,19 +71,23 @@ function connectMessageQueue(){
   
     amqp.connect("amqp://" + process.env.MQ_USER + ":" + process.env.MQ_PASS + "@" + config.rabbitMQ.host +"?heartbeat=60", function(err, conn) {
         if (err) {
+            // eslint-disable-next-line no-console
             console.error("[SMQ]", err.message);
             return setTimeout(connectMessageQueue, 5000);
           }
           conn.on("error", function(err) {
             if (err.message !== "Connection closing") {
-              console.error("[SMQ conn error", err.message);
+                // eslint-disable-next-line no-console
+                console.error("[SMQ conn error", err.message);
             }
           });
           conn.on("close", function() {
-            console.error("[SMQ] reconnecting");
-            return setTimeout(connectMessageQueue, 5000);
+              // eslint-disable-next-line no-console
+                console.error("[SMQ] reconnecting");
+                return setTimeout(connectMessageQueue, 5000);
           });
-      
+
+          // eslint-disable-next-line no-console      
           console.log("[SMQ] connected");
           amqpConn = conn;
       
