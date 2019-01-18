@@ -6,6 +6,7 @@ const Mutation = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
 const fs = require("fs");
+const serviceListener = require("./Service_Mesh/connector");
 
 const resolvers = {
   Query,
@@ -43,3 +44,6 @@ server.listen().then(({ url }) => {
   // eslint-disable-next-line no-console
   console.log(`🚀 GraphQL Server ready at ${url}`);
 });
+
+// Lauch process to listen to service message queue
+serviceListener.connectMessageQueue();

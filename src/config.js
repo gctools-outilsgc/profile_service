@@ -15,6 +15,9 @@ const development = {
    url:"http://localhost:8007/backend.php",
    format:"jpeg",
    size:300
+ },
+ rabbitMQ:{
+   host:"localhost"
  }
 };
 
@@ -31,6 +34,9 @@ const production = {
   url:"http://image/backend.php",
   format:"jpeg",
   size:300
+},
+rabbitMQ:{
+  host:"mq.gccollab.ca"
 }
 };
 
