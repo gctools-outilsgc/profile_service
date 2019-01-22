@@ -1,8 +1,11 @@
 // Handler for messages from different exchanges and keys
 
-function msgHandler(msg) {
+function msgHandler(msg, cb) {
     console.log(" [x] %s:'%s'", msg.fields.routingKey, msg.content.toString());
-    return true;
+    setTimeout(function(){
+        console.log("Done [X]");
+        cb(true);
+    },3000);
 }
 
 module.exports = {
