@@ -5,7 +5,7 @@ List any dependencies that are required for this change.
 
 Fixes # (issue)
 
-## Type of change
+# Type of change
 
 Please delete options that are not relevant.
 
