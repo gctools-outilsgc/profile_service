@@ -6,6 +6,7 @@ const Mutation = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
 const fs = require("fs");
+const introspect = require("./introspection");
 
 const resolvers = {
   Query,
@@ -21,7 +22,7 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   resolverValidationOptions: {
-    requireResolversForResolveType: false 
+    requireResolversForResolveType: false
   }
 });
 
@@ -35,11 +36,12 @@ const server = new ApolloServer({
       endpoint: "http://"+config.prisma.host+":4466/profile/",
       debug: config.prisma.debug,
     }),
+    token: introspect.verifyToken(req),
   }),
 });
 
 
-server.listen().then(({ url }) => { 
+server.listen().then(({ url }) => {
   // eslint-disable-next-line no-console
   console.log(`🚀 GraphQL Server ready at ${url}`);
 });
