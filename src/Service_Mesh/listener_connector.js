@@ -73,6 +73,7 @@ function listenMessageQueue(exchange){
                     }, {noAck: false}); 
                 });
             } else {
+                // eslint-disable-next-line no-console
                 console.warn("Exchange '" + exchange + "' does not exists");
                 retryDelay = retryDelay * 2;
                 if (retryDelay >= 3601000){
