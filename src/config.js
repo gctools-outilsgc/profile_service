@@ -18,6 +18,9 @@ const development = {
    format:"jpeg",
    size:300
  },
+ rabbitMQ:{
+   host:"localhost"
+ },
  openId:{
    url:"http://localhost:8000"
  },
@@ -40,6 +43,9 @@ const production = {
   url:"http://image/backend.php",
   format:"jpeg",
   size:300
+},
+rabbitMQ:{
+  host:"mq.gccollab.ca"
 },
 open_id:{
   url:"https://account.gccollab.ca"

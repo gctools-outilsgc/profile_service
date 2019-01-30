@@ -6,6 +6,8 @@ const Mutation = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
 const fs = require("fs");
+const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
+const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
 const introspect = require("./introspection");
 
 const resolvers = {
@@ -43,5 +45,9 @@ const server = new ApolloServer({
 
 server.listen().then(({ url }) => {
   // eslint-disable-next-line no-console
-  console.log(`🚀 GraphQL Server ready at ${url}`);
+  console.info(`🚀 GraphQL Server ready at ${url}`);
 });
+
+// Lauch process to listen to service message queue
+connectMessageQueueListener();
+connectMessageQueuePublisher();

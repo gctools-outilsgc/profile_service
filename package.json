@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node src/cluster.js",
-    "dev": "node src/index.js",
+    "dev": "PRISMA_API_ENDPOINT=localhost  yarn prisma deploy && NODE_ENV=development node src/index.js",
     "eslint": "eslint src/",
     "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage"
   },
@@ -36,6 +36,7 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@okgrow/graphql-scalars": "^0.4.2",
+    "amqplib": "^0.5.3",
     "apollo-server": "^2.3.1",
     "cluster": "^0.7.7",
     "codacy-coverage": "^3.4.0",
