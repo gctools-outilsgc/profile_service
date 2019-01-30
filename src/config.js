@@ -47,7 +47,7 @@ const production = {
 rabbitMQ:{
   host:"mq.gccollab.ca"
 },
-open_id:{
+openId:{
   url:"https://account.gccollab.ca"
 },
 client:{
