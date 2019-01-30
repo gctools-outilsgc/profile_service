@@ -51,8 +51,8 @@ open_id:{
   url:"https://account.gccollab.ca"
 },
 client:{
-  id:id,
-  secret:secret
+  id:clientId,
+  secret:clientSecret
 }
 };
 
