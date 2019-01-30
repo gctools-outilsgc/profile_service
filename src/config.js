@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const env = process.env.NODE_ENV; // 'development' or 'production'
+const clientId = process.env.client_id;
+const clientSecret = process.env.client_secret;
 
 const development = {
  app: {
@@ -15,6 +17,13 @@ const development = {
    url:"http://localhost:8007/backend.php",
    format:"jpeg",
    size:300
+ },
+ openId:{
+   url:"http://localhost:8000"
+ },
+ client:{
+   id:clientId,
+   secret:clientSecret
  }
 };
 
@@ -31,6 +40,13 @@ const production = {
   url:"http://image/backend.php",
   format:"jpeg",
   size:300
+},
+open_id:{
+  url:"https://account.gccollab.ca"
+},
+client:{
+  id:id,
+  secret:secret
 }
 };
 
