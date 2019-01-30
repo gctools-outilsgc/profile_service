@@ -1,8 +1,8 @@
 require("dotenv").config();
 
 const env = process.env.NODE_ENV; // 'development' or 'production'
-const id = process.env.client_id;
-const secret = process.env.client_secret;
+const clientId = process.env.client_id;
+const clientSecret = process.env.client_secret;
 
 const development = {
  app: {
@@ -18,12 +18,12 @@ const development = {
    format:"jpeg",
    size:300
  },
- open_id:{
+ openId:{
    url:"http://localhost:8000"
  },
  client:{
-   id:id,
-   secret:secret
+   id:clientId,
+   secret:clientSecret
  }
 };
 

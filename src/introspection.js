@@ -18,7 +18,7 @@ function verifyToken(request){
   let auth = config.client.id + ":" + config.client.secret;
   let base64auth = Buffer.from(auth).toString("base64");
 
-  const url = config.open_id.url + "/openid/introspect";
+  const url = config.openId.url + "/openid/introspect";
   const postOptions = {
     method: "POST",
     headers: {
@@ -37,12 +37,12 @@ function verifyToken(request){
     const errorMsg = {
       "active": false,
       "message": error.message
-    }
+    };
 
     return errorMsg;
   });
 
-};
+}
 
 module.exports = {
   verifyToken,
