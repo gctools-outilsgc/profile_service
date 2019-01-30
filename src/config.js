@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const env = process.env.NODE_ENV; // 'development' or 'production'
+const clientId = process.env.client_id;
+const clientSecret = process.env.client_secret;
 
 const development = {
  app: {
@@ -18,6 +20,13 @@ const development = {
  },
  rabbitMQ:{
    host:"localhost"
+ },
+ openId:{
+   url:"http://localhost:8000"
+ },
+ client:{
+   id:clientId,
+   secret:clientSecret
  }
 };
 
@@ -37,6 +46,13 @@ const production = {
 },
 rabbitMQ:{
   host:"mq.gccollab.ca"
+},
+open_id:{
+  url:"https://account.gccollab.ca"
+},
+client:{
+  id:id,
+  secret:secret
 }
 };
 

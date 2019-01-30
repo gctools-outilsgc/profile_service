@@ -8,7 +8,7 @@ const config = require("./config");
 const fs = require("fs");
 const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
-
+const introspect = require("./introspection");
 
 const resolvers = {
   Query,
@@ -24,7 +24,7 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
   resolverValidationOptions: {
-    requireResolversForResolveType: false 
+    requireResolversForResolveType: false
   }
 });
 
@@ -38,11 +38,12 @@ const server = new ApolloServer({
       endpoint: "http://"+config.prisma.host+":4466/profile/",
       debug: config.prisma.debug,
     }),
+    token: introspect.verifyToken(req),
   }),
 });
 
 
-server.listen().then(({ url }) => { 
+server.listen().then(({ url }) => {
   // eslint-disable-next-line no-console
   console.info(`🚀 GraphQL Server ready at ${url}`);
 });
