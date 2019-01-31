@@ -30,16 +30,20 @@ node_modules
 # VS code directory settings
 .vscode/
 
+# secrets file
 \.env
 
-test-report\.html
+# coverage report
+test-report.html
 
-\.idea/
-
+# temporary directory for image conversion
 temp_convert
 
+# docker volume for image server upload storage
 image-server/uploads
 
+# jest test results
 jest_*/
 
+# data volume for docker db volume
 postgres/

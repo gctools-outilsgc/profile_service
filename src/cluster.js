@@ -7,7 +7,7 @@ if (config.app.multicore){
     const cpus = os.cpus().length;
 
     // eslint-disable-next-line no-console
-    console.log(`Forking for ${cpus} CPUs`);
+    console.info(`Forking for ${cpus} CPUs`);
     for (let i = 0; i<cpus; i++) {
       cluster.fork();
     }

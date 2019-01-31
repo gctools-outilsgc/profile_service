@@ -1,15 +1,27 @@
 profile_service
 
 # Installation
-This app/solution can be run in 2 different environments
+This app/solution can be run in 2 different environments. 
+
+## Configuration
+To configure this application there are 2 files that require mondifcation.
+
+1. `./src/config.js`
+
+    This file contains the majority of the variables that define the diference between your production, development, and test environments that are not secrets.
+
+2. `./.env`
+
+    This file contains the secrets required for the application and can be set eitehr through ENV variables or through this file.
+* `MQ_USER` = Username for RabbitMQ instance set in `./src/config.js`
+* `MQ_PASS` = Password for RabbitMQ instance
 
 ## Development
 To setup this application in development run the following commands:
 
 * `sudo docker-compose -f docker-compose-dev.yml up`
 * `sudo npm install`
-* `cd prisma && yarn prisma deploy && cd ..`
-* `NODE_ENV=development PRISMA_API_ENDPOINT=localhost node ./src/cluster.js`
+* `npm start dev`
 
 The profile as a service playground endpoint can now be reached at http://localhost:4000/playground and the graphql endpoint at http://localhost:4000/graphql
 The prisma service can be reached at http://localhost:4466/profile
@@ -24,8 +36,8 @@ The profile as a service playground endpoint can now be reached at http://localh
 
 # Tests
 To run tests from the root of the project:
-`sudo docker-compose -f docker-compose-test.yml up -d`
-`npm test`
+* `sudo docker-compose -f docker-compose-test.yml up -d`
+* `npm test`
 
 # Validation
 
