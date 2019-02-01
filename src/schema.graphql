@@ -1,9 +1,8 @@
 # import Address from './generated/prisma.graphql'
 
-directive @isAuthenticated on FIELD | FIELD_DEFINITION
-directive @isOwner on FIELD | FIELD_DEFINITION
-directive @hasScope(scopes:[String]) on FIELD | FIELD_DEFINITION
-directive @hasRole(roles: [String]) on FIELD | FIELD_DEFINITION 
+directive @inOrganization on OBJECT| FIELD_DEFINITION
+directive @isAuthenticated on OBJECT | FIELD_DEFINITION
+
 
 scalar Email
 scalar PhoneNumber
@@ -19,11 +18,11 @@ type Query {
 
 type Mutation {
   createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
-  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile! @isOwner
-  deleteProfile(gcID: String!): Boolean! @isOwner
+  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
+  deleteProfile(gcID: String!): Boolean! 
   createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
-  modifyTeam(id: ID!, data: ModifyTeamInput): Team! @isOwner
-  deleteTeam(id: ID!): Boolean! @isOwner
+  modifyTeam(id: ID!, data: ModifyTeamInput): Team! 
+  deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
