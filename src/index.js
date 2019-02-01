@@ -26,26 +26,26 @@ const schema = makeExecutableSchema({
   resolvers,
   schemaDirectives: {
     isAuthenticated: AuthDirectives.AuthenticatedDirective,
-    isOwner: AuthDirectives.OwnerDirective,
+    // inOrganization: AuthDirectives.OrganizationDirective,
   },
   resolverValidationOptions: {
     requireResolversForResolveType: false
   }
 });
 
-
 const server = new ApolloServer({
   schema,
-  context: (req) => ({
-    ...req,
+  context: async (req) => ({
+    ...req,    
     prisma: new Prisma({
       typeDefs: "./src/generated/prisma.graphql",
       endpoint: "http://"+config.prisma.host+":4466/profile/",
       debug: config.prisma.debug,
     }),
-    token: introspect.verifyToken(req),
+    token: await introspect.verifyToken(req),
   }),
 });
+
 
 
 server.listen().then(({ url }) => {
