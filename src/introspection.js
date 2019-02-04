@@ -1,12 +1,13 @@
 const fetch = require("node-fetch");
 const config = require("./config");
 
-function verifyToken(request){
+async function verifyToken(request){
 
   var token;
+  var tokenData;
 
   //see if token provided in request
-  if(request.req.headers.hasOwnProperty("authorization")){
+  if(await request.req.headers.hasOwnProperty("authorization")){
     //remove "bearer" from token
     var splitReq = request.req.headers.authorization.split(" ");
     token = splitReq[1];
@@ -28,19 +29,20 @@ function verifyToken(request){
     body: "token=" + token
   };
 
-  fetch(url, postOptions)
+  await fetch(url, postOptions)
   .then((response) => response.json())
-  .then((data) => {
-    return data;
+  .then(function(data){ 
+    tokenData = data;
   })
   .catch((error) => {
     const errorMsg = {
       "active": false,
       "message": error.message
     };
-
-    return errorMsg;
+    tokenData = errorMsg;
   });
+
+  return tokenData;
 
 }
 
