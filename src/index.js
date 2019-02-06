@@ -1,4 +1,4 @@
-const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
+
 const { Prisma } = require("prisma-binding");
 const {EmailAddress, PostalCode} =  require("@okgrow/graphql-scalars");
 const Query = require("./resolvers/Query");
@@ -8,7 +8,7 @@ const config = require("./config");
 const fs = require("fs");
 const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
-const introspect = require("./introspection");
+const introspect = require("./Auth/introspection");
 
 const resolvers = {
   Query,
