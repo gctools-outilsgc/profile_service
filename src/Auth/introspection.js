@@ -1,5 +1,29 @@
 const fetch = require("node-fetch");
-const config = require("./config");
+const config = require("../config");
+const { Prisma } = require("prisma-binding");
+const { throwExceptionIfProfileIsNotDefined } = require("../resolvers/helper/profileHelper");
+
+async function getTokenOwner(tokenData){
+
+  const prisma = await new Prisma({
+    typeDefs: "./src/generated/prisma.graphql",
+    endpoint: "http://"+config.prisma.host+":4466/profile/",
+    debug: config.prisma.debug,
+  });
+
+  try {
+    tokenData.owner = await prisma.query.profile(
+      {
+          where: {
+              gcID: tokenData.sub
+          }            
+      },"{gcID, name, email, supervisor{gcID}, team{id, organization{id}}}");
+  } catch(e){
+    throw new Error("Profile does not exist");
+  }
+    await throwExceptionIfProfileIsNotDefined(tokenData.owner);
+    return tokenData;
+}
 
 async function verifyToken(request){
 
@@ -41,6 +65,8 @@ async function verifyToken(request){
     };
     tokenData = errorMsg;
   });
+
+  tokenData = await getTokenOwner(tokenData);
 
   return tokenData;
 
