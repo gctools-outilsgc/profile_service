@@ -1,6 +1,6 @@
 # import Address from './generated/prisma.graphql'
 
-directive @inOrganization on OBJECT| FIELD_DEFINITION
+directive @inOrganization on FIELD_DEFINITION
 directive @isAuthenticated on OBJECT | FIELD_DEFINITION
 
 
@@ -10,7 +10,7 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]! @isAuthenticated,
+  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]! @isAuthenticated,
   teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]! @isAuthenticated,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]! @isAuthenticated,
@@ -30,19 +30,19 @@ type Mutation {
 
 type Profile {
   gcID: String! 
-  name: String!
-  email: Email! 
-  avatar: String
-  mobilePhone: PhoneNumber
+  name: String! 
+  email: Email! @inOrganization
+  avatar: String @isAuthenticated
+  mobilePhone: PhoneNumber 
   officePhone: PhoneNumber
-  address: Address
-  titleEn: String
-  titleFr: String
+  address: Address @isAuthenticated
+  titleEn: String 
+  titleFr: String 
   supervisor: Profile 
   team: Team     
 }
 
-type Address{
+type Address {
   id: ID!
   streetAddress: String!
   city: String!
@@ -50,7 +50,7 @@ type Address{
   postalCode: String!
   country: String!,
   resident: Profile!
-}
+} 
 
 type Team {
   id: ID! 

@@ -1,84 +1,118 @@
-const { SchemaDirectiveVisitor } = require("apollo-server");
-const { defaultFieldResolver } = require("graphql");
+const { SchemaDirectiveVisitor, AuthenticationError } = require("apollo-server");
 const { propertyExists } = require("../resolvers/helper/objectHelper");
+const { defaultFieldResolver } = require("graphql");
+const { blockValue, getOrganizationid } = require("./helpers");
 
 /*
-class OrganizationDirective extends SchemaDirectiveVisitor {
-  visitFieldDefinition(field) {
-    const {resolve = defaultFieldResolver } = field;
-    field.resolve = async function(... args) {
-      const [, requestArgs , ctx] = args;
-      const requester = await ctx.prisma.query.profiles({
-        where:{
-          gcID: ctx.token.sub
-        }
-      }, "{team{organization{id}}}");
-
-      const requested = await ctx.prisma.query.profiles({
-        where:{
-          gcID: ctx.token.sub
-        }
-      }, "{team{organization{id}}}");
-
-    };
-  }
-}
+  Fragments for Auth:
+  These fragments will ensure that the fields that are required to identify relationships for access
+  levels will always be returned.
 */
+const profileFragment = "fragment authProfile on Profile {gcID, name, email, supervisor{gcID}, team{id, organization{id}}}";
 
-class AuthenticatedDirective extends SchemaDirectiveVisitor {
 
-  // Handles to see if there is auth required at the object level
-  visitObject(type) {
-    this.ensureFieldsWrapped(type);
-    type._requiresAuth = true;
-  }
-  
-  // Handles to see if there is auth required at the field level
-  visitFieldDefinition(field, details){
-    this.ensureFieldsWrapped(details.objectType);
-    field._requiresAuth = true;
+// inOrganization directive can only be used on the Profile object fields.
+// This diretive automatically implements the isAuthenticated directive
+
+class OrganizationDirective extends SchemaDirectiveVisitor {
+
+  visitObject(type){
+    this.wrapOrgAuth(type);
+    type._requiresOrgAuth = true;
   }
 
-  // Handles the actual logic of ensuring Auth 
-  ensureFieldsWrapped(objectType){
+  visitFieldDefinition(field, parent) {
+    this.wrapOrgAuth(parent.objectType);
+    field._requiresOrgAuth = true;
 
-    // Mark the object or field coming through so we avoid re-wrapping
-    if (objectType._authFieldsWrapped){
+  }
+
+  wrapOrgAuth(objectType){
+    if (objectType._fieldsWrapped) {
       return;
     }
-    objectType._authFieldsWrapped = true;
+
+    objectType._fieldsWrapped = true;
 
     const fields = objectType.getFields();
 
     Object.keys(fields).forEach((fieldName) => {
       const field = fields[fieldName];
-      const {resolve = defaultFieldResolver } = field;
-      field.resolve = async function (... args) {
-        // Get the context so we can use the token info
-        const [, , ctx] = args;
+      const { resolve = defaultFieldResolver } = field;
 
-        // Get the Auth required setting from field first and fall back to oject if defined.
-        const requiresAuth = field._requiresAuth || objectType._requiresAuth;
+      field.resolve = async function (record, args, context, info){
 
-        // If no auth is required then pass through
-        if (!requiresAuth){
-          return resolve.apply(this.args);
+        const requireOrgAuth = field._requiresOrgAuth || objectType._requiresOrgAuth;
+
+        if (!requireOrgAuth){
+          return await resolve.apply(this, [record, args, context, info]);
         }
 
-        // If auth is required then put it through the wringer
-        // If there is a sub in the token then it's valid.
-        if (propertyExists(ctx.token,"sub")){
-          const result = await resolve.apply(this, args);
-          return result;
-        } else {
-          throw new Error("Requires authentication to view");
-        }
+        const requesterOrg = await getOrganizationid(context.token.owner);
+        const recordOrg = await getOrganizationid(record);
+
+        if(requesterOrg !== null && recordOrg !== null){
+          if (requesterOrg === recordOrg){
+            return await resolve.apply(this, [record, args, context, info]);
+          } 
+        } 
+        return await blockValue(field);     
       };
+
     });
+
+
   }
 }
 
+class AuthenticatedDirective extends SchemaDirectiveVisitor {
+
+  visitObject(type){
+    this.wrapAuth(type);
+    type._requiresAuth = true;
+  }
+
+  visitFieldDefinition(field, details){
+    this.wrapAuth(details.objectType);
+    field._requiresAuth = true;
+  }
+
+  wrapAuth(objectType){
+    if (objectType._fieldsWrapped) {
+      return;
+    }
+
+    objectType._fieldsWrapped = true;
+
+    const fields = objectType.getFields();
+
+    Object.keys(fields).forEach((fieldName) => {
+      const field = fields[fieldName];
+      const { resolve = defaultFieldResolver } = field;
+
+      field.resolve = async function (record, args, context, info){
+        const requireAuth = field._requiresAuth || objectType._requiresAuth;
+        if (!requireAuth){
+          return await resolve.apply(this, [record, args, context, info]);
+        }
+        if (propertyExists(context.token,"sub")){
+          return resolve.apply(this, [record, args, context, info]);
+        } else {
+            return await blockValue(field);
+        }
+        
+      };
+
+    });
+
+  }
+}
+
+
+
+
 module.exports = {
-  // OrganizationDirective,
-  AuthenticatedDirective
+  OrganizationDirective,
+  AuthenticatedDirective,
+  profileFragment
 };

@@ -1,4 +1,7 @@
 const {copyValueToObjectIfDefined} = require("./helper/objectHelper");
+const { addFragmentToInfo } = require("graphql-binding");
+const { profileFragment } = require("../Auth/Directives");
+
 
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
@@ -20,7 +23,7 @@ function profiles(_, args, context, info) {
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),        
     },
-    info
+    addFragmentToInfo(info, profileFragment)
   );
 }
 
