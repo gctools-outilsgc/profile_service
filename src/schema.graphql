@@ -1,6 +1,11 @@
 # import Address from './generated/prisma.graphql'
 
+# The @inOrganization directive can be placed on a field of an object and will only
+# return the field value if the requestor is in the same organization
 directive @inOrganization on FIELD_DEFINITION
+
+# The @isAuthenticated directive can be placed on the Query/Mutation, Object, and field level
+# The access token passed must be valid in order to proceed.
 directive @isAuthenticated on OBJECT | FIELD_DEFINITION
 
 
@@ -10,7 +15,7 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]! @isAuthenticated,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]! @isAuthenticated,
   teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]! @isAuthenticated,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]! @isAuthenticated,
@@ -31,11 +36,11 @@ type Mutation {
 type Profile {
   gcID: String! 
   name: String! 
-  email: Email! @inOrganization
-  avatar: String @isAuthenticated
+  email: Email! 
+  avatar: String 
   mobilePhone: PhoneNumber 
   officePhone: PhoneNumber
-  address: Address @isAuthenticated
+  address: Address
   titleEn: String 
   titleFr: String 
   supervisor: Profile 
