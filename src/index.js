@@ -5,6 +5,7 @@ const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
+const AuthDirectives = require("./Auth/Directives");
 const fs = require("fs");
 const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
@@ -23,6 +24,10 @@ const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
+  schemaDirectives: {
+    isAuthenticated: AuthDirectives.AuthenticatedDirective,
+    inOrganization: AuthDirectives.OrganizationDirective,
+  },
   resolverValidationOptions: {
     requireResolversForResolveType: false
   }

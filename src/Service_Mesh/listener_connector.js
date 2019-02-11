@@ -11,7 +11,6 @@ var listenQueueOptions = {
 
 const listenExchangesAndBindings = {
     account: ["user.new", "user.modification", "user.delete"],
-    notification: ["app.viewed"],
 };
 
 function closeOnErr(err, listenerChannel) {

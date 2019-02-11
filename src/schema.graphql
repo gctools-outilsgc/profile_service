@@ -1,3 +1,14 @@
+# import Address from './generated/prisma.graphql'
+
+# The @inOrganization directive can be placed on a field of a Profile object and will only
+# return the field value if the requestor is in the same organization
+directive @inOrganization on FIELD_DEFINITION
+
+# The @isAuthenticated directive can be placed on the Query/Mutation, Object, and field level
+# The access token passed must be valid in order to proceed.
+directive @isAuthenticated on OBJECT | FIELD_DEFINITION
+
+
 scalar Email
 scalar PhoneNumber
 scalar Upload
@@ -13,9 +24,9 @@ type Query {
 type Mutation {
   createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
   modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
-  deleteProfile(gcID: String!): Boolean!
+  deleteProfile(gcID: String!): Boolean! 
   createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
-  modifyTeam(id: ID!, data: ModifyTeamInput): Team!
+  modifyTeam(id: ID!, data: ModifyTeamInput): Team! 
   deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
@@ -24,19 +35,19 @@ type Mutation {
 
 type Profile {
   gcID: String! 
-  name: String!
+  name: String! 
   email: Email! 
-  avatar: String
-  mobilePhone: PhoneNumber
+  avatar: String 
+  mobilePhone: PhoneNumber 
   officePhone: PhoneNumber
   address: Address
-  titleEn: String
-  titleFr: String
+  titleEn: String 
+  titleFr: String 
   supervisor: Profile 
   team: Team     
 }
 
-type Address{
+type Address {
   id: ID!
   streetAddress: String!
   city: String!
@@ -44,7 +55,7 @@ type Address{
   postalCode: String!
   country: String!,
   resident: Profile!
-}
+} 
 
 type Team {
   id: ID! 
