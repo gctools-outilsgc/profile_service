@@ -124,7 +124,7 @@ class SameTeamDirective extends SchemaDirectiveVisitor {
       }
 
       return await blockValue(field);
-    }
+    };
   }
 }
 
@@ -138,13 +138,13 @@ class SupervisorDirective extends SchemaDirectiveVisitor {
       const requestedSuper = await getSupervisorid(record);
 
       if(requester !== null && requestedSuper !== null){
-        if(requester == requestedSuper){
+        if(requester === requestedSuper){
             return resolve.apply(this, args);
         }
       }
 
       return await blockValue(field);
-    }
+    };
   }
 }
 
