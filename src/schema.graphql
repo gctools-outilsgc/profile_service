@@ -8,6 +8,7 @@ directive @inOrganization on FIELD_DEFINITION
 # The access token passed must be valid in order to proceed.
 directive @isAuthenticated on OBJECT | FIELD_DEFINITION
 
+directive @isOwner on FIELD_DEFINITION
 
 scalar Email
 scalar PhoneNumber
