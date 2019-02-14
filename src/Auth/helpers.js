@@ -43,11 +43,10 @@ async function blockValue(field){
   }
 
 function getOwnerid(profileObject){
-  if (typeof profileObject !== "undefined"){
-      if (propertyExists(profileObject, "profile")){
-      return profileObject.profile.gcID;
+  if (typeof profileObject !== "undefined" && propertyExists(profileObject, "gcID")){
+      return profileObject.gcID;
       }
-  } else {
+  else {
       return null;
   }
 }

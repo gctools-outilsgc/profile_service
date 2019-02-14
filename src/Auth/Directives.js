@@ -109,11 +109,6 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
 }
 
 class OwnerDirective extends SchemaDirectiveVisitor {
-
-  visitObject(type){
-    this.wrapOwnerAuth(type);
-    type._requiresOwAuth = true;
-  }
     
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
@@ -123,13 +118,13 @@ class OwnerDirective extends SchemaDirectiveVisitor {
       const OwnerRequested = await getOwnerid(record);
 
       if(OwnerRequester !== null && OwnerRequested !== null){
-        if(OwnerRequester == OwnerRequested){
+        if(OwnerRequester === OwnerRequested){
             return resolve.apply(this, [record, args, context, info]);
         }
       }
 
       return await blockValue(field);
-    }
+    };
   }
 }
 
