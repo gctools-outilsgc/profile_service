@@ -36,9 +36,7 @@ async function blockValue(field){
 
   function getOrganizationid(profileObject){
     if (typeof profileObject !== "undefined" && propertyExists(profileObject.team, "organization")){
-        if (propertyExists(profileObject.team, "organization")){
         return profileObject.team.organization.id;
-        }
     } else {
         return null;
     }
@@ -46,9 +44,7 @@ async function blockValue(field){
 
   function getTeamid(profileObject){
     if (typeof profileObject !== "undefined" && propertyExists(profileObject, "team")){
-        if (propertyExists(profileObject, "team")){
         return profileObject.team.id;
-        }
     } else {
         return null;
     }
@@ -56,9 +52,7 @@ async function blockValue(field){
 
   function getSupervisorid(profileObject){
     if (typeof profileObject !== "undefined" && propertyExists(profileObject, "supervisor")){
-        if (propertyExists(profileObject, "supervisor")){
         return profileObject.supervisor.gcID;
-        }
     } else {
         return null;
     }
