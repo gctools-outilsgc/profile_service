@@ -3,7 +3,6 @@ const {  AuthenticationError } = require("apollo-server");
 const { propertyExists } = require("../resolvers/helper/objectHelper");
 const { GraphQLNonNull, GraphQLList } = require("graphql");
 
-
 /*
   The blockValue() function will ensure that a null value is never returned for a blocked field
   that is non-nullable.  In the case of when the a directive is placed at the query or mutation
@@ -12,7 +11,6 @@ const { GraphQLNonNull, GraphQLList } = require("graphql");
 async function blockValue(field){
 
     var result = null;
-
     if (field.type instanceof GraphQLNonNull){
       switch(field.type.ofType.name){
         case "EmailAddress":
@@ -58,9 +56,18 @@ async function blockValue(field){
     }
   }
 
+function getOwnerid(profileObject){
+  if (typeof profileObject !== "undefined" && propertyExists(profileObject, "gcID")){
+      return profileObject.gcID;
+      } else {
+      return null;
+  }
+}
+
   module.exports= {
       blockValue,
       getOrganizationid,
       getTeamid,
-      getSupervisorid
+      getSupervisorid,
+      getOwnerid,
   };

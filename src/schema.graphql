@@ -16,6 +16,11 @@ directive @isSameTeam on FIELD_DEFINITION
 # return the field value if the requestor is the assigned supervisor
 directive @isSupervisor on FIELD_DEFINITION
 
+# The @isOwner directive can be placed on a filed of a Profile object and will only
+# return the field value if the requestor is the owner (has the same gcID)
+directive @isOwner on FIELD_DEFINITION
+
+
 scalar Email
 scalar PhoneNumber
 scalar Upload
@@ -41,11 +46,11 @@ type Mutation {
 }
 
 type Profile {
-  gcID: String!
-  name: String!
+  gcID: String! 
+  name: String! 
   email: Email!
-  avatar: String
-  mobilePhone: PhoneNumber
+  avatar: String 
+  mobilePhone: PhoneNumber 
   officePhone: PhoneNumber
   address: Address
   titleEn: String
