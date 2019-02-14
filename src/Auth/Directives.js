@@ -1,7 +1,7 @@
 const { SchemaDirectiveVisitor, AuthenticationError } = require("apollo-server");
 const { propertyExists } = require("../resolvers/helper/objectHelper");
 const { defaultFieldResolver } = require("graphql");
-const { blockValue, getOrganizationid } = require("./helpers");
+const { blockValue, getOrganizationid, getOwnerid } = require("./helpers");
 
 /*
   Fragments for Auth:
@@ -108,11 +108,29 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
   }
 }
 
+class OwnerDirective extends SchemaDirectiveVisitor {
+    
+  visitFieldDefinition(field) {
+    const { resolve = defaultFieldResolver } = field;
+    field.resolve = async function (record, args, context, info){
 
+      const OwnerRequester = await getOwnerid(context.token.owner);
+      const OwnerRequested = await getOwnerid(record);
 
+      if(OwnerRequester !== null && OwnerRequested !== null){
+        if(OwnerRequester === OwnerRequested){
+            return resolve.apply(this, [record, args, context, info]);
+        }
+      }
+
+      return await blockValue(field);
+    };
+  }
+}
 
 module.exports = {
   OrganizationDirective,
   AuthenticatedDirective,
+  OwnerDirective,
   profileFragment
 };
