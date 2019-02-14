@@ -27,8 +27,9 @@ const schema = makeExecutableSchema({
   schemaDirectives: {
     isAuthenticated: AuthDirectives.AuthenticatedDirective,
     inOrganization: AuthDirectives.OrganizationDirective,
-    isOwner: AuthDirectives.OwnerDirective,
-    
+    isSameTeam: AuthDirectives.SameTeamDirective,
+    isSupervisor: AuthDirectives.SupervisorDirective,
+    isOwner: AuthDirectives.OwnerDirective,    
   },
   resolverValidationOptions: {
     requireResolversForResolveType: false
@@ -38,7 +39,7 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   context: async (req) => ({
-    ...req,    
+    ...req,
     prisma: new Prisma({
       typeDefs: "./src/generated/prisma.graphql",
       endpoint: "http://"+config.prisma.host+":4466/profile/",

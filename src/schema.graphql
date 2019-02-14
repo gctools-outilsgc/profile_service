@@ -8,9 +8,18 @@ directive @inOrganization on FIELD_DEFINITION
 # The access token passed must be valid in order to proceed.
 directive @isAuthenticated on OBJECT | FIELD_DEFINITION
 
+# The @isSameTeam directive can be placed on a field of a Profile object and will only
+# return the field value if the requestor is on the same team
+directive @isSameTeam on FIELD_DEFINITION
+
+# The @isSupervisor directive can be placed on a field of a Profile object and will only
+# return the field value if the requestor is the assigned supervisor
+directive @isSupervisor on FIELD_DEFINITION
+
 # The @isOwner directive can be placed on a filed of a Profile object and will only
 # return the field value if the requestor is the owner (has the same gcID)
 directive @isOwner on FIELD_DEFINITION
+
 
 scalar Email
 scalar PhoneNumber
@@ -27,9 +36,9 @@ type Query {
 type Mutation {
   createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
   modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
-  deleteProfile(gcID: String!): Boolean! 
+  deleteProfile(gcID: String!): Boolean!
   createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
-  modifyTeam(id: ID!, data: ModifyTeamInput): Team! 
+  modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
@@ -44,10 +53,10 @@ type Profile {
   mobilePhone: PhoneNumber 
   officePhone: PhoneNumber
   address: Address
-  titleEn: String 
-  titleFr: String 
-  supervisor: Profile 
-  team: Team     
+  titleEn: String
+  titleFr: String
+  supervisor: Profile
+  team: Team
 }
 
 type Address {
@@ -58,10 +67,10 @@ type Address {
   postalCode: String!
   country: String!,
   resident: Profile!
-} 
+}
 
 type Team {
-  id: ID! 
+  id: ID!
   nameEn: String!
   nameFr: String!
   organization: Organization!
@@ -70,7 +79,7 @@ type Team {
 }
 
 type Organization {
-  id: ID! 
+  id: ID!
   nameEn: String!
   nameFr: String!
   acronymEn: String!
@@ -118,8 +127,8 @@ input ModifyProfileInput {
   address: AddressInput
   titleEn: String
   titleFr: String
-  supervisor: SupervisorInput 
-  team: TeamInput   
+  supervisor: SupervisorInput
+  team: TeamInput
 }
 
 input ModifyTeamInput {

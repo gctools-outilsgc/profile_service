@@ -6,7 +6,7 @@ const { GraphQLNonNull, GraphQLList } = require("graphql");
 /*
   The blockValue() function will ensure that a null value is never returned for a blocked field
   that is non-nullable.  In the case of when the a directive is placed at the query or mutation
-  level an Authentication error is thrown. 
+  level an Authentication error is thrown.
 */
 async function blockValue(field){
 
@@ -22,21 +22,35 @@ async function blockValue(field){
         default:
           result = "";
       }
-      
+
       if (field.type.ofType instanceof GraphQLList){
         throw new AuthenticationError("Not Authorized");
       }
     }
 
     return result;
-  
+
   }
 
   function getOrganizationid(profileObject){
     if (typeof profileObject !== "undefined" && propertyExists(profileObject.team, "organization")){
-        if (propertyExists(profileObject.team, "organization")){
         return profileObject.team.organization.id;
-        }
+    } else {
+        return null;
+    }
+  }
+
+  function getTeamid(profileObject){
+    if (typeof profileObject !== "undefined" && propertyExists(profileObject, "team")){
+        return profileObject.team.id;
+    } else {
+        return null;
+    }
+  }
+
+  function getSupervisorid(profileObject){
+    if (typeof profileObject !== "undefined" && propertyExists(profileObject, "supervisor")){
+        return profileObject.supervisor.gcID;
     } else {
         return null;
     }
@@ -45,8 +59,7 @@ async function blockValue(field){
 function getOwnerid(profileObject){
   if (typeof profileObject !== "undefined" && propertyExists(profileObject, "gcID")){
       return profileObject.gcID;
-      }
-  else {
+      } else {
       return null;
   }
 }
@@ -54,5 +67,7 @@ function getOwnerid(profileObject){
   module.exports= {
       blockValue,
       getOrganizationid,
-      getOwnerid
+      getTeamid,
+      getSupervisorid,
+      getOwnerid,
   };

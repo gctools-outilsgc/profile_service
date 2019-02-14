@@ -1,7 +1,8 @@
 const { SchemaDirectiveVisitor, AuthenticationError } = require("apollo-server");
 const { propertyExists } = require("../resolvers/helper/objectHelper");
 const { defaultFieldResolver } = require("graphql");
-const { blockValue, getOrganizationid, getOwnerid } = require("./helpers");
+
+const { blockValue, getOrganizationid, getTeamid, getSupervisorid, getOwnerid } = require("./helpers");
 
 /*
   Fragments for Auth:
@@ -54,9 +55,9 @@ class OrganizationDirective extends SchemaDirectiveVisitor {
         if(requesterOrg !== null && recordOrg !== null){
           if (requesterOrg === recordOrg){
             return await resolve.apply(this, [record, args, context, info]);
-          } 
-        } 
-        return await blockValue(field);     
+          }
+        }
+        return await blockValue(field);
       };
 
     });
@@ -100,7 +101,7 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
         } else {
             return await blockValue(field);
         }
-        
+
       };
 
     });
@@ -108,6 +109,45 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
   }
 }
 
+class SameTeamDirective extends SchemaDirectiveVisitor {
+  visitFieldDefinition(field) {
+    const { resolve = defaultFieldResolver } = field;
+    field.resolve = async function(...args) {
+      const [record, requestArgs , ctx] = args;
+
+      const requesterTeam = await getTeamid(ctx.token.owner);
+      const requestedTeam =  await getTeamid(record);
+
+      if(requesterTeam !== null && requestedTeam !== null){
+        if(requesterTeam === requestedTeam){
+          return resolve.apply(this, args);
+        }
+      }
+
+      return await blockValue(field);
+    };
+  }
+}
+
+class SupervisorDirective extends SchemaDirectiveVisitor {
+  visitFieldDefinition(field) {
+    const { resolve = defaultFieldResolver } = field;
+    field.resolve = async function(...args) {
+      const [record, requestArgs , ctx] = args;
+
+      const requester = ctx.token.sub;
+      const requestedSuper = await getSupervisorid(record);
+
+      if(requester !== null && requestedSuper !== null){
+        if(requester === requestedSuper){
+            return resolve.apply(this, args);
+        }
+      }
+
+      return await blockValue(field);
+    };
+  }
+}
 class OwnerDirective extends SchemaDirectiveVisitor {
     
   visitFieldDefinition(field) {
@@ -131,6 +171,8 @@ class OwnerDirective extends SchemaDirectiveVisitor {
 module.exports = {
   OrganizationDirective,
   AuthenticatedDirective,
+  SupervisorDirective,
+  SameTeamDirective,
   OwnerDirective,
   profileFragment
 };
