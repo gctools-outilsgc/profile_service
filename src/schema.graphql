@@ -29,7 +29,7 @@ scalar PostalCode
 type Query {
   profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
+  teams(id: ID, nameEn: String, nameFr: String, owner: OwnerInput skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
