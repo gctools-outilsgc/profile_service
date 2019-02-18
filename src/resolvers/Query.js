@@ -57,6 +57,10 @@ function teams(_, args, context, info) {
         id: args.id,
         nameEn: args.nameEn,
         nameFr: args.nameFr,
+        owner: {
+          gcID: copyValueToObjectIfDefined(args.owner.gcID),
+          email: copyValueToObjectIfDefined(args.owner.email)
+        }     
       },
       skip: args.skip,
       first: args.first,  
