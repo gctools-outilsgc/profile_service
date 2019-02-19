@@ -10,7 +10,8 @@
     "start": "node src/cluster.js",
     "dev": "PRISMA_API_ENDPOINT=localhost  yarn prisma deploy && NODE_ENV=development node src/index.js",
     "eslint": "eslint src/",
-    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage"
+    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage",
+    "prisma": "PRISMA_API_ENDPOINT=localhost prisma"
   },
   "jest": {
     "verbose": true,
@@ -46,6 +47,7 @@
     "graphql": "^14.0.2",
     "graphql-binding": "^2.5.0",
     "node-fetch": "^2.3.0",
+    "parse-svg-path": "^0.1.2",
     "prisma": "^1.24.0",
     "prisma-binding": "^2.2.11",
     "request": "^2.88.0",
