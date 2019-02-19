@@ -38,6 +38,9 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
+  engine: {
+      apiKey: config.engine.apiID,
+  }, 
   context: async (req) => ({
     ...req,
     prisma: new Prisma({
