@@ -801,6 +801,9 @@ const calculateTree = (options) => {
     cardPadding: 60,
     leftGutter: 0,
   }, options);
+  if (opt.root) opt.root = copyNode(opt.root);
+  if (opt.nodeA) opt.nodeA = getNode(opt.root, opt.nodeA.uuid);
+  if (opt.nodeB) opt.nodeB = getNode(opt.root, opt.nodeB.uuid);
   opt.nodeB = opt.nodeB || opt.root;
   resetTree(opt.root);
   addLinkToParent(opt.root);
@@ -828,6 +831,126 @@ const getNode = (node, uuid) => {
   return false;
 };
 
+const profileToNode = (profile, team) => {
+  return {
+    uuid: profile.gcID,
+    gcID: profile.gcID,
+    name: profile.name,
+    avatar: profile.avatar,
+    titleEn: profile.titleEn,
+    titleFt: profile.titleFr,
+    department: {
+      "en_CA": team.nameEn,
+      "fr_CA": team.nameFr,
+      id: team.id,
+    },
+    "direct_reports": [],
+    root: false,
+  };
+};
+
+const buildNodesFromTeams = (teams, a, b) => {
+  const profiles = {};
+  const children = [];
+
+  teams.forEach((t) => {
+    if (!profiles[`gcID-${t.owner.gcID}`]) {
+      profiles[`gcID-${t.owner.gcID}`] = profileToNode(t.owner, t);
+    }
+    t.members.forEach((m) => {
+      if (!profiles[`gcID-${m.gcID}`]) {
+        profiles[`gcID-${m.gcID}`] = profileToNode(m, t);
+      }
+      profiles[`gcID-${t.owner.gcID}`]
+        .direct_reports.push(profiles[`gcID-${m.gcID}`]);
+      children.push(`gcID-${m.gcID}`);
+    });
+  });
+  const nodeA = profiles[`gcID-${a}`];
+  const keys = Object.keys(profiles);
+  const roots = [];
+  keys.forEach((k) => {
+    if (!children.includes(k)) {
+      roots.push(profiles[k]);
+    }
+  });
+  const [root] = roots;
+  const nodeB = (b) ? profiles[`gcID-${b}`] : root;
+  if (roots.length !== 1) {
+    throw new Error("Organizational structure has diverged - found orphans.");
+  }
+  if (!root) {
+    throw new Error("Cannot determine root node");
+  }
+  if (!nodeA) {
+    throw new Error(`Cannot locate node matching gcIDa: "${a}"`);
+  }
+  if (!nodeB) {
+    throw new Error(`Cannot locate node matching gcIDb: "${b}"`);
+  }
+  root.root = true;
+  return { root, nodeA, nodeB };
+};
+
+const defaultCardHeight = 75;
+const defaultCardWidth = 350;
+const defaultCardPadding = 60;
+const defaultMiniCardHeight = 10;
+const defaultLeftGutter = 0;
+const getMiniWidth = (miniCardWidth, miniCardHeight, cardWidth, cardHeight) =>
+  (miniCardWidth) ?
+    miniCardWidth :
+    miniCardHeight *
+    (cardWidth || defaultCardWidth) /
+    (cardHeight || defaultCardHeight);
+
+const calculateOrgChart = ({
+  root, nodeA, nodeB,
+  cardHeight, cardWidth, cardPadding, leftGutter,
+  miniCardWidth, miniCardHeight, miniCardPadding,
+}) => {
+  const miniHeight = miniCardHeight || defaultMiniCardHeight;
+  const miniWidth =
+    getMiniWidth(miniCardWidth, miniHeight, cardWidth, cardHeight);
+
+  const { boxes, lines } = calculateTree({
+    root, nodeA, nodeB,
+    cardHeight: cardHeight || defaultCardHeight,
+    cardWidth: cardWidth || defaultCardWidth,
+    cardPadding: cardPadding || defaultCardPadding,
+    leftGutter: leftGutter || defaultLeftGutter,
+  });
+  const { boxes: miniboxes, lines: minilines } = calculateTree({
+    root, nodeA, nodeB,
+    cardHeight: miniCardHeight || defaultMiniCardHeight,
+    cardWidth: miniWidth,
+    cardPadding: miniCardPadding || defaultMiniCardHeight,
+    leftGutter:
+      (miniWidth / (cardWidth || defaultCardWidth)) *
+      (leftGutter || defaultLeftGutter),
+  });
+  return { boxes, lines, miniboxes, minilines };
+};
+
+const teamQuery = `{
+  owner {
+    gcID
+    name
+    titleEn
+    titleFr
+    avatar
+  }
+  nameEn
+  nameFr
+  id
+  members {
+    gcID
+    name
+    titleEn
+    titleFr
+    avatar
+  }
+}`;
 
 
 module.exports = {
@@ -837,4 +960,7 @@ module.exports = {
   addLinkToParent,
   calculateTree,
   resetTree,
+  buildNodesFromTeams,
+  calculateOrgChart,
+  teamQuery,
 };

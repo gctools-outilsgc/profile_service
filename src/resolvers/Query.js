@@ -1,9 +1,8 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
 const { addFragmentToInfo } = require("graphql-binding");
 const { profileFragment } = require("../Auth/Directives");
-const { calculateTree, copyNode, getNode }
+const { calculateOrgChart, buildNodesFromTeams, teamQuery }
   = require("../OrgChart/nrc_orgchart_placement");
-
 
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
@@ -29,89 +28,20 @@ function profiles(_, args, context, info) {
   );
 }
 
-function orgchart(_, args, context, info) {
-  return new Promise((resolve, reject) => {
-    context.prisma.query.teams(
-      {},
-      "{owner {gcID name titleEn titleFr avatar} nameEn nameFr id members {gcID name titleEn titleFr avatar}}"
-    ).then((teams) => {
-      const profiles = {};
-      const children = [];
-      teams.forEach((t) => {
-        if (!profiles[`gcID-${t.owner.gcID}`]) {
-          profiles[`gcID-${t.owner.gcID}`] = {
-            uuid: t.owner.gcID,
-            gcID: t.owner.gcID,
-            name: t.owner.name,
-            avatar: t.owner.avatar,
-            titleEn: t.owner.titleEn,
-            titleFt: t.owner.titleFr,
-          department: {
-              "en_CA": t.nameEn,
-              "fr_CA": t.nameFr,
-              id: t.id,
-            },
-            "direct_reports": [],
-          };
-        }
-        t.members.forEach((m) => {
-          if (!profiles[`gcID-${m.gcID}`]) {
-            profiles[`gcID-${m.gcID}`] = {
-              uuid: m.gcID,
-              gcID: m.gcID,
-              name: m.name,
-              avatar: m.avatar,
-              titleEn: m.titleEn,
-              titleFt: m.titleFr,
-              department: {
-                "en_CA": t.nameEn,
-                "fr_CA": t.nameFr,
-                id: t.id,
-              },
-              "direct_reports": [],
-            };
-          }
-          profiles[`gcID-${t.owner.gcID}`]
-            .direct_reports.push(profiles[`gcID-${m.gcID}`]);
-          children.push(`gcID-${m.gcID}`);
-        });
-      });
-      const nodeA = profiles[`gcID-${args.gcIDa}`];
-      const nodeB = profiles[`gcID-${args.gcIDb}`];
-      const keys = Object.keys(profiles);
-      const roots = [];
-      keys.forEach((k) => {
-        if (!children.includes(k)) {
-          roots.push(profiles[k]);
-        }
-      });
-      if (roots.length !== 1 || !nodeA) {
-        if (roots.length !== 1) {
-          reject("Cannot determine org root");
-        } else {
-          reject("gcIDa cannot be found.");
-        }
-      } else {
-        const root = roots[0];
-        const { boxes, lines } = calculateTree({
-          nodeA,
-          nodeB,
-          root,
-          cardHeight: 75,
-          cardWidth: 350,
-        });
-        const { boxes: miniboxes, lines: minilines } = calculateTree({
-          nodeA,
-          nodeB,
-          root,
-          cardHeight: 10,
-          cardWidth: 47,
-          cardPadding: 10,
-        });
-        resolve({ boxes, lines, miniboxes, minilines });
-      }
-    });
-  }).catch((e) => console.error(e));
+async function orgchart(
+  _,
+  {
+    gcIDa, gcIDb,
+    cardHeight, cardWidth, cardPadding, leftGutter,
+    miniCardHeight, miniCardWidth, miniCardPadding
+  },
+  { prisma: { query } },
+) {
+  return calculateOrgChart({
+    ...buildNodesFromTeams(await query.teams({}, teamQuery), gcIDa, gcIDb),
+    cardHeight, cardWidth, cardPadding, leftGutter,
+    miniCardHeight, miniCardWidth, miniCardPadding
+  });
 }
 
 function addresses(_, args, context, info) {
