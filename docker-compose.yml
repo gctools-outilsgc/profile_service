@@ -10,7 +10,7 @@ services:
       - LOWPROFILE=True
     ports:
     - "8007:80"
-  yoga:
+  apollo:
     build: ./
     image: profile-yoga
     environment: 

@@ -3,6 +3,7 @@ require("dotenv").config();
 const env = process.env.NODE_ENV; // 'development' or 'production'
 const clientId = process.env.client_id;
 const clientSecret = process.env.client_secret;
+const engineAPI = process.env.ENGINE_API_KEY;
 
 const development = {
  app: {
@@ -27,6 +28,9 @@ const development = {
  client:{
    id:clientId,
    secret:clientSecret
+ },
+ engine:{
+   apiID: engineAPI
  }
 };
 
@@ -53,6 +57,9 @@ openId:{
 client:{
   id:clientId,
   secret:clientSecret
+},
+engine:{
+  apiID: engineAPI
 }
 };
 
