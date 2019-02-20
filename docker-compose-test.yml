@@ -33,6 +33,3 @@ services:
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
-volumes:
-  postgres:
-  image_server:
