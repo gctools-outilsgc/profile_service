@@ -180,8 +180,8 @@ const computePositions = ({
   const computeLine = (parent, child, opt, buf) => {
     const getMiddle = (obj) => {
       const middle = Math.floor((
-        Math.max(...obj.direct_reports.map(n => n.col)) +
-        Math.min(...obj.direct_reports.map(n => n.col))
+        Math.max(...obj.direct_reports.map((n) => n.col)) +
+        Math.min(...obj.direct_reports.map((n) => n.col))
       ) / 2) - obj.col;
       const cardSpace = (((cardWidth / 2) + (cardPadding / 2)));
       return ((middle) * (cardWidth + cardPadding)) - cardSpace;
@@ -256,10 +256,18 @@ const computePositions = ({
     row, col, size, a, b, l, r, anc, items,
   }) => {
     const isXYOk = (y, x) => {
-      if (typeof a !== 'undefined' && y >= a) return false;
-      if (typeof b !== 'undefined' && y <= b) return false;
-      if (typeof l !== 'undefined' && x >= l) return false;
-      if (typeof r !== 'undefined' && x <= r) return false;
+      if (typeof a !== "undefined" && y >= a) {
+        return false;
+      }
+      if (typeof b !== "undefined" && y <= b) {
+        return false;
+      }
+      if (typeof l !== "undefined" && x >= l) {
+        return false;
+      }
+      if (typeof r !== "undefined" && x <= r) {
+        return false;
+      }
 
       if (anc) {
         for (let z = 0; z < anc.length; z += 1) {
@@ -297,9 +305,13 @@ const computePositions = ({
               }
             }
           }
-          if (!ok) break;
+          if (!ok) {
+            break;
+          }
         }
-        if (!ok) break;
+        if (!ok) {
+          break;
+        }
       }
       if (ok && (!anc || anchored)) {
         return {
@@ -356,7 +368,7 @@ const computePositions = ({
         items: 1,
       });
       if (!position) {
-        throw new Error('Unable to fit node.direct_reports');
+        throw new Error("Unable to fit node.direct_reports");
       }
     }
     const geometry = {
@@ -370,7 +382,9 @@ const computePositions = ({
     geometry.mid_row = geometry.bottom -
       Math.ceil((geometry.bottom - geometry.top) / 2);
 
-    if (!rows[position.row]) rows[position.row] = [];
+    if (!rows[position.row]) {
+      rows[position.row] = [];
+    }
     rows[position.row].push(position.col);
 
     positionsMatrix.push({ row: position.row, col: position.col, node });
@@ -420,7 +434,7 @@ const computePositions = ({
       items: node.direct_reports.length,
     });
     if (!boxPosition) {
-      throw new Error('Unable to fit node.direct_reports');
+      throw new Error("Unable to fit node.direct_reports");
     }
 
     const mod = {
@@ -513,12 +527,12 @@ const computePositions = ({
 
     const occupiedBySibling = (node, row, col) => {
       const sNode = node.parent.direct_reports
-        .filter(n => n.col === col && n.row === row);
+        .filter((n) => n.col === col && n.row === row);
       return sNode.length === 1;
     };
 
     const canMove = (row, col) => positionsMatrix
-      .filter(n => n.row === row && n.col === col)
+      .filter((n) => n.row === row && n.col === col)
       .reduce((p, c) => p && !criticalP.includes(c.node), true);
 
     const occupied = (row, col) => rows[row].includes(col);
@@ -531,7 +545,7 @@ const computePositions = ({
       if (node.col !== newCol || node.row !== newRow) {
         const tNode = node;
         const sNode = node.parent.direct_reports
-          .filter(n => n.col === newCol && n.row === newRow)[0];
+          .filter((n) => n.col === newCol && n.row === newRow)[0];
         if (sNode) {
           moveNode(sNode, tNode.row, tNode.col);
         }
@@ -551,7 +565,7 @@ const computePositions = ({
 
       const firstNode = path[0];
       let geometry = addNode(0, 0, firstNode, {});
-      const inter = firstNode.direct_reports.filter(n => path.includes(n))[0];
+      const inter = firstNode.direct_reports.filter((n) => path.includes(n))[0];
       if (inter) {
         const newPos = Math.min(
           firstNode.direct_reports.length,
@@ -591,9 +605,9 @@ const computePositions = ({
           );
         } else if (node.direct_reports.length > 0) {
           const balanceL = rows
-            .reduce((t, v) => t + v.filter(c => c < 0).length, 0);
+            .reduce((t, v) => t + v.filter((c) => c < 0).length, 0);
           const balanceR = rows
-            .reduce((t, v) => t + v.filter(c => c > 0).length, 0);
+            .reduce((t, v) => t + v.filter((c) => c > 0).length, 0);
 
           // Pick the best position
 
@@ -639,7 +653,9 @@ const computePositions = ({
               .sort(sortPotentials);
             if (potentialSwaps.length > 0) {
               const swap = potentialSwaps.shift();
-              if (swap !== node) swapChildren(node, swap.row, swap.col);
+              if (swap !== node) {
+                swapChildren(node, swap.row, swap.col);
+              }
               const box = findNearestFreePosition({
                 row: node.row + 1,
                 col: node.col,
@@ -661,7 +677,7 @@ const computePositions = ({
             tries += 1;
           }
           if (tries === 20) {
-            throw new Error('Unable to go down');
+            throw new Error("Unable to go down");
           }
           geometry = addChildNodes(
             node.row,
@@ -699,7 +715,7 @@ const computePositions = ({
     if (!tree) {
       tree = [];
     }
-    if (typeof node.x !== 'undefined') {
+    if (typeof node.x !== "undefined") {
       const n = node;
       n.x += xModifier;
       n.y += yModifier;
@@ -713,7 +729,7 @@ const computePositions = ({
         node,
         on_path: (criticalPath.includes(node)),
       }]);
-      if (parent && typeof parent.x !== 'undefined') {
+      if (parent && typeof parent.x !== "undefined") {
         computeLine(
           { y: parent.y, x: parent.x },
           { y: node.y, x: node.x },
@@ -736,11 +752,11 @@ const computePositions = ({
     return tree;
   };
 
-  const xModifier = Math.abs(Math.min(...positionsMatrix.map(p => p.node.x)))
+  const xModifier = Math.abs(Math.min(...positionsMatrix.map((p) => p.node.x)))
     + leftGutter;
-  const yModifier = Math.abs(Math.min(...positionsMatrix.map(p => p.node.y)));
+  const yModifier = Math.abs(Math.min(...positionsMatrix.map((p) => p.node.y)));
 
-  positions = flattenTree(root, undefined, undefined, yModifier, xModifier);
+  positions = flattenTree(root, void 0, void 0, yModifier, xModifier);
 
   lines.sort((a, b) => {
     const av = (a.on_path) ? 1 : 0;
@@ -763,7 +779,7 @@ const addLinkToParent = (child, a) => {
   const obj = child;
   const parent = a || child;
   obj.parent = parent;
-  obj.direct_reports.forEach(node => addLinkToParent(node, obj));
+  obj.direct_reports.forEach((node) => addLinkToParent(node, obj));
 };
 
 /**
@@ -781,7 +797,7 @@ const resetTree = (node) => {
   delete obj.row;
   delete obj.parent;
   delete obj.placed;
-  obj.direct_reports.forEach(edge => resetTree(edge));
+  obj.direct_reports.forEach((edge) => resetTree(edge));
 };
 
 /**
@@ -792,18 +808,24 @@ const resetTree = (node) => {
  */
 const calculateTree = (options) => {
   const opt = Object.assign({
-    nodeA: undefined,
-    nodeB: undefined,
-    root: undefined,
+    nodeA: void 0,
+    nodeB: void 0,
+    root: void 0,
     childrenMaxColumns: 5,
     cardWidth: 150,
     cardHeight: 50,
     cardPadding: 60,
     leftGutter: 0,
   }, options);
-  if (opt.root) opt.root = copyNode(opt.root);
-  if (opt.nodeA) opt.nodeA = getNode(opt.root, opt.nodeA.uuid);
-  if (opt.nodeB) opt.nodeB = getNode(opt.root, opt.nodeB.uuid);
+  if (opt.root) {
+    opt.root = copyNode(opt.root);
+  }
+  if (opt.nodeA) {
+    opt.nodeA = getNode(opt.root, opt.nodeA.uuid);
+  }
+  if (opt.nodeB) {
+    opt.nodeB = getNode(opt.root, opt.nodeB.uuid);
+  }
   opt.nodeB = opt.nodeB || opt.root;
   resetTree(opt.root);
   addLinkToParent(opt.root);
@@ -818,15 +840,19 @@ const copyNode = (node) => {
     { direct_reports: [], parent: null },
   );
   node.direct_reports
-    .forEach(child => newNode.direct_reports.push(copyNode(child)));
+    .forEach((child) => newNode.direct_reports.push(copyNode(child)));
   return newNode;
 };
 
 const getNode = (node, uuid) => {
-  if (node.uuid === uuid) return node;
+  if (node.uuid === uuid) {
+    return node;
+  }
   for (let x = 0; x < node.direct_reports.length; x += 1) {
     const n = getNode(node.direct_reports[x], uuid);
-    if (n) return n;
+    if (n) {
+      return n;
+    }
   }
   return false;
 };
