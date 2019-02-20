@@ -14,14 +14,16 @@
     "prisma": "PRISMA_API_ENDPOINT=localhost prisma"
   },
   "jest": {
-    "verbose": true,
+    "verbose": false,
     "coveragePathIgnorePatterns": [
       "/postgres",
       "/image-server",
       "/node_modules",
       "/temp_convert",
       "/docker",
-      "/coverage"
+      "/coverage",
+      "fixtures",
+      "package.json"
     ],
     "watchPathIgnorePatterns": [
       "/postgres",

@@ -24,7 +24,7 @@ function profiles(_, args, context, info) {
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),
     },
-    addFragmentToInfo(info, profileFragment)
+    addFragmentToInfo(info, profileFragment),
   );
 }
 

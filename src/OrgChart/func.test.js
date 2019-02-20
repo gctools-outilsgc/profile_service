@@ -1,8 +1,8 @@
 
-import { getSortingNumber, getSize, getBounds } from './func';
+const { getSortingNumber, getSize, getBounds } = require("./func");
 
-describe('getSize', () => {
-  test('Throws error if provided undefined values', () => {
+describe("getSize", () => {
+  test("Throws error if provided undefined values", () => {
     expect(() => {
       getSize();
     }).toThrow();
@@ -11,7 +11,7 @@ describe('getSize', () => {
     }).toThrow();
   });
 
-  test('Correctly sizes boxes based on number of direct reports', () => {
+  test("Correctly sizes boxes based on number of direct reports", () => {
     for (let x = 0; x < 50; x += 1) {
       for (let y = -5; y < 60; y += 1) {
         if (y <= 0) {
@@ -28,8 +28,8 @@ describe('getSize', () => {
   });
 });
 
-describe('getSortingNumber', () => {
-  describe('Test case #1', () => {
+describe("getSortingNumber", () => {
+  describe("Test case #1", () => {
     const testCase = {
       row: -4,
       col: -1,
@@ -38,7 +38,7 @@ describe('getSortingNumber', () => {
           .map((u2, c) => ({ row: r - 3, col: c - 3 }))), []),
     };
 
-    test('Balanced to the LEFT', () => {
+    test("Balanced to the LEFT", () => {
       const expected = [
         [17, 23, 7, 29, 35],
         [16, 22, 6, 28, 34],
@@ -54,7 +54,7 @@ describe('getSortingNumber', () => {
           .toBe(expected[node.row + 3][node.col + 3]);
       }
     });
-    test('Balanced to the RIGHT', () => {
+    test("Balanced to the RIGHT", () => {
       const expected = [
         [35, 29, 7, 23, 17],
         [34, 28, 6, 22, 16],
@@ -71,7 +71,7 @@ describe('getSortingNumber', () => {
       }
     });
   });
-  describe('Test case #2', () => {
+  describe("Test case #2", () => {
     const testCase = {
       row: 4,
       col: 6,
@@ -80,7 +80,7 @@ describe('getSortingNumber', () => {
           .map((u2, c) => ({ row: r + 5, col: c + 4 }))), []),
     };
 
-    test('Balanced to the LEFT', () => {
+    test("Balanced to the LEFT", () => {
       const expected = [
         [7, 9, 3],
         [6, 8, 2],
@@ -92,7 +92,7 @@ describe('getSortingNumber', () => {
           .toBe(expected[node.row - 5][node.col - 4]);
       }
     });
-    test('Balanced to the RIGHT', () => {
+    test("Balanced to the RIGHT", () => {
       const expected = [
         [9, 7, 3],
         [8, 6, 2],
@@ -105,7 +105,7 @@ describe('getSortingNumber', () => {
       }
     });
   });
-  describe('Test case #3', () => {
+  describe("Test case #3", () => {
     const testCase = {
       row: -8,
       col: -6,
@@ -114,7 +114,7 @@ describe('getSortingNumber', () => {
           .map((u2, c) => ({ row: r - 7, col: c - 6 }))), []),
     };
 
-    test('Balanced to the LEFT', () => {
+    test("Balanced to the LEFT", () => {
       const expected = [
         [4, 10, 13, 16],
         [3, 9, 12, 15],
@@ -127,7 +127,7 @@ describe('getSortingNumber', () => {
           .toBe(expected[node.row + 7][node.col + 6]);
       }
     });
-    test('Balanced to the RIGHT', () => {
+    test("Balanced to the RIGHT", () => {
       const expected = [
         [4, 16, 13, 10],
         [3, 15, 12, 9],
@@ -143,14 +143,14 @@ describe('getSortingNumber', () => {
   });
 });
 
-describe('getBounds', () => {
-  test('able to determine positive bounds', () => {
+describe("getBounds", () => {
+  test("able to determine positive bounds", () => {
     const ar = [{ row: 5, col: 3 }, { row: 10, col: 2 }, { row: 1, col: 2 }];
     const bounds = getBounds(ar);
     expect(bounds.row).toBe(1);
     expect(bounds.col).toBe(2);
   });
-  test('able to determine negative bounds', () => {
+  test("able to determine negative bounds", () => {
     const ar = [{ row: 5, col: -3 }, { row: -10, col: 2 }, { row: 1, col: 2 }];
     const bounds = getBounds(ar);
     expect(bounds.row).toBe(-10);

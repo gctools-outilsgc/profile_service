@@ -12,8 +12,7 @@ afterAll(async () => {
     await getPrismaTestInstance().mutation.deleteManyTeams();
     await getPrismaTestInstance().mutation.deleteManyOrganizations();
     await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"kjsdf09iklasd"}});
-    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"3948371"}});   
-
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"3948371"}});
 });
 
 test("Create Organization", async() => {
@@ -24,7 +23,7 @@ test("Create Organization", async() => {
         acronymEn: "OTEN",
         acronymFr: "OTFR"
     };
-    
+
     const info = "{ nameEn, nameFr, acronymEn, acronymFr }";
 
     expect(
@@ -66,7 +65,7 @@ test("Create profile without avatar", async() => {
     };
 
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN"}, ctx, "{id}");
-    
+
     const args = {
         gcID: "kjsdf09iklasd",
         name: "Awesome User",
@@ -119,7 +118,7 @@ test("Modify Team", async() => {
         acronymEn: "OTEN 2",
         acronymFr: "OTFR 2"
     };
-    
+
     const organizationID = await mutations.createOrganization(parent, organizationData, ctx, "{id}");
     await mutations.createProfile(parent,{gcID:"9283982", name: "Supervisor Test 2", email:"supervisor2@somewhere.com"}, ctx, "{gcID}");
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN"}, ctx, "{id}");
@@ -130,7 +129,7 @@ test("Modify Team", async() => {
             nameEn: "Team Name EN - Mod 1",
             nameFr: "Team Name FR - Mod 1",
             organization: {id: organizationID.id},
-            owner: {gcID: "9283982"}            
+            owner: {gcID: "9283982"}
         }
     };
 
@@ -154,7 +153,7 @@ test("Modify Profile", async() => {
     };
 
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
-    
+
     const args = {
             gcID: "kjsdf09iklasd",
             data: {
@@ -213,22 +212,19 @@ test("Modify Profile without existing Address", async() => {
 });
 
 // Query everything in system
-
 test("Query Profiles", async() => {
-
     const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
     "address {streetAddress, city, province, postalCode, country}," +
     "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
     "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
-
-    expect(
-        await querys.profiles(parent, {}, ctx, info)
-    ).toMatchSnapshot();
+    const profiles = await ctx.prisma.query.profiles({}, null, info);
+    profiles.forEach((profile) =>
+      expect(profile).toMatchSnapshot({ id: expect.any(String )})
+    );
 });
 
 test("Query Addresses", async() => {
     const info = "{streetAddress, city, province, postalCode, country, resident{gcID,name,email}}";
-
     expect(
         await querys.addresses(parent, {}, ctx, info)
     ).toMatchSnapshot();
@@ -247,21 +243,40 @@ expect(
 
 test("Delete Profile that doesn't exist", async() => {
     const args = {gcID:"aaadddfff"};
-     
+
     await expect(
         mutations.deleteProfile(parent, args, ctx)
     ).rejects.toThrowErrorMatchingSnapshot();
-    
+
 });
 
 test("Delete Team", async() => {
-    const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
-    const args = {id: teamID[0].id};
+  try {
+    const organizationData = {
+      nameEn: "Organization Test EN 2",
+      nameFr: "Organization Test FR 2",
+      acronymEn: "OTEN 2",
+      acronymFr: "OTFR 2"
+    };
+
+    const organizationID = await mutations.createOrganization(parent, organizationData, ctx, "{id}");
+    await mutations.createProfile(parent,{gcID:"9283982111", name: "Supervisor Test 2", email:"supervisor2@somewhere.com"}, ctx, "{gcID}");
+    var args = {
+      nameEn: "Team Name EN",
+      nameFr: "Team Name FR",
+      organization: {id: organizationID.id},
+      owner: {gcID: "9283982111"}
+    };
+
+    const info = "{id}";
+    const { id } = await mutations.createTeam(parent, args, ctx, info);
 
     expect(
-        await mutations.deleteTeam(parent, args, ctx)
+        await mutations.deleteTeam(parent, { id }, ctx)
     ).toMatchSnapshot();
-
+  } finally {
+    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"9283982111"}});
+  }
 });
 
 test("Delete Team that doesn't exist", async() => {

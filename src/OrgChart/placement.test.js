@@ -1,10 +1,9 @@
-import svgPathParse from 'parse-svg-path';
+const svgPathParse = require("parse-svg-path");
 
-import { calculateTree } from './nrc_orgchart_placement';
-import NRCOrgChart from '../fixtures/sample.json';
-import { getNode } from '../fixtures/utils';
+const { calculateTree, getNode } = require("./nrc_orgchart_placement");
+const NRCOrgChart = require("./fixtures/sample.json");
 
-describe('calculateTree', () => {
+describe("calculateTree", () => {
   let rows = [];
   const collisionTest = (box) => {
     const addr = `${box.y}-${box.x}`;
@@ -12,7 +11,7 @@ describe('calculateTree', () => {
     rows.push(addr);
   };
   const testNodes = (nodeA, nodeB) => {
-    test('has to expected number of boxes and lines', () => {
+    test("has to expected number of boxes and lines", () => {
       const { boxes, lines } = calculateTree({
         nodeA,
         nodeB,
@@ -23,7 +22,7 @@ describe('calculateTree', () => {
       expect(boxes.length).toBeGreaterThan(0);
       expect(lines.length).toBe(boxes.length - 1);
     });
-    test('has no box collisions', () => {
+    test("has no box collisions", () => {
       const { boxes } = calculateTree({
         nodeA,
         nodeB,
@@ -33,7 +32,7 @@ describe('calculateTree', () => {
       });
       boxes.forEach(collisionTest);
     });
-    test('has no line collisions', () => {
+    test("has no line collisions", () => {
       const { lines } = calculateTree({
         nodeA,
         nodeB,
@@ -71,11 +70,11 @@ describe('calculateTree', () => {
         let point = { y: 0, x: 0 };
         commands.forEach((cmd) => {
           switch (cmd[0]) {
-            case 'M': {
+            case "M": {
               [, point.x, point.y] = cmd;
               break;
             }
-            case 'v': {
+            case "v": {
               const V = point.y + cmd[1];
               const start = Math.min(V, point.y);
               const end = Math.max(V, point.y);
@@ -89,7 +88,7 @@ describe('calculateTree', () => {
               point = { x: point.x, y: V };
               break;
             }
-            case 'V': {
+            case "V": {
               const V = cmd[1];
               const start = Math.min(V, point.y);
               const end = Math.max(V, point.y);
@@ -103,7 +102,7 @@ describe('calculateTree', () => {
               point = { x: point.x, y: V };
               break;
             }
-            case 'h': {
+            case "h": {
               const H = point.x + cmd[1];
               const start = Math.min(H, point.x);
               const end = Math.max(H, point.x);
@@ -117,7 +116,7 @@ describe('calculateTree', () => {
               point = { x: H, y: point.y };
               break;
             }
-            case 'H': {
+            case "H": {
               const H = cmd[1];
               const start = Math.min(H, point.x);
               const end = Math.max(H, point.x);
@@ -154,33 +153,33 @@ describe('calculateTree', () => {
     rows = [];
   });
 
-  describe('Test case #1 (1 -> 2)', () => {
-    const nodeA = getNode(NRCOrgChart, '1');
-    const nodeB = getNode(NRCOrgChart, '2');
+  describe("Test case #1 (1 -> 2)", () => {
+    const nodeA = getNode(NRCOrgChart, "1");
+    const nodeB = getNode(NRCOrgChart, "2");
     testNodes(nodeA, nodeB);
   });
 
-  describe('Test case #2 (2 -> 1)', () => {
-    const nodeA = getNode(NRCOrgChart, '2');
-    const nodeB = getNode(NRCOrgChart, '1');
+  describe("Test case #2 (2 -> 1)", () => {
+    const nodeA = getNode(NRCOrgChart, "2");
+    const nodeB = getNode(NRCOrgChart, "1");
     testNodes(nodeA, nodeB);
   });
 
-  describe('Test case #3 (6 -> 3)', () => {
-    const nodeA = getNode(NRCOrgChart, '6');
-    const nodeB = getNode(NRCOrgChart, '3');
+  describe("Test case #3 (6 -> 3)", () => {
+    const nodeA = getNode(NRCOrgChart, "6");
+    const nodeB = getNode(NRCOrgChart, "3");
     testNodes(nodeA, nodeB);
   });
 
-  describe('Test case #4 (9 -> 1)', () => {
-    const nodeA = getNode(NRCOrgChart, '9');
-    const nodeB = getNode(NRCOrgChart, '1');
+  describe("Test case #4 (9 -> 1)", () => {
+    const nodeA = getNode(NRCOrgChart, "9");
+    const nodeB = getNode(NRCOrgChart, "1");
     testNodes(nodeA, nodeB);
   });
 
-  describe('Test case #5 (1 -> 9)', () => {
-    const nodeA = getNode(NRCOrgChart, '1');
-    const nodeB = getNode(NRCOrgChart, '9');
+  describe("Test case #5 (1 -> 9)", () => {
+    const nodeA = getNode(NRCOrgChart, "1");
+    const nodeB = getNode(NRCOrgChart, "9");
     testNodes(nodeA, nodeB);
   });
 });

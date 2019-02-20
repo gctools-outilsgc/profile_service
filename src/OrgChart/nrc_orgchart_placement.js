@@ -850,9 +850,11 @@ const profileToNode = (profile, team) => {
 };
 
 const buildNodesFromTeams = (teams, a, b) => {
+  if (!teams || teams.length === 0) {
+    throw new Error("No teams found.");
+  }
   const profiles = {};
   const children = [];
-
   teams.forEach((t) => {
     if (!profiles[`gcID-${t.owner.gcID}`]) {
       profiles[`gcID-${t.owner.gcID}`] = profileToNode(t.owner, t);
@@ -876,7 +878,7 @@ const buildNodesFromTeams = (teams, a, b) => {
   });
   const [root] = roots;
   const nodeB = (b) ? profiles[`gcID-${b}`] : root;
-  if (roots.length !== 1) {
+  if (roots.length > 1) {
     throw new Error("Organizational structure has diverged - found orphans.");
   }
   if (!root) {
