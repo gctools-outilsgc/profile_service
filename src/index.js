@@ -40,7 +40,8 @@ const server = new ApolloServer({
   schema,
   engine: {
       apiKey: config.engine.apiID,
-  }, 
+  },
+  tracing: config.app.tracing, 
   context: async (req) => ({
     ...req,
     prisma: new Prisma({

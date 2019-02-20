@@ -8,7 +8,8 @@ const engineAPI = process.env.ENGINE_API_KEY;
 const development = {
  app: {
    port: 4000,
-   multicore: false
+   multicore: false,
+   tracing: true
  },
  prisma: {
      host:"localhost",
@@ -37,7 +38,8 @@ const development = {
 const production = {
  app: {
    port: 4000,
-   multicore: true
+   multicore: true,
+   tracing: false
  },
  prisma: {
      host: "prisma",
