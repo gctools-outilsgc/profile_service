@@ -11,7 +11,7 @@ services:
     ports:
     - "8007:80"
   prisma:
-    image: prismagraphql/prisma:1.16
+    image: prismagraphql/prisma:1.26
     ports:
     - "4466:4466"
     environment:
@@ -32,6 +32,8 @@ services:
       - postgres
   postgres:
     image: postgres:10.6
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_USER: prisma
       POSTGRES_PASSWORD: prisma
