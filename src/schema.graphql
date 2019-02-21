@@ -30,7 +30,7 @@ type Query {
   profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   orgchart(gcIDa: String!, gcIDb: String, cardHeight: Float, cardWidth: Float, cardPadding: Float, leftGutter: Float, miniCardHeight: Float, miniCardWidth: Float, miniCardPadding: Float): OrgChart!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  teams(id: ID, nameEn: String, nameFr: String, owner: OwnerInput skip: Int, first: Int): [Team!]!,
+  teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
@@ -38,7 +38,7 @@ type Mutation {
   createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
   modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
   deleteProfile(gcID: String!): Boolean!
-  createTeam(nameEn: String!, nameFr: String!, organization: OrganizationInput! , owner: TeamOwnerInput!): Team!
+  createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
   modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
@@ -116,6 +116,8 @@ type Team {
   id: ID!
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: Organization!
   owner: Profile
   members: [Profile!]!
@@ -177,6 +179,8 @@ input ModifyProfileInput {
 input ModifyTeamInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationInput
   owner: OwnerInput
 }

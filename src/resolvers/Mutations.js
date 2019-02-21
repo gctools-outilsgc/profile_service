@@ -14,7 +14,7 @@ async function createProfile(_, args, context, info){
         titleEn: copyValueToObjectIfDefined(args.titleEn),
         titleFr: copyValueToObjectIfDefined(args.titleFr)
     };
-    
+
     if ( propertyExists(args, "avatar")){
         await processUpload(args.avatar).then((url) => {
             createProfileData.avatar = url;
@@ -48,7 +48,7 @@ async function createProfile(_, args, context, info){
                 }
         };
     }
-      
+
 
     return await context.prisma.mutation.createProfile({
         data: createProfileData,
@@ -61,7 +61,7 @@ async function modifyProfile(_, args, context, info){
         {
             where: {
                 gcID: args.gcID
-            }            
+            }
         },"{gcID, address{id}}");
 
     throwExceptionIfProfileIsNotDefined(currentProfile);
@@ -79,15 +79,15 @@ async function modifyProfile(_, args, context, info){
             updateProfileData.avatar = url;
         });
     }
-    
+
     if (propertyExists(args.data, "address")){
         var address = updateOrCreateAddressOnProfile(args, currentProfile);
         if(address != null){
             updateProfileData.address = address;
-        }        
+        }
     }
 
-       
+
     if (propertyExists(args.data, "supervisor")) {
         var updateSupervisorData = {
             gcID: copyValueToObjectIfDefined(args.data.supervisor.gcID),
@@ -98,7 +98,7 @@ async function modifyProfile(_, args, context, info){
                 connect: updateSupervisorData
         };
     }
-    
+
     if (propertyExists(args.data, "team")){
         updateProfileData.team = {
                 connect: {
@@ -111,8 +111,8 @@ async function modifyProfile(_, args, context, info){
         where:{
         gcID: args.gcID
         },
-        data: updateProfileData   
-    }, info);    
+        data: updateProfileData
+    }, info);
 }
 
 async function deleteProfile(_, args, context){
@@ -137,14 +137,14 @@ async function deleteProfile(_, args, context){
 
 
 
-function createOrganization(_, args, context, info){            
-    return context.prisma.mutation.createOrganization({            
+function createOrganization(_, args, context, info){
+    return context.prisma.mutation.createOrganization({
         data: {
         nameEn: args.nameEn,
         nameFr: args.nameFr,
-        acronymEn: args.acronymEn,        
-        acronymFr: args.acronymFr  
-        }        
+        acronymEn: args.acronymEn,
+        acronymFr: args.acronymFr
+        }
     }, info);
 }
 
@@ -167,7 +167,7 @@ async function modifyOrganization(_, args, context, info){
             id: args.id
         },
         data: updateOrganizationData
-    }, info);    
+    }, info);
 }
 
 async function deleteOrganization(_, args, context){
@@ -196,6 +196,8 @@ function createTeam(_, args, context, info){
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
+            descriptionEn: args.descriptionEn,
+            descriptionFr: args.descriptionFr,
             organization: {connect: {id: args.organization.id}},
             owner: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
         }
@@ -203,7 +205,6 @@ function createTeam(_, args, context, info){
 }
 
 async function modifyTeam(_, args, context, info){
-
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Team({id:args.id})){
         throw new UserInputError("Team does not exist");
@@ -212,13 +213,15 @@ async function modifyTeam(_, args, context, info){
     var updateTeamData = {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
-
+        descriptionEn: copyValueToObjectIfDefined(args.data.descriptionEn),
+        descriptionFr: copyValueToObjectIfDefined(args.data.descriptionFr),
     };
+
     if (typeof args.data.organization !== "undefined"){
         updateTeamData.organization = {
             connect:{
                 id: args.data.organization.id
-            }      
+            }
         };
     }
 
@@ -241,7 +244,7 @@ async function modifyTeam(_, args, context, info){
 }
 
 async function deleteTeam(_, args, context){
-    
+
     // eslint-disable-next-line new-cap
     if (await context.prisma.exists.Team({id:args.id})){
         try {
@@ -254,8 +257,8 @@ async function deleteTeam(_, args, context){
         return false;
         }
         return true;
-    }  
-    throw new UserInputError("Team does not exist");              
+    }
+    throw new UserInputError("Team does not exist");
 }
 
 
