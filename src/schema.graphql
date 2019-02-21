@@ -129,7 +129,7 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  Teams: [Team!]!
+  teams: [Team!]!
 }
 
 input SupervisorInput {
