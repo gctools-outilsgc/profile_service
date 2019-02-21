@@ -1,0 +1,183 @@
+{
+  "uuid": "1",
+  "title": {
+      "en_CA": "President - NRC",
+      "fr_CA": "Président, CNRC"
+  },
+  "avatar": "1.jpg",
+  "department": {
+      "en_CA": "",
+      "fr_CA": ""
+  },
+  "direct_reports": [
+      {
+          "uuid": "2",
+          "title": {
+              "en_CA": "Vice President, Corporate Services and Chief Financial Officer",
+              "fr_CA": "Vice-président, Services corporatifs et chef de la direcion financière"
+          },
+          "avatar": "2.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Dale MacMillan"
+      },
+      {
+          "uuid": "3",
+          "title": {
+              "en_CA": "Departmental Science Advisor",
+              "fr_CA": "Conseiller scientifique du département"
+          },
+          "avatar": "3.gif",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Danial Wayner"
+      },
+      {
+          "uuid": "4",
+          "title": {
+              "en_CA": "Vice President, IRAP",
+              "fr_CA": "Vice-président(e), PARI"
+          },
+          "avatar": "4.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "David Lisk"
+      },
+      {
+          "uuid": "5",
+          "title": {
+              "en_CA": "Vice-President, HRB",
+              "fr_CA": "Vice-président, DRH"
+          },
+          "avatar": "5.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Emily Harrison"
+      },
+      {
+          "uuid": "6",
+          "title": {
+              "en_CA": "VP, Transportation and Manufacturing",
+              "fr_CA": "VP, Transport et fabrication"
+          },
+          "avatar": "6.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "François Cordeau"
+      },
+      {
+          "uuid": "7",
+          "title": {
+              "en_CA": "Vice-President, Emerging Technologies",
+              "fr_CA": "Vice-président, Technologies émergentes"
+          },
+          "avatar": "7.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Geneviève Tanguay"
+      },
+      {
+          "uuid": "8",
+          "title": {
+              "en_CA": "Chief of Staff, Office of the President",
+              "fr_CA": "Chef de cabinet, Bureau du Président"
+          },
+          "avatar": "8.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Marcel Turcot"
+      },
+      {
+          "uuid": "9",
+          "title": {
+              "en_CA": "VP, Business and Professional Services",
+              "fr_CA": "VP, Services professionnels et d'affaire"
+          },
+          "avatar": "9.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Maria Aubrey"
+      },
+      {
+          "uuid": "10",
+          "title": {
+              "en_CA": "Vice-President, Engineering",
+              "fr_CA": "Vice-président, Génie"
+          },
+          "avatar": "10.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Michel Dumoulin"
+      },
+      {
+          "uuid": "11",
+          "title": {
+              "en_CA": "Secretary General",
+              "fr_CA": "Secrétaire général"
+          },
+          "avatar": "11.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Roger Scott-Douglas"
+      },
+      {
+          "uuid": "12",
+          "title": {
+              "en_CA": "VP, Life Sciences",
+              "fr_CA": "VP, Sciences de la vie"
+          },
+          "avatar": "12.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Roman Szumski"
+      },
+      {
+          "uuid": "13",
+          "title": {
+              "en_CA": "Special Advisor, Group of Head of Federal Agencies",
+              "fr_CA": "Conseiller spécial, Groupe du chef des agences fédérales"
+          },
+          "avatar": "13.jpg",
+          "department": {
+              "en_CA": "",
+              "fr_CA": ""
+          },
+          "direct_reports": [],
+          "name": "Thomas Pedersen"
+      }
+  ],
+  "name": "Iain Stewart"
+}

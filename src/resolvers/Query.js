@@ -1,7 +1,8 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
 const { addFragmentToInfo } = require("graphql-binding");
 const { profileFragment } = require("../Auth/Directives");
-
+const { calculateOrgChart, buildNodesFromTeams, teamQuery }
+  = require("../OrgChart/nrc_orgchart_placement");
 
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
@@ -18,13 +19,29 @@ function profiles(_, args, context, info) {
         // eslint-disable-next-line camelcase
         titleEn_contains: copyValueToObjectIfDefined(args.titleEn),
         // eslint-disable-next-line camelcase
-        titleFr_contains: copyValueToObjectIfDefined(args.titleFr),                        
+        titleFr_contains: copyValueToObjectIfDefined(args.titleFr),
       },
       skip: copyValueToObjectIfDefined(args.skip),
-      first: copyValueToObjectIfDefined(args.first),        
+      first: copyValueToObjectIfDefined(args.first),
     },
-    addFragmentToInfo(info, profileFragment)
+    addFragmentToInfo(info, profileFragment),
   );
+}
+
+async function orgchart(
+  _,
+  {
+    gcIDa, gcIDb,
+    cardHeight, cardWidth, cardPadding, leftGutter,
+    miniCardHeight, miniCardWidth, miniCardPadding
+  },
+  { prisma: { query } },
+) {
+  return calculateOrgChart({
+    ...buildNodesFromTeams(await query.teams({}, teamQuery), gcIDa, gcIDb),
+    cardHeight, cardWidth, cardPadding, leftGutter,
+    miniCardHeight, miniCardWidth, miniCardPadding
+  });
 }
 
 function addresses(_, args, context, info) {
@@ -96,6 +113,7 @@ function organizations(_, args, context, info){
 
 module.exports = {
     profiles,
+    orgchart,
     addresses,
     teams,
     organizations,
