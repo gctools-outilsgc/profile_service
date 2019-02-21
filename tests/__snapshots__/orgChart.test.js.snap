@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`orgChart Query should report no teams found 1`] = `
+Array [
+  [GraphQLError: No teams found.],
+]
+`;
+
+exports[`orgChart Query should return error without gcIDa 1`] = `
+Array [
+  [GraphQLError: Field "orgchart" argument "gcIDa" of type "String!" is required but not provided.],
+]
+`;
