@@ -1,3 +1,8 @@
+const fs = require("fs");
+const { makeExecutableSchema, addMockFunctionsToSchema }
+  = require("graphql-tools");
+const { graphql } = require("graphql");
+
 const mutations = require("../src/resolvers/Mutations");
 const querys = require("../src/resolvers/Query");
 
@@ -6,6 +11,23 @@ const parent = {};
 const ctx = {
     prisma: getPrismaTestInstance()
 };
+
+const typeDefs = fs.readFileSync("src/schema.graphql", "utf8");
+const schema = makeExecutableSchema({ typeDefs });
+
+const mocks = {
+  Query: () => ({
+    profiles: (a, b, c, d) => querys
+      .profiles(
+        a,
+        b,
+        Object.assign({}, c, { prisma: getPrismaTestInstance()}),
+        d
+      )
+  })
+};
+
+addMockFunctionsToSchema({ schema, mocks });
 
 afterAll(async () => {
     await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"0834haf"}});
@@ -213,14 +235,15 @@ test("Modify Profile without existing Address", async() => {
 
 // Query everything in system
 test("Query Profiles", async() => {
-    const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
-    "address {streetAddress, city, province, postalCode, country}," +
-    "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
-    "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
-    const profiles = await ctx.prisma.query.profiles({}, null, info);
-    profiles.forEach((profile) =>
-      expect(profile).toMatchSnapshot({ id: expect.any(String )})
-    );
+    const info = `
+    query queryProfiles {
+      profiles { gcID, name, email, mobilePhone, officePhone, titleEn, titleFr,
+      address {streetAddress, city, province, postalCode, country},
+      team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr},
+      owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }
+    }`;
+    const profiles = await(graphql(schema, info));
+    expect(profiles).toMatchSnapshot();
 });
 
 test("Query Addresses", async() => {
