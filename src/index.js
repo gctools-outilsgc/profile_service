@@ -27,6 +27,9 @@ const schema = makeExecutableSchema({
   schemaDirectives: {
     isAuthenticated: AuthDirectives.AuthenticatedDirective,
     inOrganization: AuthDirectives.OrganizationDirective,
+    isSameTeam: AuthDirectives.SameTeamDirective,
+    isSupervisor: AuthDirectives.SupervisorDirective,
+    isOwner: AuthDirectives.OwnerDirective,    
   },
   resolverValidationOptions: {
     requireResolversForResolveType: false
@@ -35,8 +38,12 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
+  engine: {
+      apiKey: config.engine.apiID,
+  },
+  tracing: config.app.tracing, 
   context: async (req) => ({
-    ...req,    
+    ...req,
     prisma: new Prisma({
       typeDefs: "./src/generated/prisma.graphql",
       endpoint: "http://"+config.prisma.host+":4466/profile/",
@@ -54,5 +61,8 @@ server.listen().then(({ url }) => {
 });
 
 // Lauch process to listen to service message queue
-connectMessageQueueListener();
-connectMessageQueuePublisher();
+if (config.rabbitMQ.user && config.rabbitMQ.password){
+  connectMessageQueueListener();
+  connectMessageQueuePublisher();
+}
+

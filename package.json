@@ -8,19 +8,22 @@
   },
   "scripts": {
     "start": "node src/cluster.js",
-    "dev": "PRISMA_API_ENDPOINT=localhost  yarn prisma deploy && NODE_ENV=development node src/index.js",
+    "dev": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && NODE_ENV=development node src/index.js",
     "eslint": "eslint src/",
-    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage"
+    "test": "PRISMA_API_ENDPOINT=localhost yarn prisma deploy && jest --runInBand --coverage",
+    "prisma": "PRISMA_API_ENDPOINT=localhost prisma"
   },
   "jest": {
-    "verbose": true,
+    "verbose": false,
     "coveragePathIgnorePatterns": [
       "/postgres",
       "/image-server",
       "/node_modules",
       "/temp_convert",
       "/docker",
-      "/coverage"
+      "/coverage",
+      "fixtures",
+      "package.json"
     ],
     "watchPathIgnorePatterns": [
       "/postgres",
@@ -35,28 +38,29 @@
   "author": "Bryan Robitaille - GCTools/OutilsGC",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "@okgrow/graphql-scalars": "^0.4.2",
+    "@okgrow/graphql-scalars": "^0.4.5",
     "amqplib": "^0.5.3",
-    "apollo-server": "^2.3.1",
+    "apollo-server": "^2.4.2",
     "cluster": "^0.7.7",
     "codacy-coverage": "^3.4.0",
     "dotenv": "^6.2.0",
-    "eslint": "^5.10.0",
+    "eslint": "^5.14.1",
     "express-jwt": "^5.3.1",
-    "graphql": "^14.0.2",
+    "graphql": "^14.1.1",
     "graphql-binding": "^2.5.0",
     "node-fetch": "^2.3.0",
-    "prisma": "^1.24.0",
-    "prisma-binding": "^2.2.11",
+    "parse-svg-path": "^0.1.2",
+    "prisma": "^1.26.6",
+    "prisma-binding": "^2.3.2",
     "request": "^2.88.0",
-    "sharp": "^0.21.1",
+    "sharp": "^0.21.3",
     "shortid": "^2.2.14",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "jest": "^23.6.0",
-    "jest-html-reporter": "^2.4.2",
+    "jest-html-reporter": "^2.4.4",
     "ts-jest": "^23.10.5"
   }
 }

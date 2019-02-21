@@ -11,7 +11,7 @@ type Profile {
   titleFr: String
   supervisor: Profile @relation(name:"Employees")
   team: Team @relation(name:"TeamMembers")
-  ownerofTeams: [Team!]! @relation(name:"OwnerOfTeam")
+  ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
 }
 
 type Address {
