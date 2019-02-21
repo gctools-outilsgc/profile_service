@@ -11,7 +11,7 @@ type Profile {
   titleFr: String
   supervisor: Profile @relation(name:"Employees")
   team: Team @relation(name:"TeamMembers")
-  ownerofTeams: [Team!]! @relation(name:"OwnerOfTeam")  
+  ownerofTeams: [Team!]! @relation(name:"OwnerOfTeam")
 }
 
 type Address {
@@ -28,6 +28,8 @@ type Team {
   id: ID! @unique
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: Organization! @relation(name:"Teams")
   owner: Profile @relation(name:"OwnerOfTeam")
   members: [Profile!]! @relation(name:"TeamMembers")
@@ -41,4 +43,3 @@ type Organization {
   acronymFr: String!
   teams: [Team!]! @relation(name:"Teams")
 }
-

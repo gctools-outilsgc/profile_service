@@ -1123,6 +1123,8 @@ type Team {
   id: ID!
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: Organization!
   owner: Profile
   members(where: ProfileWhereInput, orderBy: ProfileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Profile!]
@@ -1137,6 +1139,8 @@ type TeamConnection {
 input TeamCreateInput {
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationCreateOneWithoutTeamsInput!
   owner: ProfileCreateOneWithoutOwnerofTeamsInput
   members: ProfileCreateManyWithoutTeamInput
@@ -1160,6 +1164,8 @@ input TeamCreateOneWithoutMembersInput {
 input TeamCreateWithoutMembersInput {
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationCreateOneWithoutTeamsInput!
   owner: ProfileCreateOneWithoutOwnerofTeamsInput
 }
@@ -1167,6 +1173,8 @@ input TeamCreateWithoutMembersInput {
 input TeamCreateWithoutOrganizationInput {
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   owner: ProfileCreateOneWithoutOwnerofTeamsInput
   members: ProfileCreateManyWithoutTeamInput
 }
@@ -1174,6 +1182,8 @@ input TeamCreateWithoutOrganizationInput {
 input TeamCreateWithoutOwnerInput {
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationCreateOneWithoutTeamsInput!
   members: ProfileCreateManyWithoutTeamInput
 }
@@ -1190,6 +1200,10 @@ enum TeamOrderByInput {
   nameEn_DESC
   nameFr_ASC
   nameFr_DESC
+  descriptionEn_ASC
+  descriptionEn_DESC
+  descriptionFr_ASC
+  descriptionFr_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1200,6 +1214,8 @@ type TeamPreviousValues {
   id: ID!
   nameEn: String!
   nameFr: String!
+  descriptionEn: String
+  descriptionFr: String
 }
 
 input TeamScalarWhereInput {
@@ -1245,6 +1261,34 @@ input TeamScalarWhereInput {
   nameFr_not_starts_with: String
   nameFr_ends_with: String
   nameFr_not_ends_with: String
+  descriptionEn: String
+  descriptionEn_not: String
+  descriptionEn_in: [String!]
+  descriptionEn_not_in: [String!]
+  descriptionEn_lt: String
+  descriptionEn_lte: String
+  descriptionEn_gt: String
+  descriptionEn_gte: String
+  descriptionEn_contains: String
+  descriptionEn_not_contains: String
+  descriptionEn_starts_with: String
+  descriptionEn_not_starts_with: String
+  descriptionEn_ends_with: String
+  descriptionEn_not_ends_with: String
+  descriptionFr: String
+  descriptionFr_not: String
+  descriptionFr_in: [String!]
+  descriptionFr_not_in: [String!]
+  descriptionFr_lt: String
+  descriptionFr_lte: String
+  descriptionFr_gt: String
+  descriptionFr_gte: String
+  descriptionFr_contains: String
+  descriptionFr_not_contains: String
+  descriptionFr_starts_with: String
+  descriptionFr_not_starts_with: String
+  descriptionFr_ends_with: String
+  descriptionFr_not_ends_with: String
   AND: [TeamScalarWhereInput!]
   OR: [TeamScalarWhereInput!]
   NOT: [TeamScalarWhereInput!]
@@ -1271,6 +1315,8 @@ input TeamSubscriptionWhereInput {
 input TeamUpdateInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
   owner: ProfileUpdateOneWithoutOwnerofTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
@@ -1279,11 +1325,15 @@ input TeamUpdateInput {
 input TeamUpdateManyDataInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
 }
 
 input TeamUpdateManyMutationInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
 }
 
 input TeamUpdateManyWithoutOrganizationInput {
@@ -1325,6 +1375,8 @@ input TeamUpdateOneWithoutMembersInput {
 input TeamUpdateWithoutMembersDataInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
   owner: ProfileUpdateOneWithoutOwnerofTeamsInput
 }
@@ -1332,6 +1384,8 @@ input TeamUpdateWithoutMembersDataInput {
 input TeamUpdateWithoutOrganizationDataInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
   owner: ProfileUpdateOneWithoutOwnerofTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
 }
@@ -1339,6 +1393,8 @@ input TeamUpdateWithoutOrganizationDataInput {
 input TeamUpdateWithoutOwnerDataInput {
   nameEn: String
   nameFr: String
+  descriptionEn: String
+  descriptionFr: String
   organization: OrganizationUpdateOneRequiredWithoutTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
 }
@@ -1413,6 +1469,34 @@ input TeamWhereInput {
   nameFr_not_starts_with: String
   nameFr_ends_with: String
   nameFr_not_ends_with: String
+  descriptionEn: String
+  descriptionEn_not: String
+  descriptionEn_in: [String!]
+  descriptionEn_not_in: [String!]
+  descriptionEn_lt: String
+  descriptionEn_lte: String
+  descriptionEn_gt: String
+  descriptionEn_gte: String
+  descriptionEn_contains: String
+  descriptionEn_not_contains: String
+  descriptionEn_starts_with: String
+  descriptionEn_not_starts_with: String
+  descriptionEn_ends_with: String
+  descriptionEn_not_ends_with: String
+  descriptionFr: String
+  descriptionFr_not: String
+  descriptionFr_in: [String!]
+  descriptionFr_not_in: [String!]
+  descriptionFr_lt: String
+  descriptionFr_lte: String
+  descriptionFr_gt: String
+  descriptionFr_gte: String
+  descriptionFr_contains: String
+  descriptionFr_not_contains: String
+  descriptionFr_starts_with: String
+  descriptionFr_not_starts_with: String
+  descriptionFr_ends_with: String
+  descriptionFr_not_ends_with: String
   organization: OrganizationWhereInput
   owner: ProfileWhereInput
   members_every: ProfileWhereInput
