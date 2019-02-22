@@ -117,22 +117,18 @@ async function modifyProfile(_, args, context, info){
 
 async function deleteProfile(_, args, context){
 
-    // eslint-disable-next-line new-cap
-    if (await context.prisma.exists.Profile({gcID:args.gcID})){
-        try {
-            await context.prisma.mutation.deleteProfile({
-                where:{
-                gcID: args.gcID
-                }
-            });
+    try {
+        await context.prisma.mutation.deleteProfile({
+            where:{
+            gcID: args.gcID
+            }
+        });
 
-        } catch(e){
-            return false;
-        }
-        return true;
+    } catch(e){
+        throw new UserInputError("Profile does not exist");
     }
-    throw new UserInputError("Profile does not exist")
-;
+    return true;
+
 }
 
 

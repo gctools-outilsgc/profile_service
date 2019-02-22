@@ -1,6 +1,5 @@
 type Profile {
-  id: ID! @unique
-  gcID: String! @unique
+  gcID: ID! @unique
   name: String!
   email: String! @unique
   avatar: String
