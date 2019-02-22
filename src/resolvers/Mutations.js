@@ -142,9 +142,15 @@ function createOrganization(_, args, context, info){
         data: {
         nameEn: args.nameEn,
         nameFr: args.nameFr,
-        acronymEn: args.acronymEn,
-        acronymFr: args.acronymFr
-        }
+        acronymEn: args.acronymEn,        
+        acronymFr: args.acronymFr,
+        teams:{
+            create:{
+                nameEn: "",
+                nameFr: "",
+            }
+        }  
+        }        
     }, info);
 }
 
