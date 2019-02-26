@@ -11,8 +11,8 @@ const ctx = {
         debug: config.prisma.debug,
     }) 
 }; 
-                    console.log(relation);
-                    console.log(relation);
+
+async function seed(){
 
     // Number of Organizations to Create
     const orgNumber = 3;
