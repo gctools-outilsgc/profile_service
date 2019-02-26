@@ -11,18 +11,21 @@ const ctx = {
         debug: config.prisma.debug,
     }) 
 }; 
-
-async function seed(){
+                    console.log(relation);
+                    console.log(relation);
 
     // Number of Organizations to Create
     const orgNumber = 3;
     // Number of Teams to create in each Organization
     const teamNumber = 20;
     // Number or profiles to create in each Organization
-    const profileNumber = 1000;
+    const profileNumber = 4000;
 
     try {
+        // Create n organizations
         for(var o = 0; o < orgNumber; o++){
+
+
 
                 var orgEn = faker.fake("{{commerce.department}} {{commerce.product}}");
                 var orgFr = orgEn + " - FR";
@@ -36,14 +39,18 @@ async function seed(){
                 };
                 const infoOrg = "{id}";
 
+                // Store the created org info to assign teams to the org.
                 var org = await mutations.createOrganization({}, orgArgs, ctx, infoOrg);
 
                 console.log("Created organization: " + orgArgs.nameEn);
+
+                // These arrays will be used to handle the reporting relationships
                 var teams = [];
                 var profiles = [];
 
                 console.log("Creating " + profileNumber + " profiles");
 
+                // Create n profiles in current organization
                 for(var p = 0; p < profileNumber; p++){
                     var firstName = faker.name.firstName();
                     var lastName = faker.name.lastName();
@@ -77,6 +84,7 @@ async function seed(){
 
                 console.log("Creating " + teamNumber + " teams");
 
+                // Create n teams in current organization
                 for(var t = 0; t < teamNumber; t++){
                     var teamEn = faker.fake("{{name.jobDescriptor}}, {{name.jobArea}}");
                     var teamFr = teamEn + " - FR";
@@ -96,11 +104,13 @@ async function seed(){
                     teams.push(await ctx.prisma.mutation.createTeam(teamArgs, "{id, owner{gcID}}"));
                 }
 
+                // Assign the various profiles to teams.
+                // The profiles that are owners of teams are randomly built
+                // into a hierarchy and subsequent profiles are assigned randomly
+
                 for(var x = 1; x <  profileNumber; x++){
 
                     var relation = Math.floor(Math.random() * x) % 19;
-
-                    console.log(relation);
 
                     const relationshipArgs = {
                         gcID: profiles[x].gcID,
