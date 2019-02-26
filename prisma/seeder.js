@@ -39,12 +39,14 @@ async function seed(){
                 // Store the created org info to assign teams to the org.
                 var org = await mutations.createOrganization({}, orgArgs, ctx, "{id}");
 
+                // eslint-disable-next-line no-console
                 console.log("Created organization: " + orgArgs.nameEn);
 
                 // These arrays will be used to handle the reporting relationships
                 var teams = [];
                 var profiles = [];
-
+                
+                // eslint-disable-next-line no-console
                 console.log("Creating " + profileNumber + " profiles");
 
                 // Create n profiles in current organization
@@ -78,7 +80,8 @@ async function seed(){
                     
                     profiles.push(await ctx.prisma.mutation.createProfile(ownerArgs, "{gcID}"));
                 }
-
+                
+                // eslint-disable-next-line no-console
                 console.log("Creating " + teamNumber + " teams");
 
                 // Create n teams in current organization
@@ -124,6 +127,7 @@ async function seed(){
                 }            
             }
     } catch(e){
+        // eslint-disable-next-line no-console
         console.error(e);
     }
 }
