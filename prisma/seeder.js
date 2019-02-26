@@ -25,8 +25,6 @@ async function seed(){
         // Create n organizations
         for(var o = 0; o < orgNumber; o++){
 
-
-
                 var orgEn = faker.fake("{{commerce.department}} {{commerce.product}}");
                 var orgFr = orgEn + " - FR";
                 var orgDomain = faker.internet.domainName();
@@ -37,10 +35,9 @@ async function seed(){
                     acronymEn: faker.hacker.abbreviation(),
                     acronymFr: faker.hacker.abbreviation()
                 };
-                const infoOrg = "{id}";
 
                 // Store the created org info to assign teams to the org.
-                var org = await mutations.createOrganization({}, orgArgs, ctx, infoOrg);
+                var org = await mutations.createOrganization({}, orgArgs, ctx, "{id}");
 
                 console.log("Created organization: " + orgArgs.nameEn);
 
