@@ -1,6 +1,5 @@
 type Profile {
-  id: ID! @unique
-  gcID: String! @unique
+  gcID: ID! @unique
   name: String!
   email: String! @unique
   avatar: String
@@ -41,5 +40,5 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  teams: [Team!]! @relation(name:"Teams")
+  teams: [Team!]! @relation(name:"Teams", onDelete: CASCADE) 
 }
