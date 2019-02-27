@@ -82,10 +82,6 @@ test("Create profile without avatar", async() => {
         country: "Canada"
     };
 
-    var supervisorID = {
-        gcID: "0834haf"
-    };
-
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN"}, ctx, "{id}");
 
     const args = {
@@ -97,7 +93,6 @@ test("Create profile without avatar", async() => {
         titleEn: "Super Dave",
         titleFr: "Super Dave in French",
         address: argAddress,
-        supervisor: supervisorID,
         team: {
             id: teamID[0].id
         }
@@ -106,7 +101,7 @@ test("Create profile without avatar", async() => {
     const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
     "address {streetAddress, city, province, postalCode, country}," +
     "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
-    "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
+    "owner{name, email}, members{gcID, name, email}},}";
 
     expect(
         await mutations.createProfile(parent, args, ctx, info)
@@ -170,10 +165,6 @@ test("Modify Profile", async() => {
         country: "Greece"
     };
 
-    var supervisorID = {
-        gcID: "9283982"
-    };
-
     const teamID = await querys.teams(parent, {nameEn:"Team Name EN - Mod 1"}, ctx, "{id}");
 
     const args = {
@@ -186,7 +177,6 @@ test("Modify Profile", async() => {
                 titleEn: "God of War",
                 titleFr: "Dieu de la guerre",
                 address: argAddress,
-                supervisor: supervisorID,
                 team: {
                     id: teamID[0].id
                 }
@@ -196,7 +186,7 @@ test("Modify Profile", async() => {
     const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
     "address {streetAddress, city, province, postalCode, country}," +
     "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
-    "owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }";
+    "owner{name, email}, members{gcID, name, email}}}";
 
     expect(
         await mutations.modifyProfile(parent, args, ctx, info)
@@ -240,7 +230,7 @@ test("Query Profiles", async() => {
       profiles { gcID, name, email, mobilePhone, officePhone, titleEn, titleFr,
       address {streetAddress, city, province, postalCode, country},
       team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr},
-      owner{name, email}, members{gcID, name, email}}, supervisor{gcID, name, email} }
+      owner{name, email}, members{gcID, name, email}} }
     }`;
     const profiles = await(graphql(schema, info));
     expect(profiles).toMatchSnapshot();

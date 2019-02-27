@@ -9,7 +9,7 @@ const { blockValue, getOrganizationid, getTeamid, getSupervisorid, getOwnerid } 
   These fragments will ensure that the fields that are required to identify relationships for access
   levels will always be returned.
 */
-const profileFragment = "fragment authProfile on Profile {gcID, name, email, supervisor{gcID}, team{id, organization{id}}}";
+const profileFragment = "fragment authProfile on Profile {gcID, name, email, team{id, owner{gcID}, organization{id}}}";
 
 
 // inOrganization directive can only be used on the Profile object fields.

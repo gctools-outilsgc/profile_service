@@ -12,7 +12,14 @@ async function createProfile(_, args, context, info){
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
-        titleFr: copyValueToObjectIfDefined(args.titleFr)
+        titleFr: copyValueToObjectIfDefined(args.titleFr),
+        ownerOfTeams:{
+            create:{
+                nameEn:"",
+                nameFr:"",
+                organization: {connect: {id: context.defaults.org.id}}              
+            }
+        }
     };
 
     if ( propertyExists(args, "avatar")){
@@ -30,23 +37,18 @@ async function createProfile(_, args, context, info){
 
 
 
-    if (propertyExists(args, "supervisor")) {
-        var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.supervisor.email)
-        };
-
-        createProfileData.supervisor = {
-                connect: updateSupervisorData
-        };
-    }
-
     if (propertyExists(args, "team")){
+        const teamInfo = await context.prisma.query.team({id: args.team.id}, "{organization{id}}");
+
         createProfileData.team = {
                 connect: {
                     id: args.team.id
                 }
         };
+
+        // Make sure the new default team is created in the same organization the user belongs to.
+
+        createProfileData.ownerOfTeams.create.organization.connect.id = teamInfo.organization.id;
     }
 
 
@@ -87,17 +89,6 @@ async function modifyProfile(_, args, context, info){
         }
     }
 
-
-    if (propertyExists(args.data, "supervisor")) {
-        var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.data.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.data.supervisor.email)
-        };
-
-        updateProfileData.supervisor = {
-                connect: updateSupervisorData
-        };
-    }
 
     if (propertyExists(args.data, "team")){
         updateProfileData.team = {

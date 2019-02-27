@@ -49,8 +49,8 @@ async function blockValue(field){
   }
 
   function getSupervisorid(profileObject){
-    if (typeof profileObject !== "undefined" && propertyExists(profileObject, "supervisor")){
-        return profileObject.supervisor.gcID;
+    if (typeof profileObject !== "undefined" && propertyExists(profileObject.team, "owner")){
+        return profileObject.team.owner.gcID;
     } else {
         return null;
     }

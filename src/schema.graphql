@@ -61,7 +61,6 @@ type Profile {
   address: Address
   titleEn: String
   titleFr: String
-  supervisor: Profile
   team: Team
   ownerOfTeams: [Team!]!
 }
@@ -94,11 +93,6 @@ type Organization {
   acronymEn: String!
   acronymFr: String!
   teams: [Team!]!
-}
-
-input SupervisorInput {
-  gcID: ID,
-  email: Email
 }
 
 input TeamOwnerInput {
@@ -136,7 +130,6 @@ input ModifyProfileInput {
   address: AddressInput
   titleEn: String
   titleFr: String
-  supervisor: SupervisorInput
   team: TeamInput
 }
 

@@ -10,6 +10,7 @@ const fs = require("fs");
 const { connectMessageQueueListener } = require("./Service_Mesh/listener_connector");
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
 const introspect = require("./Auth/introspection");
+const { getDefaults } = require("./resolvers/helper/default_setup");
 
 const resolvers = {
   Query,
@@ -50,6 +51,7 @@ const server = new ApolloServer({
       debug: config.prisma.debug,
     }),
     token: await introspect.verifyToken(req),
+    defaults: await getDefaults()
   }),
 });
 
@@ -65,4 +67,6 @@ if (config.rabbitMQ.user && config.rabbitMQ.password){
   connectMessageQueueListener();
   connectMessageQueuePublisher();
 }
+
+
 
