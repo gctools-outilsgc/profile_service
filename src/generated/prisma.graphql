@@ -1176,7 +1176,7 @@ input TeamCreateWithoutOrganizationInput {
   nameFr: String!
   descriptionEn: String
   descriptionFr: String
-  owner: ProfileCreateOneWithoutOwnerofTeamsInput
+  owner: ProfileCreateOneWithoutOwnerOfTeamsInput
   members: ProfileCreateManyWithoutTeamInput
 }
 
@@ -1389,7 +1389,7 @@ input TeamUpdateWithoutOrganizationDataInput {
   nameFr: String
   descriptionEn: String
   descriptionFr: String
-  owner: ProfileUpdateOneWithoutOwnerofTeamsInput
+  owner: ProfileUpdateOneWithoutOwnerOfTeamsInput
   members: ProfileUpdateManyWithoutTeamInput
 }
 
