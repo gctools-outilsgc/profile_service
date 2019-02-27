@@ -27,16 +27,16 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  profiles(gcID: String, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
+  profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
 }
 
 type Mutation {
-  createProfile(gcID: String!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
-  modifyProfile(gcID: String!, data: ModifyProfileInput): Profile!
-  deleteProfile(gcID: String!): Boolean!
+  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile!
+  deleteProfile(gcID: ID!): Boolean!
   createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
   modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
@@ -52,7 +52,7 @@ type MultiLingualField {
 }
 
 type Profile {
-  gcID: String!
+  gcID: ID!
   name: String!
   email: Email!
   avatar: String
@@ -93,16 +93,16 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
-  Teams: [Team!]!
+  teams: [Team!]!
 }
 
 input SupervisorInput {
-  gcID: String,
+  gcID: ID,
   email: Email
 }
 
 input TeamOwnerInput {
-  gcID: String,
+  gcID: ID,
   email: Email
 }
 
@@ -115,7 +115,7 @@ input OrganizationInput {
 }
 
 input OwnerInput{
-  gcID: String
+  gcID: ID
   email: String
 }
 
