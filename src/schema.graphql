@@ -34,7 +34,7 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, team: TeamInput): Profile!
   modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile!
   deleteProfile(gcID: ID!): Boolean!
   createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
