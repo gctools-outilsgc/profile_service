@@ -28,7 +28,6 @@ scalar PostalCode
 
 type Query {
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
-  orgchart(gcIDa: ID!, gcIDb: String, cardHeight: Float, cardWidth: Float, cardPadding: Float, leftGutter: Float, miniCardHeight: Float, miniCardWidth: Float, miniCardPadding: Float): OrgChart!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
@@ -50,41 +49,6 @@ type MultiLingualField {
   en_CA: String
   fr_CA: String
   id: String
-}
-
-type OrgChart {
-  boxes: [OrgChartBox!]!
-  lines: [OrgChartLine!]!
-  miniboxes: [OrgChartBox!]!
-  minilines: [OrgChartLine!]!
-}
-
-type OrgChartBox {
-  id: String!
-  x: Float!
-  y: Float!
-  width: Float
-  height: Float
-  on_path: Boolean
-  node: OrgChartNode!
-}
-
-type OrgChartNode {
-  gcID: ID!
-  name: String!
-  avatar: String
-  titleEn: String
-  titleFr: String
-  department: MultiLingualField
-  x: Float!
-  y: Float!
-  root: Boolean
-}
-
-type OrgChartLine {
-  id: String
-  d: String
-  on_path: Boolean
 }
 
 type Profile {
