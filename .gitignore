@@ -47,3 +47,6 @@ jest_*/
 
 # data volume for docker db volume
 postgres/
+
+# generated files
+src/generated
