@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined, getSupervisorFromArgs} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, changeOwnedTeamsRoot} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
@@ -58,6 +58,8 @@ async function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
+
+    var changeTeams = false;
     // eslint-disable-next-line new-cap
     const currentProfile = await context.prisma.query.profile(
         {
@@ -96,14 +98,23 @@ async function modifyProfile(_, args, context, info){
                     id: args.data.team.id
                 }
         };
+
+        changeTeams = true;
+
     }
 
+    if (changeTeams){
+        await changeOwnedTeamsRoot(args.gcID, args.data.team.id, context);
+    }
+    
     return await context.prisma.mutation.updateProfile({
         where:{
         gcID: args.gcID
         },
         data: updateProfileData
     }, info);
+
+
 }
 
 async function deleteProfile(_, args, context){
