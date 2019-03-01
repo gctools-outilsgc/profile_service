@@ -178,7 +178,7 @@ async function deleteOrganization(_, args, context){
     if (await context.prisma.exists.Organization({id:args.id})){
         try {
             await context.prisma.mutation.deleteOrganization({
-                where:{
+                where:{                
                     id: args.id
                 }
             });
@@ -193,15 +193,26 @@ async function deleteOrganization(_, args, context){
 
 }
 
-function createTeam(_, args, context, info){
-    return context.prisma.mutation.createTeam({
+async function createTeam(_, args, context, info){
+
+    var teamAvatar = "";
+
+    if ( propertyExists(args, "avatar")){
+        await processUpload(args.avatar).then((url) => {
+            teamAvatar = url;
+        });
+    }
+
+    return await context.prisma.mutation.createTeam({
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
-            descriptionEn: args.descriptionEn,
-            descriptionFr: args.descriptionFr,
+            descriptionEn: copyValueToObjectIfDefined(args.descriptionEn),
+            descriptionFr: copyValueToObjectIfDefined(args.descriptionFr),
+            colour: copyValueToObjectIfDefined(args.colour),
+            avatar: copyValueToObjectIfDefined(teamAvatar),
             organization: {connect: {id: args.organization.id}},
-            owner: {connect: {gcID: args.owner.gcID, email: args.owner.email}}
+            owner: {connect: {gcID: copyValueToObjectIfDefined(args.owner.gcID), email: copyValueToObjectIfDefined(args.owner.email)}}
         }
     }, info);
 }
@@ -212,11 +223,13 @@ async function modifyTeam(_, args, context, info){
         throw new UserInputError("Team does not exist");
     }
 
+
     var updateTeamData = {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
         descriptionEn: copyValueToObjectIfDefined(args.data.descriptionEn),
         descriptionFr: copyValueToObjectIfDefined(args.data.descriptionFr),
+        colour: copyValueToObjectIfDefined(args.data.colour)
     };
 
     if (typeof args.data.organization !== "undefined"){
@@ -235,6 +248,12 @@ async function modifyTeam(_, args, context, info){
         updateTeamData.owner = {
             connect: updateOwnerData
         };
+    }
+
+    if ( propertyExists(args, "avatar")){
+        await processUpload(args.avatar).then((url) => {
+            updateTeamData.avatar = url;
+        });
     }
 
     return await context.prisma.mutation.updateTeam({
