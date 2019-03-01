@@ -38,7 +38,7 @@ async function createProfile(_, args, context, info){
 
 
     if (propertyExists(args, "team")){
-        const teamInfo = await context.prisma.query.team({id: args.team.id}, "{organization{id}}");
+        const teamInfo = await context.prisma.query.team({where:{id: args.team.id}}, "{organization{id}}");
 
         createProfileData.team = {
                 connect: {
@@ -106,7 +106,7 @@ async function modifyProfile(_, args, context, info){
     if (changeTeams){
         await changeOwnedTeamsRoot(args.gcID, args.data.team.id, context);
     }
-    
+
     return await context.prisma.mutation.updateProfile({
         where:{
         gcID: args.gcID

@@ -1,10 +1,18 @@
 const mutations = require("../src/resolvers/Mutations");
-const { getPrismaTestInstance } = require("./init/prismaTestInstance");
+const { getContext, cleanUp } = require("./init/helper");
 
 const parent = {};
-const ctx = {
-    prisma: getPrismaTestInstance()
-};
+var ctx = {};
+
+beforeAll(async (done) => {
+    ctx = await getContext();
+    done();
+});
+
+afterAll(async (done) => {
+    await cleanUp(ctx);
+    done();
+});
 
 
 test("create a basic profile with mandatory fields",  async() => {
@@ -19,8 +27,6 @@ test("create a basic profile with mandatory fields",  async() => {
     expect(
         await mutations.createProfile(parent, args, ctx, info),
     ).toMatchSnapshot();
-
-    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"09ujilkjlkiid"}});
 });
 
 test("fail profile creation due to missing gcID", async() => {
@@ -30,11 +36,16 @@ test("fail profile creation due to missing gcID", async() => {
     };
      
     const info = "{ gcID, name, email }";
-    
-    await expect(
-        mutations.createProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
 
+    try{
+        await mutations.createProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Field value.gcID of required type ID! was not provided")
+            })  
+        );
+    }
 });
 
 test("fail profile creation due to missing name", async() => {
@@ -46,9 +57,15 @@ test("fail profile creation due to missing name", async() => {
                
         const info = "{ gcID, name, email }";
 
-    await expect(
-        mutations.createProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+        try{
+            await mutations.createProfile(parent, args, ctx, info);
+        } catch(e){
+            expect(e).toEqual(
+                expect.objectContaining({
+                    message: expect.stringContaining("Field value.name of required type String! was not provided")
+                })  
+            );
+        }
 });
 
 test("fail profile creation due to missing email", async() => {
@@ -60,8 +77,14 @@ test("fail profile creation due to missing email", async() => {
         
         const info = "{ gcID, name, email }";
         
-    await expect(
-        mutations.createProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+        try{
+            await mutations.createProfile(parent, args, ctx, info);
+        } catch(e){
+            expect(e).toEqual(
+                expect.objectContaining({
+                    message: expect.stringContaining("Field value.email of required type String! was not provided")
+                })  
+            );
+        }
 
 });

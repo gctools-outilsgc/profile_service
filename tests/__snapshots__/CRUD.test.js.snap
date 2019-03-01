@@ -66,15 +66,9 @@ Object {
 
 exports[`Delete Organization 1`] = `true`;
 
-exports[`Delete Organization that does not exist 1`] = `"Organization does not exist"`;
-
 exports[`Delete Profile 1`] = `true`;
 
-exports[`Delete Profile that doesn't exist 1`] = `"Profile does not exist"`;
-
 exports[`Delete Team 1`] = `true`;
-
-exports[`Delete Team that doesn't exist 1`] = `"Team does not exist"`;
 
 exports[`Modify Organization 1`] = `
 Object {
