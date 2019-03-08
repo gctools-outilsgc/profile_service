@@ -1,4 +1,4 @@
-const {propertyRequired} = require("./objectHelper");
+const {propertyExists} = require("./objectHelper");
 const { UserInputError } = require("apollo-server");
 
 const throwExceptionIfProfileIsNotDefined = (profile) => {
@@ -8,10 +8,14 @@ const throwExceptionIfProfileIsNotDefined = (profile) => {
 };
 
 async function getTeams(userID, context){
-  return await context.prisma.query.profile({where:{gcID: userID}}, "{ownerOfTeams{id, members{gcID}}}");
+  const result = await context.prisma.query.profile({where:{gcID: userID}}, "{ownerOfTeams{id,nameEn, members{gcID}}}");
+  return result;
 }
 
+
+
 async function changeTeamOrg(teams, context, newOrgID){
+
   for (let t = 0; t < teams.ownerOfTeams.length; t++){
     await context.prisma.mutation.updateTeam(
       {
@@ -26,36 +30,33 @@ async function changeTeamOrg(teams, context, newOrgID){
           }
         }
       });
+
+      if(teams.ownerOfTeams[t].members.length > 0){
+        for(let m=0; m<teams.ownerOfTeams[t].members.length; m++){
+          const childTeams = await getTeams(teams.ownerOfTeams[t].members[m].gcID, context);
+          if (typeof childTeams !== "undefined" && childTeams !== null){
+            changeTeamOrg(childTeams, context, newOrgID);
+          }
+        }   
+      } 
   }
 }
 
 async function changeOwnedTeamsRoot(userID, newTeamID, context){
   const newOrgID = await context.prisma.query.team({where:{id: newTeamID}}, "{organization{id}}");
   const oldOrgID = await context.prisma.query.profile({where:{gcID: userID}}, "{team{organization{id}}}");
+  
 
-  if (newOrgID.organization.id === oldOrgID.team.organization.id){
-    return;
+
+  if (oldOrgID.team !== null){
+    if (newOrgID.organization.id === oldOrgID.team.organization.id){
+      return;
+    }
   }
 
+  
   const teams = await getTeams(userID, context);
-  const members = teams.ownerOfTeams.members;
-
-
-  for (let t = 0; t < teams.ownerOfTeams.length; t++){
-    await context.prisma.mutation.updateTeam(
-      {
-        where: {
-          id: teams.ownerOfTeams[0].id
-        },
-        data: {
-          organization:{
-            connect:{
-              id: newOrgID.organization.id
-           }
-          }
-        }
-      });
-  }
+  await changeTeamOrg(teams, context, newOrgID);
   
 }
 
