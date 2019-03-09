@@ -81,7 +81,9 @@ type Team {
   nameEn: String!
   nameFr: String!
   descriptionEn: String
-  descriptionFr: String
+  descriptionFr: String,
+  colour: String,
+  avatar: String,
   organization: Organization!
   owner: Profile
   members: [Profile!]!
@@ -144,7 +146,9 @@ input ModifyTeamInput {
   nameEn: String
   nameFr: String
   descriptionEn: String
-  descriptionFr: String
+  descriptionFr: String,
+  colour: String,
+  avatar: Upload,
   organization: OrganizationInput
   owner: OwnerInput
 }

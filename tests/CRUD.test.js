@@ -61,12 +61,15 @@ test("Create a Team", async() => {
     var args = {
         nameEn: "Team Name EN",
         nameFr: "Team Name FR",
+        descriptionEn: "Team description English",
+        descriptionFr: "Team description French",
+        colour: "#03cdf",
         organization: {id: organizationID[0].id},
         owner: {gcID: "0834haf"}
     };
 
 
-    const info = "{nameEn, nameFr, organization{nameEn}, owner{gcID, name, email}}";
+    const info = "{nameEn, nameFr, descriptionEn, descriptionFr, colour, organization{nameEn}, owner{gcID, name, email}}";
 
     expect(
         await mutations.createTeam(parent, args, ctx, info)
@@ -150,12 +153,15 @@ test("Modify Team", async() => {
         data:{
             nameEn: "Team Name EN - Mod 1",
             nameFr: "Team Name FR - Mod 1",
+            descriptionEn: "English Description modified",
+            descriptionFr: "French Description modified",
+            colour: "9988e",
             organization: {id: organizationID.id},
             owner: {gcID: "9283982"}
         }
     };
 
-    const info = "{nameEn, nameFr, organization{nameEn}, owner{gcID, name, email}}";
+    const info = "{nameEn, nameFr, descriptionEn, descriptionFr, colour, organization{nameEn}, owner{gcID, name, email}}";
     expect(
         await mutations.modifyTeam(parent, args, ctx, info)
     ).toMatchSnapshot();
