@@ -28,6 +28,8 @@ type Team {
   nameFr: String!
   descriptionEn: String
   descriptionFr: String
+  colour: String,
+  avatar: String,
   organization: Organization! @relation(name:"Teams")
   owner: Profile @relation(name:"OwnerOfTeam")
   members: [Profile!]! @relation(name:"TeamMembers")

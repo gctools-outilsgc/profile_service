@@ -11,6 +11,9 @@ Object {
 
 exports[`Create a Team 1`] = `
 Object {
+  "colour": "#03cdf",
+  "descriptionEn": "Team description English",
+  "descriptionFr": "Team description French",
   "nameEn": "Team Name EN",
   "nameFr": "Team Name FR",
   "organization": Object {
@@ -136,6 +139,9 @@ Object {
 
 exports[`Modify Team 1`] = `
 Object {
+  "colour": "9988e",
+  "descriptionEn": "English Description modified",
+  "descriptionFr": "French Description modified",
   "nameEn": "Team Name EN - Mod 1",
   "nameFr": "Team Name FR - Mod 1",
   "organization": Object {

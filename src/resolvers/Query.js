@@ -64,8 +64,10 @@ function teams(_, args, context, info) {
     {
       where:{
         id: copyValueToObjectIfDefined(args.id),
-        nameEn: copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr),
+        // eslint-disable-next-line camelcase
+        nameEn_contains: copyValueToObjectIfDefined(args.nameEn),
+        // eslint-disable-next-line camelcase
+        nameFr_contains: copyValueToObjectIfDefined(args.nameFr),
         owner: copyValueToObjectIfDefined(ownerOfTeam)
       },
       skip: copyValueToObjectIfDefined(args.skip),
@@ -80,10 +82,14 @@ function organizations(_, args, context, info){
     {
       where:{
         id: copyValueToObjectIfDefined(args.id),
-        nameEn:copyValueToObjectIfDefined(args.nameEn),
-        nameFr: copyValueToObjectIfDefined(args.nameFr),
-        acronymEn: copyValueToObjectIfDefined(args.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.acronymFr),
+        // eslint-disable-next-line camelcase
+        nameEn_contains:copyValueToObjectIfDefined(args.nameEn),
+        // eslint-disable-next-line camelcase
+        nameFr_contains: copyValueToObjectIfDefined(args.nameFr),
+        // eslint-disable-next-line camelcase
+        acronymEn_contains: copyValueToObjectIfDefined(args.acronymEn),
+        // eslint-disable-next-line camelcase
+        acronymFr_contains: copyValueToObjectIfDefined(args.acronymFr),
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),
