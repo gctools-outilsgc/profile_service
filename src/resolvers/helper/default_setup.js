@@ -32,6 +32,8 @@ async function createDefaultOrg() {
 }
 
 async function getDefaults(){
+
+    // Set defaults on context 
     var org = await querys.organizations({},{nameEn:"Default Organization", nameFr:"Organization par défaut"}, ctx, "{id}");
     if (org.length < 1 ){
         defaultData.org = await createDefaultOrg();

@@ -1,6 +1,7 @@
 const { Prisma } = require("prisma-binding");
 const { getDefaults } = require("../../src/resolvers/helper/default_setup");
 
+// Set prisma object on context
 function setPrisma(context){
 
   context.prisma = new Prisma({
@@ -10,7 +11,7 @@ function setPrisma(context){
     return context;
 }
 
-
+// Setup of context object
 const getContext = async () => {
   var ctx = {};
   ctx.prisma = await new Prisma({
@@ -22,6 +23,7 @@ const getContext = async () => {
   return ctx;
 };
 
+// Wipe the database clean
 async function cleanUp(context){
   await context.prisma.mutation.deleteManyAddresses();
   await context.prisma.mutation.deleteManyProfiles();

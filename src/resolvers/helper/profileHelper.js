@@ -13,7 +13,7 @@ async function getTeams(userID, context){
 }
 
 
-
+// Recursive funtion to cascade and move organizations
 async function changeTeamOrg(teams, context, newOrgID){
 
   for (let t = 0; t < teams.ownerOfTeams.length; t++){
