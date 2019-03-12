@@ -134,21 +134,6 @@ Object {
 }
 `;
 
-exports[`Modify Profile without existing Address 2`] = `
-Object {
-  "address": Object {
-    "city": "Moncton",
-    "country": "Canada",
-    "postalCode": "F3S 6D3",
-    "province": "New Brunswick",
-    "streetAddress": "322 Princess Way",
-  },
-  "email": "cameraman@somewhere.com",
-  "gcID": "3948371",
-  "name": "Camera Man",
-}
-`;
-
 exports[`Modify Team 1`] = `
 Object {
   "nameEn": "Team Name EN - Mod 1",
@@ -194,91 +179,6 @@ Array [
 `;
 
 exports[`Query Profiles 1`] = `
-Object {
-  "data": Object {
-    "profiles": Array [
-      Object {
-        "address": null,
-        "email": "supervisor@somewhere.com",
-        "gcID": "0834haf",
-        "mobilePhone": null,
-        "name": "Supervisor Test",
-        "officePhone": null,
-        "team": null,
-        "titleEn": null,
-        "titleFr": null,
-      },
-      Object {
-        "address": Object {
-          "city": "Vallhala",
-          "country": "Greece",
-          "postalCode": "Z9P 8A0",
-          "province": "Crete",
-          "streetAddress": "101 Kratos",
-        },
-        "email": "kratos@somewhere.com",
-        "gcID": "kjsdf09iklasd",
-        "mobilePhone": "819-234-6345",
-        "name": "Kratos",
-        "officePhone": "(613) 295-9093",
-        "team": Object {
-          "members": Array [
-            Object {
-              "email": "kratos@somewhere.com",
-              "gcID": "kjsdf09iklasd",
-              "name": "Kratos",
-            },
-          ],
-          "nameEn": "Team Name EN - Mod 1",
-          "nameFr": "Team Name FR - Mod 1",
-          "organization": Object {
-            "acronymEn": "OTEN 2",
-            "acronymFr": "OTFR 2",
-            "nameEn": "Organization Test EN 2",
-            "nameFr": "Organization Test FR 2",
-          },
-          "owner": Object {
-            "email": "supervisor2@somewhere.com",
-            "name": "Supervisor Test 2",
-          },
-        },
-        "titleEn": "God of War",
-        "titleFr": "Dieu de la guerre",
-      },
-      Object {
-        "address": null,
-        "email": "supervisor2@somewhere.com",
-        "gcID": "9283982",
-        "mobilePhone": null,
-        "name": "Supervisor Test 2",
-        "officePhone": null,
-        "team": null,
-        "titleEn": null,
-        "titleFr": null,
-      },
-      Object {
-        "address": Object {
-          "city": "Moncton",
-          "country": "Canada",
-          "postalCode": "F3S 6D3",
-          "province": "New Brunswick",
-          "streetAddress": "322 Princess Way",
-        },
-        "email": "cameraman@somewhere.com",
-        "gcID": "3948371",
-        "mobilePhone": null,
-        "name": "Camera Man",
-        "officePhone": null,
-        "team": null,
-        "titleEn": null,
-        "titleFr": null,
-      },
-    ],
-  },
-}
-`;
-
-exports[`Query Profiles 2`] = `
 Object {
   "data": Object {
     "profiles": Array [

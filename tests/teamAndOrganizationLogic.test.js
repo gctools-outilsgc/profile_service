@@ -11,15 +11,12 @@ const { graphql } = require("graphql");
 const typeDefs = fs.readFileSync("src/schema.graphql", "utf8");
 const schema = makeExecutableSchema({ typeDefs });
 
+var prismaContext={};
 const mocks = {
     Query: () => ({
-      profiles: (a, b, c, d) => querys
-        .profiles(
-          a,
-          b,
-          Object.assign({}, c, {prisma: setPrisma()}),
-          d
-        )
+      profiles: (a, b, c, d) => {
+          return querys.profiles(a, b, Object.assign({}, c, setPrisma(prismaContext)), d);
+      }
     })
   };
   
@@ -29,7 +26,7 @@ const mocks = {
 const createProfiles = (profiles) => {
 
     const promises = [];
-    getContext().then((ctx) => {
+    return getContext().then((ctx) => {
         profiles.forEach((profile) => {	
             promises.push(new Promise((resolve) => {	
                 mutations.createProfile({}, profile, ctx, "{gcID}")	
@@ -40,16 +37,16 @@ const createProfiles = (profiles) => {
                 });	
             }));	
         });	
-    });
 
-    return Promise.all(promises);	
+    return Promise.all(promises);
+
+    });	
 };
-
 
 const createOrganizations = (organizations) => {
     
     const promises = [];
-    getContext().then((ctx) => {
+    return getContext().then((ctx) => {
         organizations.forEach((org) => {	
             promises.push(new Promise((resolve) => {	
             mutations.createOrganization({}, org, ctx, "{id}")	
@@ -60,14 +57,13 @@ const createOrganizations = (organizations) => {
                 });	
             }));	
         });	
-        
+    return Promise.all(promises); 
     });	
-    return Promise.all(promises);	
 };
 
 const createTeams = (teams) => {	
     const promises = [];	
-    getContext().then((ctx) => {
+    return getContext().then((ctx) => {
         teams.forEach((team, idx) => {	
             promises.push(new Promise((resolve) => {	
               mutations.createTeam({}, team, ctx, "{id}")	
@@ -81,9 +77,8 @@ const createTeams = (teams) => {
                 });	
             }));	
           });	
-          
+    return Promise.all(promises);          
     });
-    return Promise.all(promises);
 };
 
 const joinTeam = (profile, team) => {	
@@ -109,55 +104,13 @@ const joinTeam = (profile, team) => {
 	
 };
 
-describe("User being created", () => {
-    const orgs = [
-        {nameEn:"Org 1", nameFr:"Org 1", acronymEn: "O1", acronymFr:"O1" }
-    ];
-    const teams = [
-        {nameEn:"Team 1", nameFr:"Equipe 1", owner: {}, organization:{}}
-    ];
-    const profiles = [
-        { gcID:"10", name:"Bryan Robitaille", email:"bryan.robitaille@sslllddff.com"}
-    ];
 
-    beforeAll((done) => {
-        createProfiles(profiles).then(() => {
-            createOrganizations(orgs).then(([{id: orgID}]) => {
-                teams[0].organization.id = orgID;
-                teams[0].owner.gcID = profiles[0].gcID;
-                createTeams(teams).then(() => {
-                    done();
-                });
-            });
-        });
-    });
-
-    it("Profile's default team should inherit department", async() => {
-        const query = "query createTest { profiles(gcID: \"10\") { team { organization { nameEn } } }";	
-        const data = await graphql(schema, query);
-        expect(data.team.organization.nameEn).toEqual(orgs[0].nameEn);
-
-    });
-
-    afterAll((done) => {
-        getContext().then((ctx) => {
-          cleanUp(ctx);  
-        }).then(() => {
-            done();
-        });
-    });
-
-
-
-});
-
-/*
-
+describe("Org chart Logic", () => {
     const orgs = [
         {nameEn:"Org 1", nameFr:"Org 1", acronymEn: "O1", acronymFr:"O1" },
         {nameEn:"Org 2", nameFr:"Org 2", acronymEn: "O2", acronymFr:"O2" }
     ];
-
+    
     const profiles = [
         { gcID:"10", name:"Bryan Robitaille", email:"bryan.robitaille@sslllddff.com"},
         { gcID:"20", name:"Super Steph", email:"super.steph@sslllddff.com"},
@@ -166,55 +119,92 @@ describe("User being created", () => {
         { gcID:"50", name:"Super Nick", email:"super.nick@sslllddff.com"},
         { gcID:"60", name:"Super Rajeev", email:"super.rajeev@sslllddff.com"},
     ];
-
+    
     const teams = [
-        {nameEn:"Team 1", nameFr:"Equipe 1", owner: {gcID:"10"}, organization:{id: context.org[0].id}},
-        {nameEn:"Team 2", nameFr:"Equipe 2", owner: {gcID:"20"}, organization:{id: context.org[0].id}},
-        {nameEn:"Team 3", nameFr:"Equipe 3", owner: {gcID:"30"}, organization:{id: context.org[0].id}},
-        {nameEn:"Team 4", nameFr:"Equipe 4", owner: {gcID:"40"}, organization:{id: context.org[0].id}},
-        {nameEn:"Team 5", nameFr:"Equipe 5", owner: {gcID:"50"}, organization:{id: context.org[0].id}},
-        {nameEn:"Team 6", nameFr:"Equipe 6", owner: {gcID:"60"}, organization:{id: context.org[1].id}},
+        {nameEn:"Team 1", nameFr:"Equipe 1", owner: {}, organization:{}},
+        {nameEn:"Team 2", nameFr:"Equipe 2", owner: {}, organization:{}},
+        {nameEn:"Team 3", nameFr:"Equipe 3", owner: {}, organization:{}},
+        {nameEn:"Team 4", nameFr:"Equipe 4", owner: {}, organization:{}},
+        {nameEn:"Team 5", nameFr:"Equipe 5", owner: {}, organization:{}},
+        {nameEn:"Team 6", nameFr:"Equipe 6", owner: {}, organization:{}},
     ];
-
-    // Build org structure
+    
+    // Org structure
     // Org 1
     //      team1 -> team 2
     //            -> team 3 -> team 4
     //                      -> team 5
     // Org 2 
     //      team 6
-
-    const orgStructure = [
-        {gcID:"20", data: {team: {id: context.team[0].id}}},
-        {gcID:"30", data: {team: {id: context.team[0].id}}},
-        {gcID:"40", data: {team: {id: context.team[2].id}}},
-        {gcID:"50", data: {team: {id: context.team[2].id}}}
-    ];
+    
 
 
+    beforeAll((done) => {
 
-test("Team moving organizations propagates to all child teams", (done) => {
-    console.log("Start of test for child nodes");
-    return mutations.modifyProfile(parent, 
-        {
-            gcID: "10",
-            data: {
-                team:{
-                    id: ctx.team[5].id
+        createProfiles(profiles).then(() => {
+            createOrganizations(orgs).then((orgIDs) => {
+                for (let x = 0; x < teams.length; x += 1) {	
+                    const team = teams[x];
+                    if (x <=4){
+                        team.organization.id = orgIDs[0].id;
+                    } else {
+                        team.organization.id = orgIDs[1].id;
+                    }	
+	
+                    team.owner.gcID = profiles[x].gcID;	
                 }
-            }
-        }, ctx, "{gcID}"
-    ).then((result) => {
-        querys.teams(parent, {id: ctx.team[4].id}, ctx, "{organization{id}}");
-    }).then((queryResult) => {
-        expect(queryResult[0].organization.id).toEqual(ctx.org[1].id);
-        done();
-    }).catch((e) => {
-        console.log(e);
-        done();
+                createTeams(teams).then((data) => {	
+                    const promises = [];
+                  
+                    promises.push(joinTeam(profiles[1], {id: data[0][1]}));	
+                    promises.push(joinTeam(profiles[2], {id: data[0][1]}));
+                    promises.push(joinTeam(profiles[3], {id: data[2][1]}));	
+                    promises.push(joinTeam(profiles[4], {id: data[2][1]}));		
+                    
+                    Promise.all(promises).then(() => {	
+                        done();	
+                    });		
+                });
+            });
+        });   
     });
 
-});
 
+    it("Profile's default team should inherit department", async() => {
+
+        const query = "query orgTest { profiles(gcID: \"20\") { gcID, ownerOfTeams { organization { nameEn } } } }";	
+        const queryData = await graphql(schema, query);
+        expect(queryData.data.profiles[0].ownerOfTeams[0].organization.nameEn).toEqual(orgs[0].nameEn); 
+
+    });
+
+    it("Profile's child teams should follow to new Organization", async() => {
+
+
+        const ctx = await getContext();
+
+        const orgData = await querys.organizations({}, {nameEn:"Org 2"}, ctx, "{teams {id, nameEn } }");
+
+        var result = await mutations.modifyProfile({},{gcID:"10", data:{ team:{ id: orgData[0].teams[0].id}}} , ctx, "{ team {id, organization { nameEn } } }");
+
+        const query = "query orgTest { profiles(gcID: \"50\") { gcID, team { organization { nameEn } } } }";
+        const queryData =await graphql(schema, query);            
+
+        expect(queryData.data.profiles[0].team.organization.nameEn).toEqual("Org 2");         
+
+    
+
+    });
+
+/*
+    afterAll((done) => {
+        getContext().then((ctx) => {
+          cleanUp(ctx);  
+        }).then(() => {
+            done();
+        });
+
+    });
 */
 
+});

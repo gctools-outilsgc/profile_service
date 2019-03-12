@@ -20,7 +20,7 @@ async function changeTeamOrg(teams, context, newOrgID){
     await context.prisma.mutation.updateTeam(
       {
         where: {
-          id: teams.ownerOfTeams[0].id
+          id: teams.ownerOfTeams[t].id
         },
         data: {
           organization:{
@@ -31,14 +31,14 @@ async function changeTeamOrg(teams, context, newOrgID){
         }
       });
 
-      if(teams.ownerOfTeams[t].members.length > 0){
-        for(let m=0; m<teams.ownerOfTeams[t].members.length; m++){
-          const childTeams = await getTeams(teams.ownerOfTeams[t].members[m].gcID, context);
-          if (typeof childTeams !== "undefined" && childTeams !== null){
-            changeTeamOrg(childTeams, context, newOrgID);
-          }
-        }   
-      } 
+    if(teams.ownerOfTeams[t].members.length > 0){
+      for(let m=0; m<teams.ownerOfTeams[t].members.length; m++){
+        const childTeams = await getTeams(teams.ownerOfTeams[t].members[m].gcID, context);
+        if (typeof childTeams !== "undefined" && childTeams !== null){
+          await changeTeamOrg(childTeams, context, newOrgID);
+        }
+      }   
+    } 
   }
 }
 

@@ -19,10 +19,10 @@ async function createDefaultOrg() {
     // Create default organization
 
     const args = {
-            nameEn: "",
-            nameFr: "",
-            acronymEn: "",
-            acronymFr: "",
+            nameEn: "Default Organization",
+            nameFr: "Organization par défaut",
+            acronymEn: "DO",
+            acronymFr: "OPD",
         };
 
     let org = await mutations.createOrganization({}, args, ctx, "{id}");
@@ -32,12 +32,12 @@ async function createDefaultOrg() {
 }
 
 async function getDefaults(){
-    var org = await querys.organizations({},{nameEn:"", nameFr:""}, ctx, "{id}");
-    if (org.length === 0 ){
-        org = await createDefaultOrg();
-    }
-
-    defaultData.org = org;
+    var org = await querys.organizations({},{nameEn:"Default Organization", nameFr:"Organization par défaut"}, ctx, "{id}");
+    if (org.length < 1 ){
+        defaultData.org = await createDefaultOrg();
+    } else {
+         defaultData.org = org[0];
+    }   
 
     return defaultData;
 

@@ -5,7 +5,7 @@ const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 
 async function createProfile(_, args, context, info){
-    var createProfileData = {
+        var createProfileData = {
         gcID: args.gcID,
         name: args.name,
         email: args.email,
@@ -15,8 +15,8 @@ async function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr),
         ownerOfTeams:{
             create:{
-                nameEn:"",
-                nameFr:"",
+                nameEn:"User Default Team",
+                nameFr:"Équipe par défaut d'utilisateur",
                 organization: {connect: {id: context.defaults.org.id}}              
             }
         }
@@ -144,8 +144,8 @@ function createOrganization(_, args, context, info){
         acronymFr: args.acronymFr,
         teams:{
             create:{
-                nameEn: "",
-                nameFr: "",
+                nameEn: "Organization Default Team",
+                nameFr: "Équipe par defaut d'organization",
             }
         }  
         }        
