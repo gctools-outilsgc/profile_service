@@ -1,18 +1,25 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined, getSupervisorFromArgs} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, changeOwnedTeamsRoot} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 
 async function createProfile(_, args, context, info){
-    var createProfileData = {
+        var createProfileData = {
         gcID: args.gcID,
         name: args.name,
         email: args.email,
         mobilePhone: copyValueToObjectIfDefined(args.mobilePhone),
         officePhone: copyValueToObjectIfDefined(args.officePhone),
         titleEn: copyValueToObjectIfDefined(args.titleEn),
-        titleFr: copyValueToObjectIfDefined(args.titleFr)
+        titleFr: copyValueToObjectIfDefined(args.titleFr),
+        ownerOfTeams:{
+            create:{
+                nameEn:"User Default Team",
+                nameFr:"Équipe par défaut d'utilisateur",
+                organization: {connect: {id: context.defaults.org.id}}              
+            }
+        }
     };
 
     if ( propertyExists(args, "avatar")){
@@ -30,23 +37,18 @@ async function createProfile(_, args, context, info){
 
 
 
-    if (propertyExists(args, "supervisor")) {
-        var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.supervisor.email)
-        };
-
-        createProfileData.supervisor = {
-                connect: updateSupervisorData
-        };
-    }
-
     if (propertyExists(args, "team")){
+        const teamInfo = await context.prisma.query.team({where:{id: args.team.id}}, "{organization{id}}");
+
         createProfileData.team = {
                 connect: {
                     id: args.team.id
                 }
         };
+
+        // Make sure the new default team is created in the same organization the user belongs to.
+
+        createProfileData.ownerOfTeams.create.organization.connect.id = teamInfo.organization.id;
     }
 
 
@@ -56,6 +58,8 @@ async function createProfile(_, args, context, info){
 }
 
 async function modifyProfile(_, args, context, info){
+
+    var changeTeams = false;
     // eslint-disable-next-line new-cap
     const currentProfile = await context.prisma.query.profile(
         {
@@ -88,23 +92,19 @@ async function modifyProfile(_, args, context, info){
     }
 
 
-    if (propertyExists(args.data, "supervisor")) {
-        var updateSupervisorData = {
-            gcID: copyValueToObjectIfDefined(args.data.supervisor.gcID),
-            email: copyValueToObjectIfDefined(args.data.supervisor.email)
-        };
-
-        updateProfileData.supervisor = {
-                connect: updateSupervisorData
-        };
-    }
-
     if (propertyExists(args.data, "team")){
         updateProfileData.team = {
                 connect: {
                     id: args.data.team.id
                 }
         };
+
+        changeTeams = true;
+
+    }
+
+    if (changeTeams){
+        await changeOwnedTeamsRoot(args.gcID, args.data.team.id, context);
     }
 
     return await context.prisma.mutation.updateProfile({
@@ -113,6 +113,8 @@ async function modifyProfile(_, args, context, info){
         },
         data: updateProfileData
     }, info);
+
+
 }
 
 async function deleteProfile(_, args, context){
@@ -142,8 +144,8 @@ function createOrganization(_, args, context, info){
         acronymFr: args.acronymFr,
         teams:{
             create:{
-                nameEn: "",
-                nameFr: "",
+                nameEn: "Organization Default Team",
+                nameFr: "Équipe par defaut d'organization",
             }
         }  
         }        

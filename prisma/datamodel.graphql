@@ -8,7 +8,6 @@ type Profile {
   address: Address @relation(name:"Resident", onDelete: CASCADE)
   titleEn: String
   titleFr: String
-  supervisor: Profile @relation(name:"Employees")
   team: Team @relation(name:"TeamMembers")
   ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
 }

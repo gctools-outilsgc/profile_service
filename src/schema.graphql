@@ -34,7 +34,7 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, supervisor: SupervisorInput, team: TeamInput): Profile!
+  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, team: TeamInput): Profile!
   modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile!
   deleteProfile(gcID: ID!): Boolean!
   createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
@@ -61,7 +61,6 @@ type Profile {
   address: Address
   titleEn: String
   titleFr: String
-  supervisor: Profile
   team: Team
   ownerOfTeams: [Team!]!
 }
@@ -96,11 +95,6 @@ type Organization {
   acronymEn: String!
   acronymFr: String!
   teams: [Team!]!
-}
-
-input SupervisorInput {
-  gcID: ID,
-  email: Email
 }
 
 input TeamOwnerInput {
@@ -138,7 +132,6 @@ input ModifyProfileInput {
   address: AddressInput
   titleEn: String
   titleFr: String
-  supervisor: SupervisorInput
   team: TeamInput
 }
 

@@ -64,7 +64,6 @@ profile
     }
     titleEn,
     titleFr,
-    supervisor,
     org 
 }
 ```

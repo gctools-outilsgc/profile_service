@@ -1,12 +1,12 @@
 const mutations = require("../src/resolvers/Mutations");
-const { getPrismaTestInstance } = require("./init/prismaTestInstance");
+const { getContext, cleanUp } = require("./init/helper");
+
 
 const parent = {};
-const ctx = {
-    prisma: getPrismaTestInstance()
-};
+var ctx = {};
 
-beforeAll(async() => {
+beforeAll(async(done) => {
+    ctx = await getContext();
     // Create base profile
         const args = {
                 gcID: "asdf123456",
@@ -16,11 +16,13 @@ beforeAll(async() => {
 
         const info = "{ gcID, name, email }";
         await mutations.createProfile(parent, args, ctx, info);    
+        done();
 
 });
 
-afterAll(async() => {
-    await getPrismaTestInstance().mutation.deleteProfile({where:{gcID:"asdf123456"}});
+afterAll(async(done) => {
+    await cleanUp(ctx);
+    done();
 });
 
 test("Address field valdiation - streetAddress", async() => {

@@ -17,7 +17,7 @@ async function getTokenOwner(tokenData){
           where: {
               gcID: tokenData.sub
           }            
-      },"{gcID, name, email, supervisor{gcID}, team{id, organization{id}}}");
+      },"{gcID, name, email, team{id, owner{gcID}, organization{id}}}");
   } catch(e){
     throw new Error("Profile does not exist");
   }

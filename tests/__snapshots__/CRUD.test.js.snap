@@ -41,11 +41,6 @@ Object {
   "mobilePhone": "613-999-0897",
   "name": "Awesome User",
   "officePhone": "(879) 234-2341",
-  "supervisor": Object {
-    "email": "supervisor@somewhere.com",
-    "gcID": "0834haf",
-    "name": "Supervisor Test",
-  },
   "team": Object {
     "members": Array [
       Object {
@@ -74,15 +69,9 @@ Object {
 
 exports[`Delete Organization 1`] = `true`;
 
-exports[`Delete Organization that does not exist 1`] = `"Organization does not exist"`;
-
 exports[`Delete Profile 1`] = `true`;
 
-exports[`Delete Profile that doesn't exist 1`] = `"Profile does not exist"`;
-
 exports[`Delete Team 1`] = `true`;
-
-exports[`Delete Team that doesn't exist 1`] = `"Team does not exist"`;
 
 exports[`Modify Organization 1`] = `
 Object {
@@ -107,11 +96,6 @@ Object {
   "mobilePhone": "819-234-6345",
   "name": "Kratos",
   "officePhone": "(613) 295-9093",
-  "supervisor": Object {
-    "email": "supervisor2@somewhere.com",
-    "gcID": "9283982",
-    "name": "Supervisor Test 2",
-  },
   "team": Object {
     "members": Array [
       Object {
@@ -211,7 +195,6 @@ Object {
         "mobilePhone": null,
         "name": "Supervisor Test",
         "officePhone": null,
-        "supervisor": null,
         "team": null,
         "titleEn": null,
         "titleFr": null,
@@ -229,11 +212,6 @@ Object {
         "mobilePhone": "819-234-6345",
         "name": "Kratos",
         "officePhone": "(613) 295-9093",
-        "supervisor": Object {
-          "email": "supervisor2@somewhere.com",
-          "gcID": "9283982",
-          "name": "Supervisor Test 2",
-        },
         "team": Object {
           "members": Array [
             Object {
@@ -265,7 +243,6 @@ Object {
         "mobilePhone": null,
         "name": "Supervisor Test 2",
         "officePhone": null,
-        "supervisor": null,
         "team": null,
         "titleEn": null,
         "titleFr": null,
@@ -283,7 +260,6 @@ Object {
         "mobilePhone": null,
         "name": "Camera Man",
         "officePhone": null,
-        "supervisor": null,
         "team": null,
         "titleEn": null,
         "titleFr": null,
