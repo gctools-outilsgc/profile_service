@@ -32,6 +32,7 @@ const createProfiles = (profiles) => {
                 mutations.createProfile({}, profile, ctx, "{gcID}")	
                 .then(resolve)
                 .catch((e) => {	
+                    // eslint-disable-next-line no-console
                     console.error(e);	
                     throw(e);	
                 });	
@@ -52,8 +53,9 @@ const createOrganizations = (organizations) => {
             mutations.createOrganization({}, org, ctx, "{id}")	
                 .then(resolve)	
                 .catch((e) => {	
-                console.error(e);	
-                throw(e);	
+                    // eslint-disable-next-line no-console
+                    console.error(e);	
+                    throw(e);	
                 });	
             }));	
         });	
@@ -71,9 +73,10 @@ const createTeams = (teams) => {
                   team.id = id;	
                   resolve([idx, id]);	
                 })	
-                .catch((e) => {	
-                  console.error(e);	
-                  throw(e);	
+                .catch((e) => {
+                    // eslint-disable-next-line no-console	
+                    console.error(e);	
+                    throw(e);	
                 });	
             }));	
           });	
@@ -96,6 +99,7 @@ const joinTeam = (profile, team) => {
             }, ctx , "{gcID}")	
             .then(resolve)	
             .catch((e) => {	
+                // eslint-disable-next-line no-console
                 console.error(e);	
                 throw(e);	
             });	
