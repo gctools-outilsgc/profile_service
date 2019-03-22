@@ -200,7 +200,6 @@ describe("Org chart Logic", () => {
 
     });
 
-/*
     afterAll((done) => {
         getContext().then((ctx) => {
           cleanUp(ctx);  
@@ -209,6 +208,5 @@ describe("Org chart Logic", () => {
         });
 
     });
-*/
 
 });
