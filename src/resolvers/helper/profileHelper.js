@@ -60,7 +60,23 @@ async function changeOwnedTeamsRoot(userID, newTeamID, context){
   
 }
 
+async function moveMembersToDefaultTeam(teamID, context){
+  const teamInfo = await context.prisma.query.team({where:{id: teamID}},"{members { gcID }, owner{gcID}}");
+  const defaultTeam = await context.prisma.query.teams({where:{owner:{gcID: teamInfo.owner.gcID}, nameEn: "User Default Team"}}, "{id}");
+
+  if (typeof defaultTeam[0] !== "undefined" && defaultTeam[0] !== null){
+    for (let x = 0; x < teamInfo.members.length; x++){
+      await context.prisma.mutation.updateTeam({where:{id: defaultTeam[0].id}, data:{members:{connect:{gcID: teamInfo.members[x].gcID}}}});
+    }
+
+  }
+
+  
+
+}
+
 module.exports ={
   throwExceptionIfProfileIsNotDefined,
-  changeOwnedTeamsRoot
+  changeOwnedTeamsRoot,
+  moveMembersToDefaultTeam
 };
