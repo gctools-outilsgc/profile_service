@@ -273,8 +273,6 @@ async function deleteTeam(_, args, context){
         try {
 
             await moveMembersToDefaultTeam(args.id, context);
-
-
             await context.prisma.mutation.deleteTeam({
                 where:{
                     id: args.id

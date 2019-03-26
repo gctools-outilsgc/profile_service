@@ -61,6 +61,9 @@ async function changeOwnedTeamsRoot(userID, newTeamID, context){
 }
 
 async function moveMembersToDefaultTeam(teamID, context){
+
+  //TODO: Add error handling to send errors to MQ
+  
   const teamInfo = await context.prisma.query.team({where:{id: teamID}},"{members { gcID }, owner{gcID}}");
   const defaultTeam = await context.prisma.query.teams({where:{owner:{gcID: teamInfo.owner.gcID}, nameEn: "User Default Team"}}, "{id}");
 
