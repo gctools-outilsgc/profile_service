@@ -13,7 +13,7 @@ async function getTeams(userID, context){
 }
 
 
-
+// Recursive funtion to cascade and move organizations
 async function changeTeamOrg(teams, context, newOrgID){
 
   for (let t = 0; t < teams.ownerOfTeams.length; t++){
@@ -60,7 +60,26 @@ async function changeOwnedTeamsRoot(userID, newTeamID, context){
   
 }
 
+async function moveMembersToDefaultTeam(teamID, context){
+
+  //TODO: Add error handling to send errors to MQ
+  
+  const teamInfo = await context.prisma.query.team({where:{id: teamID}},"{members { gcID }, owner{gcID}}");
+  const defaultTeam = await context.prisma.query.teams({where:{owner:{gcID: teamInfo.owner.gcID}, nameEn: "User Default Team"}}, "{id}");
+  // TODO: Batch into a single call instead of multiple.
+  if (typeof defaultTeam[0] !== "undefined" && defaultTeam[0] !== null){
+    for (let x = 0; x < teamInfo.members.length; x++){
+      await context.prisma.mutation.updateTeam({where:{id: defaultTeam[0].id}, data:{members:{connect:{gcID: teamInfo.members[x].gcID}}}});
+    }
+
+  }
+
+  
+
+}
+
 module.exports ={
   throwExceptionIfProfileIsNotDefined,
-  changeOwnedTeamsRoot
+  changeOwnedTeamsRoot,
+  moveMembersToDefaultTeam
 };

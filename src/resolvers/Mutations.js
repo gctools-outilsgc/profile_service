@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined, changeOwnedTeamsRoot} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
@@ -275,6 +275,8 @@ async function deleteTeam(_, args, context){
     // eslint-disable-next-line new-cap
     if (await context.prisma.exists.Team({id:args.id})){
         try {
+
+            await moveMembersToDefaultTeam(args.id, context);
             await context.prisma.mutation.deleteTeam({
                 where:{
                     id: args.id
