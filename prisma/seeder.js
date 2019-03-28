@@ -17,7 +17,7 @@ async function seed(){
     // Number of Organizations to Create
     const orgNumber = 3;
     // Number of Teams to create in each Organization
-    const teamNumber = 20;
+    const teamNumber = 500;
     // Number or profiles to create in each Organization
     const profileNumber = 4000;
 
