@@ -4,6 +4,7 @@ const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./help
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 
+
 async function createProfile(_, args, context, info){
         var createProfileData = {
         gcID: args.gcID,
@@ -15,10 +16,13 @@ async function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr),
         ownerOfTeams:{
             create:{
-                nameEn:"User Default Team",
-                nameFr:"Équipe par défaut d'utilisateur",
+                nameEn:"Default Team",
+                nameFr:"Équipe par défaut",
                 organization: {connect: {id: context.defaults.org.id}}              
             }
+        },
+        team:{ connect: {id: context.defaults.org.teams[0].id}
+
         }
     };
 
