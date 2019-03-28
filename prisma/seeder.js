@@ -109,8 +109,10 @@ async function seed(){
                 // into a hierarchy and subsequent profiles are assigned randomly
 
                 for(var x = 1; x <  profileNumber; x++){
+                    
+                    const teamMod = teamNumber - 1;
 
-                    var relation = Math.floor(Math.random() * x) % 19;
+                    var relation = Math.floor(Math.random() * x) % teamMod;
 
                     const relationshipArgs = {
                         gcID: profiles[x].gcID,
