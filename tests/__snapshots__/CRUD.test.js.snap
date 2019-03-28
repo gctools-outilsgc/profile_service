@@ -27,6 +27,42 @@ Object {
 }
 `;
 
+exports[`Create profile without a team 1`] = `
+Object {
+  "address": null,
+  "email": "hamburgler.user@somewhere.com",
+  "gcID": "34asdfwaasdf",
+  "mobilePhone": "613-999-0897",
+  "name": "Hamburgler",
+  "officePhone": "(879) 234-2341",
+  "team": Object {
+    "members": Array [
+      Object {
+        "email": "supervisor@somewhere.com",
+        "gcID": "0834haf",
+        "name": "Supervisor Test",
+      },
+      Object {
+        "email": "hamburgler.user@somewhere.com",
+        "gcID": "34asdfwaasdf",
+        "name": "Hamburgler",
+      },
+    ],
+    "nameEn": "Organization Default Team",
+    "nameFr": "Équipe par defaut d'organization",
+    "organization": Object {
+      "acronymEn": "DO",
+      "acronymFr": "OPD",
+      "nameEn": "Default Organization",
+      "nameFr": "Organization par défaut",
+    },
+    "owner": null,
+  },
+  "titleEn": "Super Basil",
+  "titleFr": "Super Basil in French",
+}
+`;
+
 exports[`Create profile without avatar 1`] = `
 Object {
   "address": Object {
@@ -195,9 +231,84 @@ Object {
         "mobilePhone": null,
         "name": "Supervisor Test",
         "officePhone": null,
-        "team": null,
+        "team": Object {
+          "members": Array [
+            Object {
+              "email": "supervisor@somewhere.com",
+              "gcID": "0834haf",
+              "name": "Supervisor Test",
+            },
+            Object {
+              "email": "hamburgler.user@somewhere.com",
+              "gcID": "34asdfwaasdf",
+              "name": "Hamburgler",
+            },
+            Object {
+              "email": "supervisor2@somewhere.com",
+              "gcID": "9283982",
+              "name": "Supervisor Test 2",
+            },
+            Object {
+              "email": "cameraman@somewhere.com",
+              "gcID": "3948371",
+              "name": "Camera Man",
+            },
+          ],
+          "nameEn": "Organization Default Team",
+          "nameFr": "Équipe par defaut d'organization",
+          "organization": Object {
+            "acronymEn": "DO",
+            "acronymFr": "OPD",
+            "nameEn": "Default Organization",
+            "nameFr": "Organization par défaut",
+          },
+          "owner": null,
+        },
         "titleEn": null,
         "titleFr": null,
+      },
+      Object {
+        "address": null,
+        "email": "hamburgler.user@somewhere.com",
+        "gcID": "34asdfwaasdf",
+        "mobilePhone": "613-999-0897",
+        "name": "Hamburgler",
+        "officePhone": "(879) 234-2341",
+        "team": Object {
+          "members": Array [
+            Object {
+              "email": "supervisor@somewhere.com",
+              "gcID": "0834haf",
+              "name": "Supervisor Test",
+            },
+            Object {
+              "email": "hamburgler.user@somewhere.com",
+              "gcID": "34asdfwaasdf",
+              "name": "Hamburgler",
+            },
+            Object {
+              "email": "supervisor2@somewhere.com",
+              "gcID": "9283982",
+              "name": "Supervisor Test 2",
+            },
+            Object {
+              "email": "cameraman@somewhere.com",
+              "gcID": "3948371",
+              "name": "Camera Man",
+            },
+          ],
+          "nameEn": "Organization Default Team",
+          "nameFr": "Équipe par defaut d'organization",
+          "organization": Object {
+            "acronymEn": "DO",
+            "acronymFr": "OPD",
+            "nameEn": "Default Organization",
+            "nameFr": "Organization par défaut",
+          },
+          "owner": null,
+        },
+        "titleEn": "Super Basil",
+        "titleFr": "Super Basil in French",
       },
       Object {
         "address": Object {
@@ -243,7 +354,39 @@ Object {
         "mobilePhone": null,
         "name": "Supervisor Test 2",
         "officePhone": null,
-        "team": null,
+        "team": Object {
+          "members": Array [
+            Object {
+              "email": "supervisor@somewhere.com",
+              "gcID": "0834haf",
+              "name": "Supervisor Test",
+            },
+            Object {
+              "email": "hamburgler.user@somewhere.com",
+              "gcID": "34asdfwaasdf",
+              "name": "Hamburgler",
+            },
+            Object {
+              "email": "supervisor2@somewhere.com",
+              "gcID": "9283982",
+              "name": "Supervisor Test 2",
+            },
+            Object {
+              "email": "cameraman@somewhere.com",
+              "gcID": "3948371",
+              "name": "Camera Man",
+            },
+          ],
+          "nameEn": "Organization Default Team",
+          "nameFr": "Équipe par defaut d'organization",
+          "organization": Object {
+            "acronymEn": "DO",
+            "acronymFr": "OPD",
+            "nameEn": "Default Organization",
+            "nameFr": "Organization par défaut",
+          },
+          "owner": null,
+        },
         "titleEn": null,
         "titleFr": null,
       },
@@ -260,7 +403,39 @@ Object {
         "mobilePhone": null,
         "name": "Camera Man",
         "officePhone": null,
-        "team": null,
+        "team": Object {
+          "members": Array [
+            Object {
+              "email": "supervisor@somewhere.com",
+              "gcID": "0834haf",
+              "name": "Supervisor Test",
+            },
+            Object {
+              "email": "hamburgler.user@somewhere.com",
+              "gcID": "34asdfwaasdf",
+              "name": "Hamburgler",
+            },
+            Object {
+              "email": "supervisor2@somewhere.com",
+              "gcID": "9283982",
+              "name": "Supervisor Test 2",
+            },
+            Object {
+              "email": "cameraman@somewhere.com",
+              "gcID": "3948371",
+              "name": "Camera Man",
+            },
+          ],
+          "nameEn": "Organization Default Team",
+          "nameFr": "Équipe par defaut d'organization",
+          "organization": Object {
+            "acronymEn": "DO",
+            "acronymFr": "OPD",
+            "nameEn": "Default Organization",
+            "nameFr": "Organization par défaut",
+          },
+          "owner": null,
+        },
         "titleEn": null,
         "titleFr": null,
       },

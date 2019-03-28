@@ -25,16 +25,15 @@ async function createDefaultOrg() {
             acronymFr: "OPD",
         };
 
-    let org = await mutations.createOrganization({}, args, ctx, "{id}");
+    let org = await mutations.createOrganization({}, args, ctx, "{id, teams{id}}");
     
     return org;
             
 }
 
 async function getDefaults(){
+    var org = await querys.organizations({},{nameEn:"Default Organization", nameFr:"Organization par défaut"}, ctx, "{id,teams{id}}");
 
-    // Set defaults on context 
-    var org = await querys.organizations({},{nameEn:"Default Organization", nameFr:"Organization par défaut"}, ctx, "{id}");
     if (org.length < 1 ){
         defaultData.org = await createDefaultOrg();
     } else {
