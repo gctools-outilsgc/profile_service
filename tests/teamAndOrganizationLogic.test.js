@@ -220,7 +220,7 @@ describe("Org chart Logic", () => {
 
 
         expect(queryData.data.profiles[0].team.owner.gcID).toEqual("30");
-        expect(queryData.data.profiles[0].team.nameEn).toEqual("User Default Team");
+        expect(queryData.data.profiles[0].team.nameEn).toEqual("Default Team");
         expect(deleteSuccess).toBeTruthy();    
 
 
