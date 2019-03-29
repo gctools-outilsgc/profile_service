@@ -19,6 +19,7 @@ async function createDefaultOrg() {
     // Create default organization
 
     const args = {
+        data:{
             nameEn: "Global Organization",
             nameFr: "Organization Global",
             acronymEn: "DO",
@@ -29,9 +30,10 @@ async function createDefaultOrg() {
                     nameFr:"Équipe Global"
                 }
             }
-        };
+        }
+    };
 
-    let org = await ctx.prisma.mutations.createOrganization(args, "{id, teams{id}}");
+    let org = await ctx.prisma.mutation.createOrganization(args, "{id, teams{id}}");
     
     return org;
             
