@@ -19,20 +19,26 @@ async function createDefaultOrg() {
     // Create default organization
 
     const args = {
-            nameEn: "Default Organization",
-            nameFr: "Organization par défaut",
+            nameEn: "Global Organization",
+            nameFr: "Organization Global",
             acronymEn: "DO",
             acronymFr: "OPD",
+            teams:{
+                create:{
+                    nameEn:"Global Team",
+                    nameFr:"Équipe Global"
+                }
+            }
         };
 
-    let org = await mutations.createOrganization({}, args, ctx, "{id, teams{id}}");
+    let org = await ctx.prisma.mutations.createOrganization(args, "{id, teams{id}}");
     
     return org;
             
 }
 
 async function getDefaults(){
-    var org = await querys.organizations({},{nameEn:"Default Organization", nameFr:"Organization par défaut"}, ctx, "{id,teams{id}}");
+    var org = await querys.organizations({},{nameEn:"Global Organization", nameFr:"Organization Global"}, ctx, "{id,teams{id}}");
 
     if (org.length < 1 ){
         defaultData.org = await createDefaultOrg();
