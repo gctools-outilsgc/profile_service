@@ -72,6 +72,14 @@ async function seed(){
                                     province: "Ontario",
                                     country: "Canada"
                                 }
+                            },
+                            ownerOfTeams:{
+                                create: {
+                                    nameEn:"Default Team",
+                                    nameFr:"Équipe par défaut",
+                                    organization: {connect: {id: org.id}}   
+                                }
+
                             }               
             
                         }
