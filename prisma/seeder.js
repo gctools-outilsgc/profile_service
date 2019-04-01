@@ -25,6 +25,10 @@ async function seed(){
         // Create n organizations
         for(var o = 0; o < orgNumber; o++){
 
+                // These arrays will be used to handle the reporting relationships
+                var teams = [];
+                var profiles = [];
+
                 var orgEn = faker.fake("{{commerce.department}} {{commerce.product}}");
                 var orgFr = orgEn + " - FR";
                 var orgDomain = faker.internet.domainName();
@@ -43,14 +47,13 @@ async function seed(){
                 };
 
                 // Store the created org info to assign teams to the org.
-                var org = await mutations.createOrganization({}, orgArgs, ctx, "{id}");
+                var org = await mutations.createOrganization({}, orgArgs, ctx, "{id, teams{id}}");
+                teams.push(org.teams[0]);
 
                 // eslint-disable-next-line no-console
                 console.log("Created organization: " + orgArgs.nameEn);
 
-                // These arrays will be used to handle the reporting relationships
-                var teams = [];
-                var profiles = [];
+
                 
                 // eslint-disable-next-line no-console
                 console.log("Creating " + profileNumber + " profiles");
