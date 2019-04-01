@@ -33,7 +33,13 @@ async function seed(){
                     nameEn: orgEn,
                     nameFr: orgFr,
                     acronymEn: faker.hacker.abbreviation(),
-                    acronymFr: faker.hacker.abbreviation()
+                    acronymFr: faker.hacker.abbreviation(),
+                    teams:{
+                        create:{
+                            nameEn: "Organization Default Team",
+                            nameFr: "Équipe par defaut d'organization",
+                        }
+                    }
                 };
 
                 // Store the created org info to assign teams to the org.
@@ -117,10 +123,8 @@ async function seed(){
                 // into a hierarchy and subsequent profiles are assigned randomly
 
                 for(var x = 1; x <  profileNumber; x++){
-                    
-                    const teamMod = teamNumber - 1;
-
-                    var relation = Math.floor(Math.random() * x) % teamMod;
+                    // Don't need to subtract 1 from the team number due to the addition of the default team.
+                    var relation = Math.floor(Math.random() * x) % teamNumber;
 
                     const relationshipArgs = {
                         gcID: profiles[x].gcID,
