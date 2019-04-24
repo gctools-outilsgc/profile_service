@@ -181,13 +181,19 @@ test("Non-existant team for Modifcation", async() => {
     const args = {
         id: "098oihalknfdsaasdf",
         data:{
-            nameEN:"Faker"
+            nameEn:"Faker"
         }
     };
 
-    const info = "{id, nameEN}";
+    const info = "{id, nameEn}";
 
-    await expect(mutations.modifyTeam(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
-
+    try{
+        await mutations.modifyTeam(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Team does not exist")
+            })
+        );
+    }
 });
