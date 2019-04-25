@@ -244,7 +244,7 @@ test("Query Addresses", async() => {
     const info = "{streetAddress, city, province, postalCode, country, resident{gcID,name,email}}";
     expect(
         await querys.addresses(parent, {}, ctx, info)
-    ).toMatchObject({"city": "Vallhala", "country": "Greece", "postalCode": "Z9P 8A0", "province": "Crete", "resident": {"email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Kratos"}, "streetAddress": "101 Kratos"}, {"city": "Moncton", "country": "Canada", "postalCode": "F3S 6D3", "province": "New Brunswick", "resident": {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}, "streetAddress": "322 Princess Way"})
+    ).toMatchObject([{"city": "Vallhala", "country": "Greece", "postalCode": "Z9P 8A0", "province": "Crete", "resident": {"email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Kratos"}, "streetAddress": "101 Kratos"}, {"city": "Moncton", "country": "Canada", "postalCode": "F3S 6D3", "province": "New Brunswick", "resident": {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}, "streetAddress": "322 Princess Way"}])
 });
 
 test("Delete Profile", async() => {
@@ -254,7 +254,7 @@ const info = "{gcID}";
 
 expect(
     await mutations.deleteProfile(parent, args, ctx)
-).toMatchObject(true)
+).toBeTruthy()
 });
 
 test("Delete Profile that doesn't exist", async () => {
@@ -291,7 +291,7 @@ test("Delete Team", async() => {
 
     expect(
         await mutations.deleteTeam(parent, { id }, ctx)
-    ).toMatchObject(true)
+    ).toBeTruthy()
 });
 
 test("Delete Team that doesn't exist", async () => {
@@ -311,7 +311,7 @@ test("Delete Organization", async() => {
 
     expect(
         await mutations.deleteOrganization(parent, args, ctx)
-    ).toMatchObject(true)
+    ).toBeTruthy()
 });
 
 test("Delete Organization that does not exist", async () => {
