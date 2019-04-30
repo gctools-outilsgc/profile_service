@@ -143,7 +143,7 @@ describe("Org chart Logic", () => {
     
 
 
-    beforeAll((done) => {
+    beforeEach((done) => {
 
         createProfiles(profiles).then(() => {
             createOrganizations(orgs).then((orgIDs) => {
@@ -173,6 +173,14 @@ describe("Org chart Logic", () => {
         });   
     });
 
+    afterEach((done) => {
+        getContext().then((ctx) => {
+          return cleanUp(ctx);  
+        }).then(() => {
+            done();
+        });
+
+    });
 
     it("Profile's default team should inherit department", async() => {
 
@@ -189,7 +197,7 @@ describe("Org chart Logic", () => {
 
         const orgData = await querys.organizations({}, {nameEn:"Org 2"}, ctx, "{teams {id, nameEn } }");
 
-        var result = await mutations.modifyProfile({},{gcID:"10", data:{ team:{ id: orgData[0].teams[0].id}}} , ctx, "{ team {id, organization { nameEn } } }");
+        await mutations.modifyProfile({},{gcID:"10", data:{ team:{ id: orgData[0].teams[0].id}}} , ctx, "{ team {id, organization { nameEn } } }");
 
         const query = "query orgTest { profiles(gcID: \"50\") { gcID, team { organization { nameEn } } } }";
         const queryData =await graphql(schema, query);            
@@ -200,13 +208,25 @@ describe("Org chart Logic", () => {
 
     });
 
-    afterAll((done) => {
-        getContext().then((ctx) => {
-          cleanUp(ctx);  
-        }).then(() => {
-            done();
-        });
+    it("Deleted teams members should be transferred to the supervisors default team", async() => {
+        const ctx = await getContext();
+
+        const teamData = await querys.teams({},{nameEn:"Team 3"}, ctx, "{id}");
+
+        const deleteSuccess = await mutations.deleteTeam({},{id: teamData[0].id}, ctx);
+
+        const query = "query orgTest { profiles(gcID: \"40\") { gcID, team { nameEn, owner { gcID } } } }";
+        const queryData = await graphql(schema, query);
+
+
+        expect(queryData.data.profiles[0].team.owner.gcID).toEqual("30");
+        expect(queryData.data.profiles[0].team.nameEn).toEqual("Default Team");
+        expect(deleteSuccess).toBeTruthy();    
+
+
 
     });
+
+
 
 });

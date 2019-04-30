@@ -17,13 +17,17 @@ async function seed(){
     // Number of Organizations to Create
     const orgNumber = 3;
     // Number of Teams to create in each Organization
-    const teamNumber = 20;
+    const teamNumber = 500;
     // Number or profiles to create in each Organization
     const profileNumber = 4000;
 
     try {
         // Create n organizations
         for(var o = 0; o < orgNumber; o++){
+
+                // These arrays will be used to handle the reporting relationships
+                var teams = [];
+                var profiles = [];
 
                 var orgEn = faker.fake("{{commerce.department}} {{commerce.product}}");
                 var orgFr = orgEn + " - FR";
@@ -33,18 +37,23 @@ async function seed(){
                     nameEn: orgEn,
                     nameFr: orgFr,
                     acronymEn: faker.hacker.abbreviation(),
-                    acronymFr: faker.hacker.abbreviation()
+                    acronymFr: faker.hacker.abbreviation(),
+                    teams:{
+                        create:{
+                            nameEn: "Organization Default Team",
+                            nameFr: "Équipe par defaut d'organization",
+                        }
+                    }
                 };
 
                 // Store the created org info to assign teams to the org.
-                var org = await mutations.createOrganization({}, orgArgs, ctx, "{id}");
+                var org = await mutations.createOrganization({}, orgArgs, ctx, "{id, teams{id}}");
+                teams.push(org.teams[0]);
 
                 // eslint-disable-next-line no-console
                 console.log("Created organization: " + orgArgs.nameEn);
 
-                // These arrays will be used to handle the reporting relationships
-                var teams = [];
-                var profiles = [];
+
                 
                 // eslint-disable-next-line no-console
                 console.log("Creating " + profileNumber + " profiles");
@@ -72,6 +81,14 @@ async function seed(){
                                     province: "Ontario",
                                     country: "Canada"
                                 }
+                            },
+                            ownerOfTeams:{
+                                create: {
+                                    nameEn:"Default Team",
+                                    nameFr:"Équipe par défaut",
+                                    organization: {connect: {id: org.id}}   
+                                }
+
                             }               
             
                         }
@@ -109,8 +126,8 @@ async function seed(){
                 // into a hierarchy and subsequent profiles are assigned randomly
 
                 for(var x = 1; x <  profileNumber; x++){
-
-                    var relation = Math.floor(Math.random() * x) % 19;
+                    // Don't need to subtract 1 from the team number due to the addition of the default team.
+                    var relation = Math.floor(Math.random() * x) % teamNumber;
 
                     const relationshipArgs = {
                         gcID: profiles[x].gcID,

@@ -77,6 +77,28 @@ test("Create a Team", async() => {
     ).toMatchObject({"colour": "#03cdf", "descriptionEn": "Team description English", "descriptionFr": "Team description French", "nameEn": "Team Name EN", "nameFr": "Team Name FR", "organization": {"nameEn": "Organization Test EN"}, "owner": {"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}});
 });
 
+test("Create profile without a team", async() => {
+
+    const args = {
+        gcID: "34asdfwaasdf",
+        name: "Hamburgler",
+        email: "hamburgler.user@somewhere.com",
+        mobilePhone: "613-999-0897",
+        officePhone: "(879) 234-2341",
+        titleEn: "Super Basil",
+        titleFr: "Super Basil in French"
+    };
+
+    const info = "{ gcID, name, email, mobilePhone, officePhone, titleEn, titleFr, " +
+    "address {streetAddress, city, province, postalCode, country}," +
+    "team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}," +
+    "owner{name, email}, members{gcID, name, email}},}";
+
+    expect(
+        await mutations.createProfile(parent, args, ctx, info)
+    ).toMatchSnapshot();
+});
+
 test("Create profile without avatar", async() => {
     var argAddress = {
         streetAddress: "98 where",

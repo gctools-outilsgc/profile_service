@@ -1,8 +1,9 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined, throwExceptionIfTeamIsNotDefined, changeOwnedTeamsRoot} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, throwExceptionIfTeamIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
+
 
 async function createProfile(_, args, context, info){
         var createProfileData = {
@@ -15,10 +16,13 @@ async function createProfile(_, args, context, info){
         titleFr: copyValueToObjectIfDefined(args.titleFr),
         ownerOfTeams:{
             create:{
-                nameEn:"User Default Team",
-                nameFr:"Équipe par défaut d'utilisateur",
+                nameEn:"Default Team",
+                nameFr:"Équipe par défaut",
                 organization: {connect: {id: context.defaults.org.id}}              
             }
+        },
+        team:{ connect: {id: context.defaults.org.teams[0].id}
+
         }
     };
 
@@ -273,6 +277,8 @@ async function deleteTeam(_, args, context){
     // eslint-disable-next-line new-cap
     if (await context.prisma.exists.Team({id:args.id})){
         try {
+
+            await moveMembersToDefaultTeam(args.id, context);
             await context.prisma.mutation.deleteTeam({
                 where:{
                     id: args.id
