@@ -26,7 +26,7 @@ test("create a basic profile with mandatory fields",  async() => {
 
     expect(
         await mutations.createProfile(parent, args, ctx, info),
-    ).toMatchSnapshot();
+    ).toMatchObject( {"email": "awesome.user@somewhere.com", "gcID": "09ujilkjlkiid", "name": "Awesome User"});
 });
 
 test("fail profile creation due to missing gcID", async() => {

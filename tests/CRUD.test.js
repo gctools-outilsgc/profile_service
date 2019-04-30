@@ -51,7 +51,7 @@ test("Create Organization", async() => {
 
     expect(
         await mutations.createOrganization(parent, args, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject({"acronymEn": "OTEN", "acronymFr": "OTFR", "nameEn": "Organization Test EN", "nameFr": "Organization Test FR"})
 });
 
 test("Create a Team", async() => {
@@ -74,7 +74,7 @@ test("Create a Team", async() => {
 
     expect(
         await mutations.createTeam(parent, args, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject({"colour": "#03cdf", "descriptionEn": "Team description English", "descriptionFr": "Team description French", "nameEn": "Team Name EN", "nameFr": "Team Name FR", "organization": {"nameEn": "Organization Test EN"}, "owner": {"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}});
 });
 
 test("Create profile without a team", async() => {
@@ -96,7 +96,7 @@ test("Create profile without a team", async() => {
 
     expect(
         await mutations.createProfile(parent, args, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject( {"address": null, "email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "mobilePhone": "613-999-0897", "name": "Hamburgler", "officePhone": "(879) 234-2341", "team": {"members": [{"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}, {"email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "name": "Hamburgler"}], "nameEn": "Global Team", "nameFr": "Équipe Global", "organization": {"acronymEn": "DO", "acronymFr": "OPD", "nameEn": "Global Organization", "nameFr": "Organization Global"}, "owner": null}, "titleEn": "Super Basil", "titleFr": "Super Basil in French"});
 });
 
 test("Create profile without avatar", async() => {
@@ -131,7 +131,7 @@ test("Create profile without avatar", async() => {
 
     expect(
         await mutations.createProfile(parent, args, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject({"address": {"city": "somewhere", "country": "Canada", "postalCode": "H0H 0H0", "province": "Ontario", "streetAddress": "98 where"}, "email": "awesome.user@somewhere.com", "gcID": "kjsdf09iklasd", "mobilePhone": "613-999-0897", "name": "Awesome User", "officePhone": "(879) 234-2341", "team": {"members": [{"email": "awesome.user@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Awesome User"}], "nameEn": "Team Name EN", "nameFr": "Team Name FR", "organization": {"acronymEn": "OTEN", "acronymFr": "OTFR", "nameEn": "Organization Test EN", "nameFr": "Organization Test FR"}, "owner": {"email": "supervisor@somewhere.com", "name": "Supervisor Test"}}, "titleEn": "Super Dave", "titleFr": "Super Dave in French"})
 });
 
 test("Modify Organization", async() => {
@@ -150,8 +150,7 @@ test("Modify Organization", async() => {
 
     expect(
         await mutations.modifyOrganization(parent, args, ctx, info)
-    ).toMatchSnapshot();
-
+    ).toMatchObject({"acronymEn": "OTEN - Mod 1", "acronymFr": "OTFR - Mod 1", "nameEn": "Organization Test EN - Mod 1", "nameFr": "Organization Test FR - Mod 1"})
 });
 
 test("Modify Team", async() => {
@@ -182,7 +181,7 @@ test("Modify Team", async() => {
     const info = "{nameEn, nameFr, descriptionEn, descriptionFr, colour, organization{nameEn}, owner{gcID, name, email}}";
     expect(
         await mutations.modifyTeam(parent, args, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject({"colour": "9988e", "descriptionEn": "English Description modified", "descriptionFr": "French Description modified", "nameEn": "Team Name EN - Mod 1", "nameFr": "Team Name FR - Mod 1", "organization": {"nameEn": "Organization Test EN 2"}, "owner": {"email": "supervisor2@somewhere.com", "gcID": "9283982", "name": "Supervisor Test 2"}})
 });
 
 test("Modify Profile", async() => {
@@ -219,8 +218,7 @@ test("Modify Profile", async() => {
 
     expect(
         await mutations.modifyProfile(parent, args, ctx, info)
-    ).toMatchSnapshot();
-
+    ).toMatchObject( {"address": {"city": "Vallhala", "country": "Greece", "postalCode": "Z9P 8A0", "province": "Crete", "streetAddress": "101 Kratos"}, "email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "mobilePhone": "819-234-6345", "name": "Kratos", "officePhone": "(613) 295-9093", "team": {"members": [{"email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Kratos"}], "nameEn": "Team Name EN - Mod 1", "nameFr": "Team Name FR - Mod 1", "organization": {"acronymEn": "OTEN 2", "acronymFr": "OTFR 2", "nameEn": "Organization Test EN 2", "nameFr": "Organization Test FR 2"}, "owner": {"email": "supervisor2@somewhere.com", "name": "Supervisor Test 2"}}, "titleEn": "God of War", "titleFr": "Dieu de la guerre"})
 });
 
 test("Modify Profile without existing Address", async() => {
@@ -248,8 +246,7 @@ test("Modify Profile without existing Address", async() => {
 
     expect(
         await mutations.modifyProfile(parent, modifyProfileArgs, ctx, info)
-    ).toMatchSnapshot();
-
+    ).toMatchObject( {"address": {"city": "Moncton", "country": "Canada", "postalCode": "F3S 6D3", "province": "New Brunswick", "streetAddress": "322 Princess Way"}, "email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"})
 });
 
 // Query everything in system
@@ -262,14 +259,14 @@ test("Query Profiles", async() => {
       owner{name, email}, members{gcID, name, email}} }
     }`;
     const profiles = await(graphql(schema, info));
-    await expect(profiles).toMatchSnapshot();
+    await expect(profiles).toMatchObject({"data": {"profiles": [{"address": null, "email": "supervisor@somewhere.com", "gcID": "0834haf", "mobilePhone": null, "name": "Supervisor Test", "officePhone": null, "team": {"members": [{"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}, {"email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "name": "Hamburgler"}, {"email": "supervisor2@somewhere.com", "gcID": "9283982", "name": "Supervisor Test 2"}, {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}], "nameEn": "Global Team", "nameFr": "Équipe Global", "organization": {"acronymEn": "DO", "acronymFr": "OPD", "nameEn": "Global Organization", "nameFr": "Organization Global"}, "owner": null}, "titleEn": null, "titleFr": null}, {"address": null, "email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "mobilePhone": "613-999-0897", "name": "Hamburgler", "officePhone": "(879) 234-2341", "team": {"members": [{"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}, {"email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "name": "Hamburgler"}, {"email": "supervisor2@somewhere.com", "gcID": "9283982", "name": "Supervisor Test 2"}, {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}], "nameEn": "Global Team", "nameFr": "Équipe Global", "organization": {"acronymEn": "DO", "acronymFr": "OPD", "nameEn": "Global Organization", "nameFr": "Organization Global"}, "owner": null}, "titleEn": "Super Basil", "titleFr": "Super Basil in French"}, {"address": {"city": "Vallhala", "country": "Greece", "postalCode": "Z9P 8A0", "province": "Crete", "streetAddress": "101 Kratos"}, "email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "mobilePhone": "819-234-6345", "name": "Kratos", "officePhone": "(613) 295-9093", "team": {"members": [{"email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Kratos"}], "nameEn": "Team Name EN - Mod 1", "nameFr": "Team Name FR - Mod 1", "organization": {"acronymEn": "OTEN 2", "acronymFr": "OTFR 2", "nameEn": "Organization Test EN 2", "nameFr": "Organization Test FR 2"}, "owner": {"email": "supervisor2@somewhere.com", "name": "Supervisor Test 2"}}, "titleEn": "God of War", "titleFr": "Dieu de la guerre"}, {"address": null, "email": "supervisor2@somewhere.com", "gcID": "9283982", "mobilePhone": null, "name": "Supervisor Test 2", "officePhone": null, "team": {"members": [{"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}, {"email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "name": "Hamburgler"}, {"email": "supervisor2@somewhere.com", "gcID": "9283982", "name": "Supervisor Test 2"}, {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}], "nameEn": "Global Team", "nameFr": "Équipe Global", "organization": {"acronymEn": "DO", "acronymFr": "OPD", "nameEn": "Global Organization", "nameFr": "Organization Global"}, "owner": null}, "titleEn": null, "titleFr": null}, {"address": {"city": "Moncton", "country": "Canada", "postalCode": "F3S 6D3", "province": "New Brunswick", "streetAddress": "322 Princess Way"}, "email": "cameraman@somewhere.com", "gcID": "3948371", "mobilePhone": null, "name": "Camera Man", "officePhone": null, "team": {"members": [{"email": "supervisor@somewhere.com", "gcID": "0834haf", "name": "Supervisor Test"}, {"email": "hamburgler.user@somewhere.com", "gcID": "34asdfwaasdf", "name": "Hamburgler"}, {"email": "supervisor2@somewhere.com", "gcID": "9283982", "name": "Supervisor Test 2"}, {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}], "nameEn": "Global Team", "nameFr": "Équipe Global", "organization": {"acronymEn": "DO", "acronymFr": "OPD", "nameEn": "Global Organization", "nameFr": "Organization Global"}, "owner": null}, "titleEn": null, "titleFr": null}]}})
 });
 
 test("Query Addresses", async() => {
     const info = "{streetAddress, city, province, postalCode, country, resident{gcID,name,email}}";
     expect(
         await querys.addresses(parent, {}, ctx, info)
-    ).toMatchSnapshot();
+    ).toMatchObject([{"city": "Vallhala", "country": "Greece", "postalCode": "Z9P 8A0", "province": "Crete", "resident": {"email": "kratos@somewhere.com", "gcID": "kjsdf09iklasd", "name": "Kratos"}, "streetAddress": "101 Kratos"}, {"city": "Moncton", "country": "Canada", "postalCode": "F3S 6D3", "province": "New Brunswick", "resident": {"email": "cameraman@somewhere.com", "gcID": "3948371", "name": "Camera Man"}, "streetAddress": "322 Princess Way"}])
 });
 
 test("Delete Profile", async() => {
@@ -279,8 +276,7 @@ const info = "{gcID}";
 
 expect(
     await mutations.deleteProfile(parent, args, ctx)
-).toMatchSnapshot();
-
+).toBeTruthy()
 });
 
 test("Delete Profile that doesn't exist", async () => {
@@ -317,8 +313,7 @@ test("Delete Team", async() => {
 
     expect(
         await mutations.deleteTeam(parent, { id }, ctx)
-    ).toMatchSnapshot();
-
+    ).toBeTruthy()
 });
 
 test("Delete Team that doesn't exist", async () => {
@@ -338,7 +333,7 @@ test("Delete Organization", async() => {
 
     expect(
         await mutations.deleteOrganization(parent, args, ctx)
-    ).toMatchSnapshot();
+    ).toBeTruthy()
 });
 
 test("Delete Organization that does not exist", async () => {

@@ -40,8 +40,15 @@ test("Address field valdiation - streetAddress", async() => {
 
     const info = "{gcID,name,address{streetAddress, city, province, postalCode, country}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Missing Fields Required")
+            })  
+        );
+    }
 });
 
 test("Address field valdiation - city", async() => {
@@ -59,8 +66,15 @@ test("Address field valdiation - city", async() => {
 
     const info = "{gcID,name,address{streetAddress, city, province, postalCode, country}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Missing Fields Required")
+            })  
+        );
+    }
 });
 
 test("Address field valdiation - province", async() => {
@@ -78,8 +92,15 @@ test("Address field valdiation - province", async() => {
 
     const info = "{gcID,name,address{streetAddress, city, province, postalCode, country}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Missing Fields Required")
+            })  
+        );
+    }
 });
 
 test("Address field valdiation - postal code", async() => {
@@ -97,8 +118,15 @@ test("Address field valdiation - postal code", async() => {
 
     const info = "{gcID,name,address{streetAddress, city, province, postalCode, country}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Missing Fields Required")
+            })  
+        );
+    }
 });
 
 test("Address field valdiation - country", async() => {
@@ -116,8 +144,15 @@ test("Address field valdiation - country", async() => {
 
     const info = "{gcID,name,address{streetAddress, city, province, postalCode, country}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Missing Fields Required")
+            })  
+        );
+    }
 });
 
 test("Non-existant profile for Modification", async() => {
@@ -130,8 +165,15 @@ test("Non-existant profile for Modification", async() => {
 
     const info = "{gcID, name}";
 
-    await expect(mutations.modifyProfile(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
+    try{
+        await mutations.modifyProfile(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Profile does not exist")
+            })  
+        );
+    }
 });
 
 test("Non-existant team for Modifcation", async() => {
@@ -139,13 +181,19 @@ test("Non-existant team for Modifcation", async() => {
     const args = {
         id: "098oihalknfdsaasdf",
         data:{
-            nameEN:"Faker"
+            nameEn:"Faker"
         }
     };
 
-    const info = "{id, nameEN}";
+    const info = "{id, nameEn}";
 
-    await expect(mutations.modifyTeam(parent, args, ctx, info)
-    ).rejects.toThrowErrorMatchingSnapshot();
-
+    try{
+        await mutations.modifyTeam(parent, args, ctx, info);
+    } catch(e){
+        expect(e).toEqual(
+            expect.objectContaining({
+                message: expect.stringContaining("Team does not exist")
+            })
+        );
+    }
 });

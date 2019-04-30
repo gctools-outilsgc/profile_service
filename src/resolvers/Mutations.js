@@ -1,5 +1,5 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
-const { throwExceptionIfProfileIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined, throwExceptionIfTeamIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
@@ -134,7 +134,7 @@ async function deleteProfile(_, args, context){
         throw new UserInputError("Profile does not exist");
     }
     return true;
-
+    
 }
 
 
@@ -225,11 +225,13 @@ async function createTeam(_, args, context, info){
 
 async function modifyTeam(_, args, context, info){
     // eslint-disable-next-line new-cap
-    if (!context.prisma.exists.Team({id:args.id})){
-        throw new UserInputError("Team does not exist");
-    }
+    const currentTeam = await  context.prisma.query.teams(
+        {
+        where: {id:args.id
+            }
+        },"{id, nameEn}");
 
-
+    throwExceptionIfTeamIsNotDefined(currentTeam);
     var updateTeamData = {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),

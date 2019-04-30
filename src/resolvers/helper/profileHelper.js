@@ -7,6 +7,12 @@ const throwExceptionIfProfileIsNotDefined = (profile) => {
     }
 };
 
+const throwExceptionIfTeamIsNotDefined = (team) => {
+  if (team === null || typeof team === "undefined" || team.length === 0){
+      throw new UserInputError("Team does not exist");
+  }
+};
+
 async function getTeams(userID, context){
   const result = await context.prisma.query.profile({where:{gcID: userID}}, "{ownerOfTeams{id,nameEn, members{gcID}}}");
   return result;
@@ -80,6 +86,7 @@ async function moveMembersToDefaultTeam(teamID, context){
 
 module.exports ={
   throwExceptionIfProfileIsNotDefined,
+  throwExceptionIfTeamIsNotDefined,
   changeOwnedTeamsRoot,
   moveMembersToDefaultTeam
 };
