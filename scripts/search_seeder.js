@@ -32,12 +32,6 @@ const mocks = {
 addMockFunctionsToSchema({ schema, mocks });
 
 
-async function connectToMesh(){
-  mesh.connectMessageQueuePublisher();
-  console.log("Waiting for 5 Seconds");
-  await setTimeout(seed(), 5000);
-}
-
 async function seed(){
   console.log("Starting to Seed");
     try {
