@@ -25,7 +25,7 @@ async function publishMessageQueue(exchange, key, msgBody){
         }); 
     }
     try {
-        await publishChannel.publish(exchange, key, new Buffer(JSON.stringify(msgBody), {persistent:true}));
+        await publishChannel.publish(exchange, key, Buffer.from(JSON.stringify(msgBody), {persistent:true}));
     } catch(err){
         // eslint-disable-next-line no-console
         console.error("[SMQ] error", err);
