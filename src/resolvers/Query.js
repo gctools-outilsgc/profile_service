@@ -1,6 +1,11 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
 const { addFragmentToInfo } = require("graphql-binding");
 const { profileFragment } = require("../Auth/Directives");
+const { autoCompleter } = require("../Search/autoComplete");
+
+function search(_, args, context, info){
+  return autoCompleter(args.partialName);
+}
 
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
@@ -100,8 +105,9 @@ function organizations(_, args, context, info){
 
 
 module.exports = {
-    profiles,
-    addresses,
-    teams,
-    organizations,
+  search,
+  profiles,
+  addresses,
+  teams,
+  organizations,
 };

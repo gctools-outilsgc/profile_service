@@ -7,6 +7,7 @@ const { graphql } = require("graphql");
 const { makeExecutableSchema, addMockFunctionsToSchema } = require("graphql-tools");
 const typeDefs = fs.readFileSync("./src/schema.graphql", "utf8");
 const schema = makeExecutableSchema({ typeDefs });
+const { searchPrep } = require("../src/Search/transformer");
 
 const ctx = {
     prisma: new Prisma({
@@ -50,7 +51,7 @@ async function seed(){
     const profiles = users.data.profiles;
     
     for (var profile of profiles){
-      await mesh.publishMessageQueue("profile", "profile.change", profile);
+      await searchPrep(profile, "new", ctx);
     }
     } catch(e){
         console.error(e);
