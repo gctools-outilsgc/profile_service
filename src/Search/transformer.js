@@ -1,7 +1,9 @@
 const { publishMessageQueue } = require("../Service_Mesh/publisher_connector");
 
-async function suggester(field){
-    return field.split(" ");
+function suggester(field){
+    var suggestions = field.split(" ");
+    suggestions.push(field);
+    return suggestions;
 }
 
 async function searchPrep(profile, action, context){
@@ -13,7 +15,7 @@ async function searchPrep(profile, action, context){
     newProfile.suggest = await suggester(newProfile.name);
     publishMessageQueue("profile", "profile." + action, newProfile)
     .catch((e) => {
-        // ignore it for now
+        console.error(e);
     });
 }
 
