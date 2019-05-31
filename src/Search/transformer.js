@@ -15,6 +15,8 @@ async function searchPrep(profile, action, context){
     newProfile.suggest = await suggester(newProfile.name);
     publishMessageQueue("profile", "profile." + action, newProfile)
     .catch((e) => {
+        // Need to implement error handling
+        // eslint-disable-next-line no-console
         console.error(e);
     });
 }

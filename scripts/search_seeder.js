@@ -33,6 +33,7 @@ addMockFunctionsToSchema({ schema, mocks });
 
 
 async function seed(){
+  // eslint-disable-next-line no-console
   console.log("Starting to Seed");
     try {
 
@@ -48,6 +49,7 @@ async function seed(){
       await searchPrep(profile, "new", ctx);
     }
     } catch(e){
+        // eslint-disable-next-line no-console
         console.error(e);
     }
 

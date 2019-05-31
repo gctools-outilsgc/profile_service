@@ -17,6 +17,7 @@ async function getSuggestions(partialName){
     })
     .catch((e) => {
         // Need to implement error handling
+        // eslint-disable-next-line no-console
         console.log(e);
     });
 }
