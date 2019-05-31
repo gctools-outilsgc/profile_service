@@ -1,6 +1,7 @@
 version: '3'
 services:
   image:
+    image: profile-image:latest
     build: ./image-server
     volumes:
       - ./image-server/upload:/usr/share/nginx/html/upload
@@ -12,7 +13,7 @@ services:
     - "8007:80"
   apollo:
     build: ./
-    image: profile-yoga
+    image: profile-apollo:latest
     environment: 
       NODE_ENV: "production"
       PRISMA_API_ENDPOINT: 'prisma'

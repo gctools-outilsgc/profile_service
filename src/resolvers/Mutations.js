@@ -145,6 +145,7 @@ async function deleteProfile(_, args, context){
     } catch(e){
         throw new UserInputError("Profile does not exist");
     }
+    searchPrep(args, "delete", context);
     return true;
     
 }
