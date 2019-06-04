@@ -43,3 +43,38 @@ type Organization {
   acronymFr: String!
   teams: [Team!]! @relation(name:"Teams", onDelete: CASCADE) 
 }
+
+type Approval {
+    id: ID! @unique
+    gcIDApprover: Profile! @relation(name:"Approver")
+    gcIDSubmitter: Profile @relation(name:"Submitter")
+    requestedChange: RequestedChange!
+    createdOn: String!
+    actionedOn: String
+    deniedComment: String
+    status: Status!
+    changeType: ChangeType!
+}
+
+type RequestedChange {
+    gcID: ID! @unique
+    name: String
+    email: String
+    avatar: String
+    mobilePhone: String
+    officePhone: String
+    address: Address
+    titleEn: String
+    titleFr: String
+    team: Team
+}
+
+enum Status {
+    Pending
+    Approved
+    Denied
+}
+enum ChangeType {
+    Membership
+    Informational
+} 
