@@ -59,7 +59,8 @@ type Approval {
 }
 
 type RequestedChange {
-    gcID: ID! @unique
+    id: ID! @unique
+    gcID: ID
     name: String
     email: String
     avatar: String
