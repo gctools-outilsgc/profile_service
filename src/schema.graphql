@@ -63,6 +63,8 @@ type Profile {
   titleFr: String
   team: Team
   ownerOfTeams: [Team!]!
+  outstandingApprovals: [Approval!]!
+  submittedApprovals: [Approval!]!
 }
 
 type Address {
