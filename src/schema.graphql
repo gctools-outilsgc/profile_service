@@ -168,6 +168,7 @@ type Approval {
 }
 
 type RequestedChange {
+    id: ID!
     gcID: ID!
     name: String
     email: String
