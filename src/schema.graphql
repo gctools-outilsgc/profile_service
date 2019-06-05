@@ -63,6 +63,8 @@ type Profile {
   titleFr: String
   team: Team
   ownerOfTeams: [Team!]!
+  outstandingApprovals: [Approval!]!
+  submittedApprovals: [Approval!]!
 }
 
 type Address {
@@ -152,3 +154,39 @@ input ModifyOrganizationInput {
   acronymEn: String
   acronymFr: String
 }
+
+type Approval {
+    id: ID!
+    gcIDApprover: Profile!
+    gcIDSubmitter: Profile
+    requestedChange: RequestedChange!
+    createdOn: String
+    actionedOn: String
+    deniedComment: String
+    status: Status!
+    changeType: ChangeType!
+}
+
+type RequestedChange {
+    id: ID!
+    gcID: ID!
+    name: String
+    email: String
+    avatar: String
+    mobilePhone: PhoneNumber
+    officePhone: PhoneNumber
+    address: Address
+    titleEn: String
+    titleFr: String
+    team: Team
+}
+
+enum Status {
+    Pending
+    Approved
+    Denied
+}
+enum ChangeType {
+    Membership
+    Informational
+} 
