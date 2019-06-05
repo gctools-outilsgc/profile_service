@@ -292,6 +292,21 @@ async function deleteTeam(_, args, context){
     throw new UserInputError("Team does not exist");
 }
 
+async function createApproval(_, args, context, info){
+    
+    return await context.prisma.mutation.createApproval({
+        data: {
+            gcIDApprover: args.gcIDApprover,
+            gcIDSubmitter: copyValueToObjectIfDefined(args.gcIDSubmitter),
+            requestedChange: args.requestedChange,
+            createdOn: args.createdOn,
+            actionedOn: copyValueToObjectIfDefined(args.actionedOn),
+            deniedComment: copyValueToObjectIfDefined(args.deniedComment),
+            status: args.status,
+            changeType: args.changeType
+        }
+    }, info);
+}
 
 module.exports = {
     createProfile,
@@ -302,5 +317,6 @@ module.exports = {
     deleteOrganization,
     createTeam,
     modifyTeam,
-    deleteTeam
+    deleteTeam,
+    createApproval
 };

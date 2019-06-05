@@ -43,6 +43,7 @@ type Mutation {
   createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
+  createApproval(gcIDApprover: gcIDProfileInput!, gcIDSubmitter: gcIDProfileInput!, requestedChange: RequestedChangeInput, createdOn: String, actionedOn: String, deniedComment: String, status: String, changeType: ChangeType): Approval!
 }
 
 type MultiLingualField {
@@ -181,6 +182,19 @@ type RequestedChange {
     team: Team
 }
 
+input RequestedChangeInput {
+    gcID: ID!
+    name: String
+    email: String
+    avatar: String
+    mobilePhone: PhoneNumber
+    officePhone: PhoneNumber
+    address: AddressInput
+    titleEn: String
+    titleFr: String
+    team: TeamInput
+}
+
 enum Status {
     Pending
     Approved
@@ -189,4 +203,8 @@ enum Status {
 enum ChangeType {
     Membership
     Informational
-} 
+}
+
+input gcIDProfileInput {
+  gcID: ID,
+}
