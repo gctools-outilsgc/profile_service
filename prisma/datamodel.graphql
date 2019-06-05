@@ -51,8 +51,8 @@ type Approval {
     gcIDApprover: Profile! @relation(name:"Approver")
     gcIDSubmitter: Profile @relation(name:"Submitter")
     requestedChange: RequestedChange!
-    createdOn: Int!
-    actionedOn: Int
+    createdOn: String!
+    actionedOn: String
     deniedComment: String
     status: Status!
     changeType: ChangeType!

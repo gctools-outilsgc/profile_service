@@ -160,8 +160,8 @@ type Approval {
     gcIDApprover: Profile!
     gcIDSubmitter: Profile
     requestedChange: RequestedChange!
-    createdOn: Int!
-    actionedOn: Int
+    createdOn: String
+    actionedOn: String
     deniedComment: String
     status: Status!
     changeType: ChangeType!
