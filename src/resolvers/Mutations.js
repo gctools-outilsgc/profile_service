@@ -296,9 +296,14 @@ async function createApproval(_, args, context, info){
     
     return await context.prisma.mutation.createApproval({
         data: {
-            gcIDApprover: args.gcIDApprover,
-            gcIDSubmitter: copyValueToObjectIfDefined(args.gcIDSubmitter),
-            requestedChange: args.requestedChange,
+            gcIDApprover: {connect: {gcID: copyValueToObjectIfDefined(args.gcIDApprover.gcID)}},
+            gcIDSubmitter: {connect: {gcID: copyValueToObjectIfDefined(args.gcIDSubmitter.gcID)}},
+            requestedChange: {
+                create:{
+                    gcID: args.requestedChange.gcID,
+                    name: args.requestedChange.name,            
+                }
+              },
             createdOn: args.createdOn,
             actionedOn: copyValueToObjectIfDefined(args.actionedOn),
             deniedComment: copyValueToObjectIfDefined(args.deniedComment),

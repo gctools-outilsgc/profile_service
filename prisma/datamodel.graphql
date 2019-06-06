@@ -10,7 +10,7 @@ type Profile {
   titleFr: String
   team: Team @relation(name:"TeamMembers")
   ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
-  outstandingApprovals: [Approval] @relation(name:"Approver")
+  outstandingApprovals: [Approval!]! @relation(name:"Approver")
   submittedApprovals: [Approval] @relation(name:"Submitter")
 }
 
