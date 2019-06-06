@@ -340,6 +340,25 @@ async function modifyApproval(_, args, context, info){
     }, info);
 }
 
+async function deleteApproval(_, args, context){
+
+    // eslint-disable-next-line new-cap
+    if (await context.prisma.exists.Approval({id:args.id})){
+        try {
+
+            await context.prisma.mutation.deleteApproval({
+                where:{
+                    id: args.id
+                }
+            });
+        } catch(e){
+        return false;
+        }
+        return true;
+    }
+    throw new UserInputError("Approval does not exist");
+}
+
 module.exports = {
     createProfile,
     modifyProfile,
@@ -351,5 +370,6 @@ module.exports = {
     modifyTeam,
     deleteTeam,
     createApproval,
-    modifyApproval
+    modifyApproval,
+    deleteApproval
 };
