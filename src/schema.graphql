@@ -27,7 +27,7 @@ scalar Upload
 scalar PostalCode
 
 type Query {
-  search(partialName:String):[SearchResult!]!
+  search(partialName:String):[Profile!]!
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
@@ -66,17 +66,6 @@ type Profile {
   ownerOfTeams: [Team!]!
   outstandingApprovals: [Approval!]!
   submittedApprovals: [Approval!]!
-}
-
-type SearchResult {
-  gcID: ID!,
-  name: String!,
-  email: Email!,
-  avatar: String,
-  titleEn: String,
-  titleFr: String,
-  mobilePhone: PhoneNumber,
-  officePhone: PhoneNumber
 }
 
 type Address {

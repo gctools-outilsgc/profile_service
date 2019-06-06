@@ -22,22 +22,21 @@ async function getSuggestions(partialName){
     });
 }
 
-function responseFormatter(suggestion){
-    return {
-        gcID: suggestion._source.gcID,
-        name: suggestion._source.name,
-        email: suggestion._source.email,
-        avatar: suggestion._source.avatar,
-        titleEn: suggestion._source.titleEn,
-        titleFr: suggestion._source.titleFr,
-        mobilePhone: suggestion._source.mobilePhone,
-        officePhone: suggestion._source.officePhone
-    };
+async function responseFormatter(suggestion, context, info){
+    return await context.prisma.query.profile(
+        {
+            where: {
+                gcID: suggestion._source.gcID
+            }
+        }, info
+    );
 }
 
-async function autoCompleter(partialName){
+async function autoCompleter(partialName, context, info){
     const response = await getSuggestions(partialName);
-    return response.body.suggest.nameAutoComplete[0].options.map((suggestion) => responseFormatter(suggestion));
+    return Promise.all(
+        response.body.suggest.nameAutoComplete[0].options.map((suggestion) => responseFormatter(suggestion, context, info))
+        );
 }
 
 module.exports = {
