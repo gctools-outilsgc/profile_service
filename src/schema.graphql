@@ -45,6 +45,7 @@ type Mutation {
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
   createApproval(gcIDApprover: gcIDProfileInput!, gcIDSubmitter: gcIDProfileInput!, requestedChange: RequestedChangeInput, createdOn: String, actionedOn: String, deniedComment: String, status: Status, changeType: ChangeType): Approval!
+  modifyApproval(id: ID!, data: ModifyApprovalInput): Approval!  
 }
 
 type MultiLingualField {
@@ -155,6 +156,13 @@ input ModifyOrganizationInput {
   nameFr: String
   acronymEn: String
   acronymFr: String
+}
+
+input ModifyApprovalInput {
+  requestedChange: RequestedChangeInput
+  actionedOn: String
+  deniedComment: String
+  status: Status
 }
 
 type Approval {

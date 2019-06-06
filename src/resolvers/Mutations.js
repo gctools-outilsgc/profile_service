@@ -313,6 +313,33 @@ async function createApproval(_, args, context, info){
     }, info);
 }
 
+async function modifyApproval(_, args, context, info){
+
+    // eslint-disable-next-line new-cap
+    if (!context.prisma.exists.Approval({id:args.id})){
+        throw new UserInputError("Approval does not Exist");
+    }
+
+    var updateApprovalData = {
+        requestedChange: {
+            create:{
+                gcID: args.data.requestedChange.gcID,                
+                name: args.data.requestedChange.name
+            }
+        },
+        actionedOn: copyValueToObjectIfDefined(args.data.actionedOn),
+        deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
+        status: copyValueToObjectIfDefined(args.data.status)
+    };
+
+    return await context.prisma.mutation.updateApproval({
+        where: {
+            id: args.id
+        },
+        data: updateApprovalData
+    }, info);
+}
+
 module.exports = {
     createProfile,
     modifyProfile,
@@ -323,5 +350,6 @@ module.exports = {
     createTeam,
     modifyTeam,
     deleteTeam,
-    createApproval
+    createApproval,
+    modifyApproval
 };
