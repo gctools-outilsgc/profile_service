@@ -31,6 +31,7 @@ type Query {
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
+  approvals(gcIDApprover: gcIDProfileInput, gcIDSubmitter: gcIDProfileInput, status: Status, changeType: ChangeType): [Approval!]!  
 }
 
 type Mutation {
