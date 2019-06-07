@@ -293,6 +293,8 @@ async function deleteTeam(_, args, context){
 }
 
 async function createApproval(_, args, context, info){
+
+    //var address = getNewAddressFromArgs(args.requestedChange);
     
     return await context.prisma.mutation.createApproval({
         data: {
@@ -301,7 +303,23 @@ async function createApproval(_, args, context, info){
             requestedChange: {
                 create:{
                     gcID: args.requestedChange.gcID,
-                    name: args.requestedChange.name,            
+                    name: args.requestedChange.name,
+                    email: args.requestedChange.email,
+                    avatar: args.requestedChange.avatar,   
+                    mobilePhone: args.requestedChange.mobilePhone,
+                    officePhone: args.requestedChange.officePhone,
+                    //address: {create:address},
+                    address:{create:{
+                        streetAddress:args.requestedChange.address.streetAddress,
+                        city:args.requestedChange.address.city,
+                        province:args.requestedChange.address.province,
+                        postalCode:args.requestedChange.address.postalCode,
+                        country:args.requestedChange.address.country,                        
+                    }
+                },
+                    titleEn: args.requestedChange.titleEn,  
+                    titleFr: args.requestedChange.titleFr,
+                    team: args.requestedChange.team,           
                 }
               },
             createdOn: args.createdOn,
@@ -323,10 +341,31 @@ async function modifyApproval(_, args, context, info){
     var updateApprovalData = {
         requestedChange: {
             create:{
-                gcID: args.data.requestedChange.gcID,                
-                name: args.data.requestedChange.name
-            }
-        },
+                gcID: args.data.requestedChange.gcID,
+                name: args.data.requestedChange.name,
+                email: args.data.requestedChange.email,
+                avatar: args.data.requestedChange.avatar,   
+                mobilePhone: args.data.requestedChange.mobilePhone,
+                officePhone: args.data.requestedChange.officePhone,
+                address:{create:{
+                    streetAddress:args.data.requestedChange.address.streetAddress,
+                    city:args.data.requestedChange.address.city,
+                    province:args.data.requestedChange.address.province,
+                    postalCode:args.data.requestedChange.address.postalCode,
+                    country:args.data.requestedChange.address.country,                        
+                }
+            
+            },
+                titleEn: args.data.requestedChange.titleEn,  
+                titleFr: args.data.requestedChange.titleFr,
+                //team: args.data.requestedChange.team,      
+                // team:{create:{
+                //     id:args.data.requestedChange.team.id,
+                // } 
+                team:{connect: {id: copyValueToObjectIfDefined(args.data.requestedChange.team.id)}}    
+            
+        }
+          },
         actionedOn: copyValueToObjectIfDefined(args.data.actionedOn),
         deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
         status: copyValueToObjectIfDefined(args.data.status)

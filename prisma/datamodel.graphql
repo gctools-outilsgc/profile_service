@@ -21,7 +21,7 @@ type Address {
   province: String!
   postalCode: String!
   country: String!
-  resident: Profile! @relation(name:"Resident")
+  resident: Profile @relation(name:"Resident")
 }
 
 type Team {
