@@ -203,7 +203,7 @@ input RequestedChangeInput {
     address: AddressInput
     titleEn: String
     titleFr: String
-    team: TeamInput
+    team: ModifyTeamInput
 }
 
 enum Status {

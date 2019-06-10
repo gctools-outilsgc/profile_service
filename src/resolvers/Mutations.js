@@ -294,7 +294,7 @@ async function deleteTeam(_, args, context){
 
 async function createApproval(_, args, context, info){
 
-    //var address = getNewAddressFromArgs(args.requestedChange);
+    var address = getNewAddressFromArgs(args.requestedChange);
     
     return await context.prisma.mutation.createApproval({
         data: {
@@ -308,20 +308,23 @@ async function createApproval(_, args, context, info){
                     avatar: args.requestedChange.avatar,   
                     mobilePhone: args.requestedChange.mobilePhone,
                     officePhone: args.requestedChange.officePhone,
-                    //address: {create:address},
-                    address:{create:{
-                        streetAddress:args.requestedChange.address.streetAddress,
-                        city:args.requestedChange.address.city,
-                        province:args.requestedChange.address.province,
-                        postalCode:args.requestedChange.address.postalCode,
-                        country:args.requestedChange.address.country,                        
-                    }
-                },
+                    address: {create:address},
                     titleEn: args.requestedChange.titleEn,  
                     titleFr: args.requestedChange.titleFr,
-                    team: args.requestedChange.team,           
+                    team:{
+                        create:{
+                            nameEn:args.requestedChange.team.nameEn,
+                            nameFr:args.requestedChange.team.nameFr,
+                            descriptionEn:args.requestedChange.team.descriptionEn,
+                            descriptionFr:args.requestedChange.team.descriptionFr,
+                            colour:args.requestedChange.team.colour, 
+                            avatar:args.requestedChange.team.avatar,
+                            organization:{connect:{ id:args.requestedChange.team.organization.id}},
+                            owner:args.requestedChange.team.owner,                        
+                        }
+                    },       
                 }
-              },
+            },
             createdOn: args.createdOn,
             actionedOn: copyValueToObjectIfDefined(args.actionedOn),
             deniedComment: copyValueToObjectIfDefined(args.deniedComment),
@@ -332,7 +335,7 @@ async function createApproval(_, args, context, info){
 }
 
 async function modifyApproval(_, args, context, info){
-
+    var address = getNewAddressFromArgs(args.data.requestedChange);
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({id:args.id})){
         throw new UserInputError("Approval does not Exist");
@@ -347,25 +350,23 @@ async function modifyApproval(_, args, context, info){
                 avatar: args.data.requestedChange.avatar,   
                 mobilePhone: args.data.requestedChange.mobilePhone,
                 officePhone: args.data.requestedChange.officePhone,
-                address:{create:{
-                    streetAddress:args.data.requestedChange.address.streetAddress,
-                    city:args.data.requestedChange.address.city,
-                    province:args.data.requestedChange.address.province,
-                    postalCode:args.data.requestedChange.address.postalCode,
-                    country:args.data.requestedChange.address.country,                        
-                }
-            
-            },
-                titleEn: args.data.requestedChange.titleEn,  
+                address: {create:address},
+                team:{
+                    create:{
+                        nameEn:args.data.requestedChange.team.nameEn,
+                        nameFr:args.data.requestedChange.team.nameFr,
+                        descriptionEn:args.data.requestedChange.team.descriptionEn,
+                        descriptionFr:args.data.requestedChange.team.descriptionFr,
+                        colour:args.data.requestedChange.team.colour, 
+                        avatar:args.data.requestedChange.team.avatar,
+                        organization:{connect:{ id:args.data.requestedChange.team.organization.id}},
+                        owner:args.data.requestedChange.team.owner,                        
+                    }
+                },
+             titleEn: args.data.requestedChange.titleEn,  
                 titleFr: args.data.requestedChange.titleFr,
-                //team: args.data.requestedChange.team,      
-                // team:{create:{
-                //     id:args.data.requestedChange.team.id,
-                // } 
-                team:{connect: {id: copyValueToObjectIfDefined(args.data.requestedChange.team.id)}}    
-            
-        }
-          },
+            },
+        },
         actionedOn: copyValueToObjectIfDefined(args.data.actionedOn),
         deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
         status: copyValueToObjectIfDefined(args.data.status)
