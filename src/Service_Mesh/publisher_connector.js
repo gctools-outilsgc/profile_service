@@ -11,6 +11,9 @@ async function publishMessageQueue(exchange, key, msgBody){
 
     if (publishChannel == null){
         publishChannel = await publisherConnection.createChannel();
+        publishChannel.assertExchange(exchange, "topic", {
+            durable: true
+        });
 
         publishChannel.on("error", function(err) {
             // eslint-disable-next-line no-console
@@ -56,7 +59,7 @@ function connectMessageQueuePublisher(){
 
         // eslint-disable-next-line no-console      
         console.info("[SMQ] connected");
-        publisherConnection = conn;
+        publisherConnection = conn;        
     });
 }
 
