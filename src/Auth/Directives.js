@@ -168,11 +168,21 @@ class OwnerDirective extends SchemaDirectiveVisitor {
   }
 }
 
+class RequiresApproval extends SchemaDirectiveVisitor {
+  visitFieldDefinition(field) {
+    const {resolve = defaultFieldResolver } = field;
+    field.resolve = async function (record, args, context, info) {
+      return resolve.apply(this, [record, args, context, info]);
+    };
+  }
+}
+
 module.exports = {
   OrganizationDirective,
   AuthenticatedDirective,
   SupervisorDirective,
   SameTeamDirective,
   OwnerDirective,
+  RequiresApproval,
   profileFragment
 };

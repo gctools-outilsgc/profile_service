@@ -30,7 +30,8 @@ const schema = makeExecutableSchema({
     inOrganization: AuthDirectives.OrganizationDirective,
     isSameTeam: AuthDirectives.SameTeamDirective,
     isSupervisor: AuthDirectives.SupervisorDirective,
-    isOwner: AuthDirectives.OwnerDirective,    
+    isOwner: AuthDirectives.OwnerDirective,
+    requiresApproval: AuthDirectives.RequiresApproval,    
   },
   resolverValidationOptions: {
     requireResolversForResolveType: false

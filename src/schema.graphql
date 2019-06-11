@@ -20,6 +20,10 @@ directive @isSupervisor on FIELD_DEFINITION
 # return the field value if the requestor is the owner (has the same gcID)
 directive @isOwner on FIELD_DEFINITION
 
+# The @requiresApproval directive can be placed on any field of a Profile object that requires
+# approval from the users supervisor
+directive @requiresApproval on FIELD_DEFINITION
+
 
 scalar Email
 scalar PhoneNumber
