@@ -311,65 +311,26 @@ async function createApproval(_, args, context, info){
                     address: {create:address},
                     titleEn: args.requestedChange.titleEn,  
                     titleFr: args.requestedChange.titleFr,
-                    team:{
-                        create:{
-                            nameEn:args.requestedChange.team.nameEn,
-                            nameFr:args.requestedChange.team.nameFr,
-                            descriptionEn:args.requestedChange.team.descriptionEn,
-                            descriptionFr:args.requestedChange.team.descriptionFr,
-                            colour:args.requestedChange.team.colour, 
-                            avatar:args.requestedChange.team.avatar,
-                            organization:{connect:{ id:args.requestedChange.team.organization.id}},
-                            owner:args.requestedChange.team.owner,                        
-                        }
-                    },       
+                    team:{connect:{ id:args.requestedChange.team.id}}, 
                 }
             },
-            createdOn: args.createdOn,
-            actionedOn: copyValueToObjectIfDefined(args.actionedOn),
-            deniedComment: copyValueToObjectIfDefined(args.deniedComment),
-            status: args.status,
+            createdOn: await Date.now().toString(),
+            status: "Pending",
             changeType: args.changeType
         }
     }, info);
 }
 
 async function modifyApproval(_, args, context, info){
-    var address = getNewAddressFromArgs(args.data.requestedChange);
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({id:args.id})){
         throw new UserInputError("Approval does not Exist");
     }
 
     var updateApprovalData = {
-        requestedChange: {
-            create:{
-                gcID: args.data.requestedChange.gcID,
-                name: args.data.requestedChange.name,
-                email: args.data.requestedChange.email,
-                avatar: args.data.requestedChange.avatar,   
-                mobilePhone: args.data.requestedChange.mobilePhone,
-                officePhone: args.data.requestedChange.officePhone,
-                address: {create:address},
-                team:{
-                    create:{
-                        nameEn:args.data.requestedChange.team.nameEn,
-                        nameFr:args.data.requestedChange.team.nameFr,
-                        descriptionEn:args.data.requestedChange.team.descriptionEn,
-                        descriptionFr:args.data.requestedChange.team.descriptionFr,
-                        colour:args.data.requestedChange.team.colour, 
-                        avatar:args.data.requestedChange.team.avatar,
-                        organization:{connect:{ id:args.data.requestedChange.team.organization.id}},
-                        owner:args.data.requestedChange.team.owner,                        
-                    }
-                },
-             titleEn: args.data.requestedChange.titleEn,  
-                titleFr: args.data.requestedChange.titleFr,
-            },
-        },
-        actionedOn: copyValueToObjectIfDefined(args.data.actionedOn),
-        deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
-        status: copyValueToObjectIfDefined(args.data.status)
+        actionedOn: await Date.now().toString(),
+        deniedComment: args.data.deniedComment,
+        status: args.data.status
     };
 
     return await context.prisma.mutation.updateApproval({
