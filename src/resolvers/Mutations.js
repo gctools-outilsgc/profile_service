@@ -292,111 +292,22 @@ async function deleteTeam(_, args, context){
     throw new UserInputError("Team does not exist");
 }
 
-async function createApproval(_, args, context, info){
-
-    var address = getNewAddressFromArgs(args.requestedChange);
-    
-    return await context.prisma.mutation.createApproval({
-        data: {
-            gcIDApprover: {connect: {gcID: copyValueToObjectIfDefined(args.gcIDApprover.gcID)}},
-            gcIDSubmitter: {connect: {gcID: copyValueToObjectIfDefined(args.gcIDSubmitter.gcID)}},
-            requestedChange: {
-                create:{
-                    gcID: args.requestedChange.gcID,
-                    name: args.requestedChange.name,
-                    email: args.requestedChange.email,
-                    avatar: args.requestedChange.avatar,   
-                    mobilePhone: args.requestedChange.mobilePhone,
-                    officePhone: args.requestedChange.officePhone,
-                    address: {create:address},
-                    titleEn: args.requestedChange.titleEn,  
-                    titleFr: args.requestedChange.titleFr,
-                    team:{
-                        create:{
-                            nameEn:args.requestedChange.team.nameEn,
-                            nameFr:args.requestedChange.team.nameFr,
-                            descriptionEn:args.requestedChange.team.descriptionEn,
-                            descriptionFr:args.requestedChange.team.descriptionFr,
-                            colour:args.requestedChange.team.colour, 
-                            avatar:args.requestedChange.team.avatar,
-                            organization:{connect:{ id:args.requestedChange.team.organization.id}},
-                            owner:args.requestedChange.team.owner,                        
-                        }
-                    },       
-                }
-            },
-            createdOn: args.createdOn,
-            actionedOn: copyValueToObjectIfDefined(args.actionedOn),
-            deniedComment: copyValueToObjectIfDefined(args.deniedComment),
-            status: args.status,
-            changeType: args.changeType
-        }
-    }, info);
-}
-
 async function modifyApproval(_, args, context, info){
-    var address = getNewAddressFromArgs(args.data.requestedChange);
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({id:args.id})){
         throw new UserInputError("Approval does not Exist");
     }
-
     var updateApprovalData = {
-        requestedChange: {
-            create:{
-                gcID: args.data.requestedChange.gcID,
-                name: args.data.requestedChange.name,
-                email: args.data.requestedChange.email,
-                avatar: args.data.requestedChange.avatar,   
-                mobilePhone: args.data.requestedChange.mobilePhone,
-                officePhone: args.data.requestedChange.officePhone,
-                address: {create:address},
-                team:{
-                    create:{
-                        nameEn:args.data.requestedChange.team.nameEn,
-                        nameFr:args.data.requestedChange.team.nameFr,
-                        descriptionEn:args.data.requestedChange.team.descriptionEn,
-                        descriptionFr:args.data.requestedChange.team.descriptionFr,
-                        colour:args.data.requestedChange.team.colour, 
-                        avatar:args.data.requestedChange.team.avatar,
-                        organization:{connect:{ id:args.data.requestedChange.team.organization.id}},
-                        owner:args.data.requestedChange.team.owner,                        
-                    }
-                },
-             titleEn: args.data.requestedChange.titleEn,  
-                titleFr: args.data.requestedChange.titleFr,
-            },
-        },
-        actionedOn: copyValueToObjectIfDefined(args.data.actionedOn),
+        actionedOn: await Date.now().toString(),
         deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
-        status: copyValueToObjectIfDefined(args.data.status)
+        status: args.data.status
     };
-
     return await context.prisma.mutation.updateApproval({
         where: {
             id: args.id
         },
         data: updateApprovalData
     }, info);
-}
-
-async function deleteApproval(_, args, context){
-
-    // eslint-disable-next-line new-cap
-    if (await context.prisma.exists.Approval({id:args.id})){
-        try {
-
-            await context.prisma.mutation.deleteApproval({
-                where:{
-                    id: args.id
-                }
-            });
-        } catch(e){
-        return false;
-        }
-        return true;
-    }
-    throw new UserInputError("Approval does not exist");
 }
 
 module.exports = {
@@ -409,7 +320,5 @@ module.exports = {
     createTeam,
     modifyTeam,
     deleteTeam,
-    createApproval,
     modifyApproval,
-    deleteApproval
 };

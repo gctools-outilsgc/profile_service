@@ -117,8 +117,8 @@ function approvals(_, args, context, info){
     {
       where:{
         id: copyValueToObjectIfDefined(args.id),
-        gcIDSubmitter: copyValueToObjectIfDefined(submittedApprovals),
-        gcIDApprover: copyValueToObjectIfDefined(outstandingApprovals),
+        gcIDSubmitter: submittedApprovals,
+        gcIDApprover: outstandingApprovals,
       
         // eslint-disable-next-line camelcase
         status: copyValueToObjectIfDefined(args.status),
