@@ -43,7 +43,7 @@ async function verifyToken(request){
   let auth = config.client.id + ":" + config.client.secret;
   let base64auth = Buffer.from(auth).toString("base64");
 
-  const url = config.openId.url + "/openid/introspect";
+  const url = config.openId.url + "/openid/introspect/";
   const postOptions = {
     method: "POST",
     headers: {
@@ -66,10 +66,11 @@ async function verifyToken(request){
     tokenData = errorMsg;
   });
 
-  tokenData = await getTokenOwner(tokenData);
+  if (tokenData.active){
+    tokenData = await getTokenOwner(tokenData);
+  }
 
   return tokenData;
-
 }
 
 module.exports = {

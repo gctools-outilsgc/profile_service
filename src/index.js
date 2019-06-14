@@ -2,7 +2,7 @@ const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
 const { Prisma } = require("prisma-binding");
 const {EmailAddress, PostalCode} =  require("@okgrow/graphql-scalars");
 const Query = require("./resolvers/Query");
-const Mutation = require("./resolvers/Mutations");
+const {modifyProfile, createTeam, modifyTeam, deleteTeam} = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
 const AuthDirectives = require("./Auth/Directives");
@@ -11,18 +11,31 @@ const { connectMessageQueueListener } = require("./Service_Mesh/listener_connect
 const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_connector");
 const introspect = require("./Auth/introspection");
 const { getDefaults } = require("./resolvers/helper/default_setup");
+const { applyMiddleware } = require("graphql-middleware");
+const { approvalRequired } = require("./resolvers/middleware");
 
 const resolvers = {
   Query,
-  Mutation,
+  Mutation : {
+    modifyProfile,
+    createTeam,
+    modifyTeam,  
+    deleteTeam,
+  },
   Email : EmailAddress,
   PhoneNumber,
   PostalCode
 };
 
+const approvalRequiredApplications = {
+  Mutation:{
+    modifyProfile: approvalRequired
+  },  
+};
+
 const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}`;
 
-const schema = makeExecutableSchema({
+const schemaBeforeMiddleware = makeExecutableSchema({
   typeDefs,
   resolvers,
   schemaDirectives: {
@@ -37,6 +50,11 @@ const schema = makeExecutableSchema({
     requireResolversForResolveType: false
   }
 });
+
+const schema = applyMiddleware(
+  schemaBeforeMiddleware,
+  approvalRequiredApplications
+);
 
 const server = new ApolloServer({
   schema,

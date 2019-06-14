@@ -4,7 +4,7 @@ endpoint: http://${env:PRISMA_API_ENDPOINT}:4466/profile/
 datamodel: datamodel.graphql
 generate:
   - generator: graphql-schema
-    output: ../src/generated/
+    output: ../src/generated/prisma.graphql
 hooks:
   post-deploy:
     - prisma generate

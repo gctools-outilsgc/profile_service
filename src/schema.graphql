@@ -16,7 +16,7 @@ directive @isSameTeam on FIELD_DEFINITION
 # return the field value if the requestor is the assigned supervisor
 directive @isSupervisor on FIELD_DEFINITION
 
-# The @isOwner directive can be placed on a filed of a Profile object and will only
+# The @isOwner directive can be placed on a field of a Profile object and will only
 # return the field value if the requestor is the owner (has the same gcID)
 directive @isOwner on FIELD_DEFINITION
 
@@ -39,9 +39,14 @@ type Query {
 }
 
 type Mutation {
-  createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, team: TeamInput): Profile!
+
+# The create profile mutation will be remvoed because profiles will only be created through the Service Mesh. 
+# createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, team: TeamInput): Profile!
+  
   modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile!
-  deleteProfile(gcID: ID!): Boolean!
+# The delete profile mutaiton will be removed because profiles will only be deleted through the Service Mesh.
+# deleteProfile(gcID: ID!): Boolean!
+
   createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
   modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
@@ -65,9 +70,9 @@ type Profile {
   mobilePhone: PhoneNumber
   officePhone: PhoneNumber
   address: Address
-  titleEn: String
-  titleFr: String
-  team: Team
+  titleEn: String @requiresApproval
+  titleFr: String @requiresApproval
+  team: Team @requiresApproval
   ownerOfTeams: [Team!]!
   outstandingApprovals: [Approval!]!
   submittedApprovals: [Approval!]!
@@ -138,9 +143,9 @@ input ModifyProfileInput {
   mobilePhone: PhoneNumber
   officePhone: PhoneNumber
   address: AddressInput
-  titleEn: String
-  titleFr: String
-  team: TeamInput
+  titleEn: String 
+  titleFr: String 
+  team: TeamInput 
 }
 
 input ModifyTeamInput {
