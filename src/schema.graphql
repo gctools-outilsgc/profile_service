@@ -43,7 +43,7 @@ type Mutation {
 # The create profile mutation will be remvoed because profiles will only be created through the Service Mesh. 
 # createProfile(gcID: ID!, name: String!, email: Email!, avatar: Upload, titleEn: String, titleFr: String, mobilePhone: PhoneNumber, officePhone: PhoneNumber, address: AddressInput, team: TeamInput): Profile!
   
-  modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile!
+  modifyProfile(gcID: ID!, data: ModifyProfileInput): Profile! @isAuthenticated
 # The delete profile mutaiton will be removed because profiles will only be deleted through the Service Mesh.
 # deleteProfile(gcID: ID!): Boolean!
 
