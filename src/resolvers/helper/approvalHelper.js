@@ -3,7 +3,7 @@ const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
 
 async function createApproval(_, args, context, info){
-    var address = getNewAddressFromArgs(args.requestedChange);
+    var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
     
     return await context.prisma.mutation.createApproval({
         data: {
@@ -17,10 +17,10 @@ async function createApproval(_, args, context, info){
                     avatar: copyValueToObjectIfDefined(args.requestedChange.avatar),
                     mobilePhone: copyValueToObjectIfDefined(args.requestedChange.mobilePhone),
                     officePhone: copyValueToObjectIfDefined(args.requestedChange.officePhone),
-                    address: {create:address},
+                    address: (address) ? {create:address}: address,
                     titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
                     titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
-                    team:{connect:{ id:args.requestedChange.team.id}},
+                    team: (args.requestedChange.team) ? {connect:{ id:args.requestedChange.team.id}} : null,
                 }
             },
             createdOn: await Date.now().toString(),
