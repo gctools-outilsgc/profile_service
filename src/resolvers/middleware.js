@@ -1,4 +1,5 @@
 const {createApproval} = require("../resolvers/helper/approvalHelper");
+const { AuthenticationError } = require("apollo-server");
 
 function checkForDirective(field, info){
     const directiveName = "requiresApproval";
@@ -64,6 +65,11 @@ async function generateInformationalApproval(approvalObject, context){
 
 
 const approvalRequired = async (resolve, root, args, context, info) => {
+
+    if (!context.token){
+        throw new AuthenticationError("Must be authenticaticated");
+    }
+
     var requestedChanges = {};
     requestedChanges.gcID = args.gcID;
     requestedChanges.approvalSubmitter = context.token.owner.gcID;
