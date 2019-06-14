@@ -1,4 +1,4 @@
-const {createApproval} = require("../resolvers/Mutations");
+const {createApproval} = require("../resolvers/helper/approvalHelper");
 
 function checkForDirective(field, info){
     const directiveName = "requiresApproval";
