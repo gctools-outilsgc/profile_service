@@ -49,6 +49,5 @@ async function deleteApproval(_, args, context){
 
 module.exports = {
     createApproval,
-    modifyApproval,
     deleteApproval
 };
