@@ -7,8 +7,8 @@ async function createApproval(_, args, context, info){
     
     return await context.prisma.mutation.createApproval({
         data: {
-            gcIDApprover: {connect: {gcID: args.gcIDApprover.gcID}},
-            gcIDSubmitter: {connect: {gcID: args.gcIDSubmitter.gcID}},
+            gcIDApprover: {connect: {gcID: args.gcIDApprover}},
+            gcIDSubmitter: {connect: {gcID: args.gcIDSubmitter}},
             requestedChange: {
                 create:{
                     gcID: args.requestedChange.gcID,
