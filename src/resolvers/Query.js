@@ -98,10 +98,46 @@ function organizations(_, args, context, info){
   );
 }
 
+function approvals(_, args, context, info){
+  var outstandingApprovals = {};
+  var submittedApprovals = {};
+  
+  if (propertyExists(args, "gcIDApprover")){
+    outstandingApprovals = {
+      gcID: copyValueToObjectIfDefined(args.gcIDApprover.gcID),
+    };
+  }
+
+  if (propertyExists(args, "gcIDSubmitter")){
+    submittedApprovals = {
+      gcID: copyValueToObjectIfDefined(args.gcIDSubmitter.gcID),
+    };
+  }
+  return context.prisma.query.approvals(
+    {
+      where:{
+        id: copyValueToObjectIfDefined(args.id),
+        gcIDSubmitter: submittedApprovals,
+        gcIDApprover: outstandingApprovals,
+      
+        // eslint-disable-next-line camelcase
+        status: copyValueToObjectIfDefined(args.status),
+        // eslint-disable-next-line camelcase
+        changeType: copyValueToObjectIfDefined(args.changeType),
+
+      },
+      skip: copyValueToObjectIfDefined(args.skip),
+      first: copyValueToObjectIfDefined(args.first),
+    },
+    info
+  );
+}
+
 
 module.exports = {
     profiles,
     addresses,
     teams,
     organizations,
+    approvals
 };

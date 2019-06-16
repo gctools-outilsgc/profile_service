@@ -292,6 +292,23 @@ async function deleteTeam(_, args, context){
     throw new UserInputError("Team does not exist");
 }
 
+async function modifyApproval(_, args, context, info){
+    // eslint-disable-next-line new-cap
+    if (!context.prisma.exists.Approval({id:args.id})){
+        throw new UserInputError("Approval does not Exist");
+    }
+    var updateApprovalData = {
+        actionedOn: await Date.now().toString(),
+        deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
+        status: args.data.status
+    };
+    return await context.prisma.mutation.updateApproval({
+        where: {
+            id: args.id
+        },
+        data: updateApprovalData
+    }, info);
+}
 
 module.exports = {
     createProfile,
@@ -302,5 +319,6 @@ module.exports = {
     deleteOrganization,
     createTeam,
     modifyTeam,
-    deleteTeam
+    deleteTeam,
+    modifyApproval,
 };
