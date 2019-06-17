@@ -18,13 +18,13 @@ function checkForDirective(field, info){
 
 }
 
-async function generateMemerbshipApproval(requestedChanges, context){
-    if (requestedChanges.data.team){
+async function generateMemerbshipApproval(membershipChanges, context){
+    if (membershipChanges.data.team){
 
         var newSupervisor = await context.prisma.query.team(
             {
                 where:{
-                    id: requestedChanges.data.team.id
+                    id: membershipChanges.data.team.id
                 }
             }, "{owner{gcID}}")
         .then((data) => {
@@ -36,11 +36,11 @@ async function generateMemerbshipApproval(requestedChanges, context){
 
         var teamApprovalObject = {
             gcIDApprover: newSupervisor,
-            gcIDSubmitter: requestedChanges.approvalSubmitter,
+            gcIDSubmitter: membershipChanges.approvalSubmitter,
             requestedChange: {
-                gcID: requestedChanges.data.gcID,
+                gcID: membershipChanges.data.gcID,
                 team:{
-                    id: requestedChanges.data.team.id
+                    id: membershipChanges.data.team.id
                 }
             },
             changeType: "Membership"
@@ -49,6 +49,7 @@ async function generateMemerbshipApproval(requestedChanges, context){
         
         await createApproval(null, teamApprovalObject, context)
         .catch((e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
         });
     }
@@ -56,21 +57,21 @@ async function generateMemerbshipApproval(requestedChanges, context){
 }
 
 
-async function generateInformationalApproval(requestedChanges, context){
+async function generateInformationalApproval(informationalChanges, context){
     // If no current supervisor don't create an approval object
 
-    if(requestedChanges.gcIDApprover){
+    if(informationalChanges.approverID){
        // Remove team object because it's being handled in Membership change
-        if (requestedChanges.team){
-            delete requestedChanges.team;
+        if (informationalChanges.data.team){
+            delete informationalChanges.data.team;
         }
 
 
 
         const informationalApprovalObject = {
-            gcIDApprover: requestedChanges.approverID,
-            gcIDSubmitter: requestedChanges.approvalSubmitter,
-            requestedChange: requestedChanges.data,
+            gcIDApprover: informationalChanges.approverID,
+            gcIDSubmitter: informationalChanges.approvalSubmitter,
+            requestedChange: informationalChanges.data,
             changeType: "Informational"
         };
 
@@ -78,6 +79,8 @@ async function generateInformationalApproval(requestedChanges, context){
 
         await createApproval(null, informationalApprovalObject, context)
         .catch((e) => {
+
+            // eslint-disable-next-line no-console
             console.log(e);
         }); 
     }
@@ -110,34 +113,27 @@ const approvalRequired = async (resolve, root, args, context, info) => {
     // Membership approval process
 
     if (!requestedChanges.approverID && args.data.team){
-        // If no current supervisor then pass through Information
-        // changes without the team object
-        const newArgs = args;
-        delete newArgs.data.team;
-    }
 
-    for (var field in args.data){
-        // Find any fields wrapped with the @requiresApproval directive and
-        // remove them from the current context
-        if (await checkForDirective(field, info)){
-            requestedChanges.data[field] = args.data[field];
-            delete args.data[field];
+        requestedChanges.data.team = args.data.team;
+        delete args.data.team;
+
+    } else {
+
+        for (var field in args.data){
+            // Find any fields wrapped with the @requiresApproval directive and
+            // remove them from the current context
+            if (await checkForDirective(field, info)){
+                requestedChanges.data[field] = args.data[field];
+                delete args.data[field];
+            }
         }
     }
-
-        
      
     await Promise.all(
         [
-            generateMemerbshipApproval(requestedChanges, context),
-            generateInformationalApproval(requestedChanges, context)
+            generateMemerbshipApproval(JSON.parse(JSON.stringify(requestedChanges)), context),
+            generateInformationalApproval(JSON.parse(JSON.stringify(requestedChanges)), context)
         ]);
-
-    // createApproval(gcIDApprover: gcIDProfileInput!, gcIDSubmitter: gcIDProfileInput!, requestedChange: RequestedChangeInput, createdOn: String, actionedOn: String, deniedComment: String, status: Status, changeType: ChangeType)
-
-    // ToDo: Approver will differ depending on change type (informational vs team).
-    // Need to check before setting gcIDApprover in object.
-
 
     // mutate any remainng non protected fields and resolve info
     return await resolve(root, args, context, info);

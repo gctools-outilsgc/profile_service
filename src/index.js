@@ -2,7 +2,7 @@ const { ApolloServer, gql, makeExecutableSchema } = require("apollo-server");
 const { Prisma } = require("prisma-binding");
 const {EmailAddress, PostalCode} =  require("@okgrow/graphql-scalars");
 const Query = require("./resolvers/Query");
-const {modifyProfile, createTeam, modifyTeam, deleteTeam} = require("./resolvers/Mutations");
+const {modifyProfile, createTeam, modifyTeam, deleteTeam, modifyApproval} = require("./resolvers/Mutations");
 const {PhoneNumber} = require("./resolvers/Scalars");
 const config = require("./config");
 const AuthDirectives = require("./Auth/Directives");
@@ -21,6 +21,7 @@ const resolvers = {
     createTeam,
     modifyTeam,  
     deleteTeam,
+    modifyApproval,
   },
   Email : EmailAddress,
   PhoneNumber,

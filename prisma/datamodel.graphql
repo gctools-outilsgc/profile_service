@@ -10,8 +10,8 @@ type Profile {
   titleFr: String
   team: Team @relation(name:"TeamMembers")
   ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
-  outstandingApprovals: [Approval!]! @relation(name:"Approver")
-  submittedApprovals: [Approval] @relation(name:"Submitter")
+  outstandingApprovals: [Approval!]! @relation(name:"Approver", onDelete: CASCADE)
+  submittedApprovals: [Approval] @relation(name:"Submitter", onDelete: CASCADE)
 }
 
 type Address {

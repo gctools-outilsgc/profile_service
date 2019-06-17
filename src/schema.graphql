@@ -50,10 +50,13 @@ type Mutation {
   createTeam(nameEn: String!, nameFr: String!, descriptionEn: String, descriptionFr: String, organization: OrganizationInput!, owner: TeamOwnerInput!): Team!
   modifyTeam(id: ID!, data: ModifyTeamInput): Team!
   deleteTeam(id: ID!): Boolean!
-  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
-  modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
-  deleteOrganization(id: ID!): Boolean!
-  modifyApproval(id: ID!, data: ModifyApprovalInput): Approval!
+
+# The Organization mutations are being removed because they would be Admin type mutations
+# createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
+# modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
+# deleteOrganization(id: ID!): Boolean!
+  
+  modifyApproval(id: ID!, data: ModifyApprovalInput): Approval! @isAuthenticated
 }
 
 type MultiLingualField {
