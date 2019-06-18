@@ -4,7 +4,7 @@ const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./help
 const { getApprovalChanges } = require("./helper/approvalHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
-
+const  { searchPrep } = require("../Search/transformer");
 
 async function createProfile(_, args, context, info){
         var createProfileData = {
@@ -57,9 +57,15 @@ async function createProfile(_, args, context, info){
     }
 
 
-    return await context.prisma.mutation.createProfile({
+    const profile = await context.prisma.mutation.createProfile({
         data: createProfileData,
         }, info);
+    
+    searchPrep(profile, "new", context)
+    .catch((e) => {
+        // ignore it for now
+    });
+    return profile;
 }
 
 async function modifyProfile(_, args, context, info){
@@ -112,12 +118,18 @@ async function modifyProfile(_, args, context, info){
         await changeOwnedTeamsRoot(args.gcID, args.data.team.id, context);
     }
 
-    return await context.prisma.mutation.updateProfile({
+    const modifiedProfile = await context.prisma.mutation.updateProfile({
         where:{
         gcID: args.gcID
         },
         data: updateProfileData
     }, info);
+
+    searchPrep(modifiedProfile,"change", context)
+    .catch((e) => {
+        // ignore it for now
+    });
+    return modifiedProfile;
 
 
 }
@@ -134,6 +146,7 @@ async function deleteProfile(_, args, context){
     } catch(e){
         throw new UserInputError("Profile does not exist");
     }
+    searchPrep(args, "delete", context);
     return true;
     
 }

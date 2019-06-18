@@ -19,7 +19,7 @@ const getContext = async () => {
     endpoint: "http://localhost:4466/profile",
     });
   
-  ctx.defaults = await getDefaults(ctx);
+  ctx.defaults = await getDefaults();
   return ctx;
 };
 

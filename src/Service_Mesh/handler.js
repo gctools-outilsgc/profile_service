@@ -4,8 +4,9 @@ const { createProfile } = require("../resolvers/Mutations");
 const {GraphQLError} = require("graphql");
 const { publishMessageQueue } = require("./publisher_connector");
 const config = require("../config");
+const { getDefaults } = require("../resolvers/helper/default_setup");
 
-const context = {
+var context = {
     prisma: new Prisma({
         typeDefs: "./src/generated/prisma.graphql",
         endpoint: "http://"+config.prisma.host+":4466/profile/",
@@ -15,12 +16,13 @@ const context = {
 
 async function msgHandler(msg, success) {
     const messageBody = JSON.parse(msg.content.toString());
+    context.defaults = await getDefaults();
     switch (msg.fields.routingKey){
         case "user.new":
             var args = {
                 gcID: messageBody.gcID,
                 name: messageBody.name,
-                email: messageBody.name
+                email: messageBody.email
             };
             try {
                 await createProfile(null, args, context, "{gcID, name, email}");

@@ -34,6 +34,9 @@ const development = {
    id:clientId,
    secret:clientSecret
  },
+ elastic:{
+   host:"http://localhost:9200"
+ },
  engine:{
    apiID: engineAPI
  }
@@ -65,6 +68,9 @@ openId:{
 client:{
   id:clientId,
   secret:clientSecret
+},
+elastic:{
+  host:"http://localhost:9200"
 },
 engine:{
   apiID: engineAPI
