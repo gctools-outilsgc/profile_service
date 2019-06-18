@@ -42,7 +42,7 @@ function listenMessageQueue(exchange){
         }); 
         listenerChannel.checkExchange(exchange, function(err, ok){
             if (ok) {
-                listenerChannel.assertQueue("profile", listenQueueOptions, function(err, q) {
+                listenerChannel.assertQueue("profile_listener", listenQueueOptions, function(err, q) {
                     if (closeOnErr(err, listenerChannel)) {
                         return;
                     }

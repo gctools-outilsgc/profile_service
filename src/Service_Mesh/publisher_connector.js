@@ -5,12 +5,15 @@ const amqp = require("amqplib/callback_api");
 var publisherConnection = null;
 var publishChannel = null;
 
-async function publishMessageQueue(exchange, key, rejectMsg){
+async function publishMessageQueue(exchange, key, msgBody){
 
     var retryDelay = 5000;
 
     if (publishChannel == null){
         publishChannel = await publisherConnection.createChannel();
+        publishChannel.assertExchange(exchange, "topic", {
+            durable: true
+        });
 
         publishChannel.on("error", function(err) {
             // eslint-disable-next-line no-console
@@ -25,7 +28,7 @@ async function publishMessageQueue(exchange, key, rejectMsg){
         }); 
     }
     try {
-        await publishChannel.publish(exchange, key, new Buffer(JSON.stringify(rejectMsg), {persistent:true}));
+        await publishChannel.publish(exchange, key, Buffer.from(JSON.stringify(msgBody), {persistent:true}));
     } catch(err){
         // eslint-disable-next-line no-console
         console.error("[SMQ] error", err);
@@ -56,7 +59,7 @@ function connectMessageQueuePublisher(){
 
         // eslint-disable-next-line no-console      
         console.info("[SMQ] connected");
-        publisherConnection = conn;
+        publisherConnection = conn;        
     });
 }
 

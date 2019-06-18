@@ -37,6 +37,7 @@
   "author": "Bryan Robitaille - GCTools/OutilsGC",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.1.0",
     "@okgrow/graphql-scalars": "^0.4.5",
     "amqplib": "^0.5.3",
     "apollo-server": "^2.4.2",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "faker": "^4.1.0",
+    "graphql-request": "^1.8.2",
     "jest": "^23.6.0",
     "jest-html-reporter": "^2.4.4",
     "randomatic": "^3.1.1",
