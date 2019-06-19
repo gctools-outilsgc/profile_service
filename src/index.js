@@ -22,7 +22,6 @@ const resolvers = {
     modifyTeam,  
     deleteTeam,
     modifyApproval,
-    search,
   },
   Email : EmailAddress,
   PhoneNumber,
