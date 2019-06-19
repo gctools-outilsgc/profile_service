@@ -56,11 +56,24 @@ async function generateMemerbshipApproval(membershipChanges, context){
     return;
 }
 
+function checkForEmptyChanges(changesObject){
+    var requestedChanges = JSON.parse(JSON.stringify(changesObject.data));
+    delete requestedChanges.gcID;
+    var isNull = true;
+    
+    Object.entries(requestedChanges).forEach((field) => {
+        isNull = isNull && !field;
+    });
+
+    return isNull;
+
+}
+
 
 async function generateInformationalApproval(informationalChanges, context){
     // If no current supervisor don't create an approval object
 
-    if(informationalChanges.approverID){
+    if(informationalChanges.approverID && !checkForEmptyChanges(informationalChanges)){
        // Remove team object because it's being handled in Membership change
         if (informationalChanges.data.team){
             delete informationalChanges.data.team;
@@ -106,11 +119,6 @@ const approvalRequired = async (resolve, root, args, context, info) => {
         // it's a membership change
         return await resolve(root, args, context, info);
     }
-
-    //This is where you're working...
-    // Need to find way to split incoming request to pass
-    // Informational without approval and continue with
-    // Membership approval process
 
     if (!requestedChanges.approverID && args.data.team){
 
