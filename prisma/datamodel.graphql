@@ -10,8 +10,8 @@ type Profile {
   titleFr: String
   team: Team @relation(name:"TeamMembers")
   ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
-  outstandingApprovals: [Approval!]! @relation(name:"Approver")
-  submittedApprovals: [Approval] @relation(name:"Submitter")
+  outstandingApprovals: [Approval!]! @relation(name:"Approver", onDelete: CASCADE)
+  submittedApprovals: [Approval] @relation(name:"Submitter", onDelete: CASCADE)
 }
 
 type Address {
@@ -50,7 +50,7 @@ type Approval {
     id: ID! @unique
     gcIDApprover: Profile! @relation(name:"Approver")
     gcIDSubmitter: Profile @relation(name:"Submitter")
-    requestedChange: RequestedChange!
+    requestedChange: RequestedChange! @relation(name: "RequestedChanges" onDelete: CASCADE)
     createdOn: String!
     actionedOn: String
     deniedComment: String
@@ -60,6 +60,7 @@ type Approval {
 
 type RequestedChange {
     id: ID! @unique
+    approval: Approval! @relation(name:"RequestedChanges")
     gcID: ID
     name: String
     email: String

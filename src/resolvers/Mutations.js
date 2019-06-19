@@ -1,6 +1,7 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
 const { throwExceptionIfProfileIsNotDefined, throwExceptionIfTeamIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
+const { getApprovalChanges } = require("./helper/approvalHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 const  { searchPrep } = require("../Search/transformer");
@@ -306,6 +307,7 @@ async function deleteTeam(_, args, context){
 }
 
 async function modifyApproval(_, args, context, info){
+
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({id:args.id})){
         throw new UserInputError("Approval does not Exist");
@@ -315,6 +317,12 @@ async function modifyApproval(_, args, context, info){
         deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
         status: args.data.status
     };
+    
+    if (args.data.status === "Approved"){
+        const approvedChanges = await getApprovalChanges(args.id, context);
+        modifyProfile(_, approvedChanges, context);
+    }
+
     return await context.prisma.mutation.updateApproval({
         where: {
             id: args.id

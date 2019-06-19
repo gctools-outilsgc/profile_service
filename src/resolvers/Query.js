@@ -145,4 +145,5 @@ module.exports = {
   addresses,
   teams,
   organizations,
+  approvals
 };

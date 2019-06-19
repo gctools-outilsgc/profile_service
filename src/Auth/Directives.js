@@ -97,7 +97,7 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
           return await resolve.apply(this, [record, args, context, info]);
         }
         if (propertyExists(context.token,"sub")){
-          return resolve.apply(this, [record, args, context, info]);
+          return await resolve.apply(this, [record, args, context, info]);
         } else {
             return await blockValue(field);
         }
@@ -168,11 +168,21 @@ class OwnerDirective extends SchemaDirectiveVisitor {
   }
 }
 
+class RequiresApproval extends SchemaDirectiveVisitor {
+  // A marker that is placed on the Input object to be identigy a field that requires approval
+  // The fields are then captured and handled in middleware
+
+  visitFieldDefinition(){
+    return;
+  }
+}
+
 module.exports = {
   OrganizationDirective,
   AuthenticatedDirective,
   SupervisorDirective,
   SameTeamDirective,
   OwnerDirective,
+  RequiresApproval,
   profileFragment
 };

@@ -28,7 +28,7 @@ const development = {
    password: mqPass
  },
  openId:{
-   url:"http://localhost:8000"
+   url:"https://dev.account.gccollab.ca"
  },
  client:{
    id:clientId,
