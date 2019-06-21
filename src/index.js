@@ -62,7 +62,10 @@ const server = new ApolloServer({
   engine: {
       apiKey: config.engine.apiID,
   },
-  tracing: config.app.tracing, 
+  tracing: config.app.tracing,
+  cors: {
+    origin: "*"
+  },
   context: async (req) => ({
     ...req,
     prisma: new Prisma({
