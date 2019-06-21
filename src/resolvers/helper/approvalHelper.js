@@ -8,6 +8,7 @@ async function createApproval(_, args, context, info){
     const data = {
             gcIDApprover: {connect: {gcID: args.gcIDApprover}},
             gcIDSubmitter: {connect: {gcID: args.gcIDSubmitter}},
+            createdBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
                 create:{
                     gcID: args.requestedChange.gcID,
@@ -40,7 +41,7 @@ async function getApprovalChanges(approvalID, context){
             where: {
                 id: approvalID
             }
-        }, "{requestedChange{gcID, name, email, avatar, mobilePhone, officePhone,"
+        }, "{gcIDApprover{gcID, name, email},requestedChange{gcID, name, email, avatar, mobilePhone, officePhone,"
         + "address{streetAddress, city, province, postalCode, country},"
         + "titleEn,titleFr,team{id}}}"
     );

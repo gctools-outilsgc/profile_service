@@ -12,6 +12,8 @@ type Profile {
   ownerOfTeams: [Team!]! @relation(name:"OwnerOfTeam")
   outstandingApprovals: [Approval!]! @relation(name:"Approver", onDelete: CASCADE)
   submittedApprovals: [Approval] @relation(name:"Submitter", onDelete: CASCADE)
+  createdApprovals: [Approval] @relation(name:"Creator")
+  updatedApprovals: [Approval] @relation(name:"Updater")
 }
 
 type Address {
@@ -49,9 +51,11 @@ type Organization {
 type Approval {
     id: ID! @unique
     gcIDApprover: Profile! @relation(name:"Approver")
-    gcIDSubmitter: Profile @relation(name:"Submitter")
+    gcIDSubmitter: Profile! @relation(name:"Submitter")
     requestedChange: RequestedChange! @relation(name: "RequestedChanges" onDelete: CASCADE)
     createdOn: String!
+    createdBy: Profile! @relation(name:"Creator")
+    updatedBy: Profile @relation(name:"Updater")
     actionedOn: String
     deniedComment: String
     status: Status!
@@ -61,7 +65,6 @@ type Approval {
 type RequestedChange {
     id: ID! @unique
     approval: Approval! @relation(name:"RequestedChanges")
-    gcID: ID
     name: String
     email: String
     avatar: String
