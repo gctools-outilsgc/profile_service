@@ -154,12 +154,14 @@ async function checkAgainstExistingProfile(requestedChanges, submitterProfile){
 
 async function getApprovalType(approvals, type){
 
-    const index = approvals.findIndex((approval) => {
-        return approval.changeType === type;
-    });
-
-    if (index >= 0){
-        return approvals[index];
+    if(approvals){
+        const index = approvals.findIndex((approval) => {
+            return approval.changeType === type;
+        });
+    
+        if (index >= 0){
+            return approvals[index];
+        }
     }
 
     return null;
@@ -266,6 +268,20 @@ const approvalRequired = async (resolve, root, args, context, info) => {
             delete args.data[field];
         }
     }
+    
+    // If the supervisor is changing a persons team pass through the changes
+    if(requestedChanges.data.team && requestedChanges.approverID.gcID === context.token.owner.gcID){
+        const teamArgs = {
+            gcID: args.gcID,
+            data:{
+                team:{
+                    id: requestedChanges.data.team.id
+                }
+            }
+            
+        };
+        return await resolve(root, teamArgs, context, info);
+    }
 
     // Check to see if the requested changes coming in are changes
     // or already existing data.
@@ -275,7 +291,7 @@ const approvalRequired = async (resolve, root, args, context, info) => {
     // If there are changes that require approval check to see if there aren't already
     // approvals generated for the change
 
-    const existingApprovals = await getExistingApprovals(context, requestedChanges.approvalSubmitter.gcID)
+    const existingApprovals = await getExistingApprovals(context, requestedChanges.approvalSubmitter)
     .then((approvals) => checkAgainstExistingApprovals(requestedChanges.data, approvals));
 
     // If there are still changes in the requestedChanges object that were not

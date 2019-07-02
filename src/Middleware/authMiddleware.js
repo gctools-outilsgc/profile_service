@@ -14,8 +14,8 @@ const allowedToModifyProfile = async (resolve, root, args, context, info) => {
 
     // Only the profile owner or their current supervisor can modify a profile
     
-    const submitter = getSubmitterProfile(context, args);
-    if (args.gcID !== context.token.owner.gcID || context.token.owner.teamgcID !== submitter.gcID){
+    const submitter = await getSubmitterProfile(context, args);
+    if (args.gcID !== context.token.owner.gcID && context.token.owner.gcID !== submitter.team.owner.gcID){
         throw new AuthenticationError("Must be owner or supervisor of profile to Modify");
     }
     return await resolve(root, args, context, info);
