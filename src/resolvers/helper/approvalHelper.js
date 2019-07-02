@@ -11,7 +11,6 @@ async function createApproval(_, args, context, info){
             createdBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
                 create:{
-                    gcID: args.requestedChange.gcID,
                     name: copyValueToObjectIfDefined(args.requestedChange.name),
                     email: copyValueToObjectIfDefined(args.requestedChange.email),
                     avatar: copyValueToObjectIfDefined(args.requestedChange.avatar),
@@ -33,6 +32,39 @@ async function createApproval(_, args, context, info){
     }, info);
 }
 
+async function appendApproval(_, args, context, info){
+    var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
+
+    const data = {
+            gcIDApprover: {connect: {gcID: args.gcIDApprover}},
+            updatedBy: {connect: {gcID: args.createdBy}},
+            requestedChange: {
+                update:{
+                    name: copyValueToObjectIfDefined(args.requestedChange.name),
+                    email: copyValueToObjectIfDefined(args.requestedChange.email),
+                    avatar: copyValueToObjectIfDefined(args.requestedChange.avatar),
+                    mobilePhone: copyValueToObjectIfDefined(args.requestedChange.mobilePhone),
+                    officePhone: copyValueToObjectIfDefined(args.requestedChange.officePhone),
+                    address: (address) ? {create: address} : address,
+                    titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
+                    titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
+                    team: (args.requestedChange.team) ? {connect: {id: args.requestedChange.team.id}} : null,
+                }
+            },
+            actionedOn: await Date.now().toString(),
+            status: "Pending",
+      
+};
+    
+    return await context.prisma.mutation.updateApproval({
+        where:{
+            id: args.id
+        },
+        data
+    }, info);
+}
+
+
 async function getApprovalChanges(approvalID, context){
     // Do the action to update the profile
 
@@ -41,13 +73,13 @@ async function getApprovalChanges(approvalID, context){
             where: {
                 id: approvalID
             }
-        }, "{gcIDApprover{gcID, name, email},requestedChange{gcID, name, email, avatar, mobilePhone, officePhone,"
+        }, "{gcIDApprover{gcID, name, email},gcIDSubmitter{gcID, name, email},requestedChange{name, email, avatar, mobilePhone, officePhone,"
         + "address{streetAddress, city, province, postalCode, country},"
         + "titleEn,titleFr,team{id}}}"
     );
     
     var infoToModify = {
-        gcID: approvalToAction.requestedChange.gcID,
+        gcID: approvalToAction.gcIDSubmitter.gcID,
         data: {
             name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
             email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
@@ -93,5 +125,6 @@ async function deleteApproval(_, args, context){
 module.exports = {
     createApproval,
     deleteApproval,
-    getApprovalChanges
+    getApprovalChanges,
+    appendApproval
 };

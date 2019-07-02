@@ -189,7 +189,6 @@ type Approval {
 
 type RequestedChange {
     id: ID!
-    gcID: ID!
     name: String
     email: String
     avatar: String
@@ -202,7 +201,6 @@ type RequestedChange {
 }
 
 input RequestedChangeInput {
-    gcID: ID!
     name: String
     email: String
     avatar: String

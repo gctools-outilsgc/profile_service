@@ -12,7 +12,8 @@ const { connectMessageQueuePublisher } = require("./Service_Mesh/publisher_conne
 const introspect = require("./Auth/introspection");
 const { getDefaults } = require("./resolvers/helper/default_setup");
 const { applyMiddleware } = require("graphql-middleware");
-const { approvalRequired } = require("./resolvers/middleware");
+const { approvalRequired } = require("./Middleware/approvalCreation");
+const {allowedToModifyProfile, allowedToModifyApproval, mustbeAuthenticated} = require("./Middleware/authMiddleware");
 
 const resolvers = {
   Query,
@@ -22,6 +23,8 @@ const resolvers = {
     modifyTeam,  
     deleteTeam,
     modifyApproval,
+    createProfile,
+    createOrganization
   },
   Email : EmailAddress,
   PhoneNumber,
@@ -32,6 +35,24 @@ const approvalRequiredApplications = {
   Mutation:{
     modifyProfile: approvalRequired
   },  
+};
+
+const ownershipRequiredApplications = {
+  Mutation:{
+    modifyProfile: allowedToModifyProfile,
+    modifyApproval: allowedToModifyApproval 
+  },
+};
+
+const authenticationRequiredApplications = 
+{
+  Mutation:{
+    modifyProfile: mustbeAuthenticated,
+    createTeam: mustbeAuthenticated,
+    modifyTeam: mustbeAuthenticated,
+    deleteTeam: mustbeAuthenticated,
+    modifyApproval: mustbeAuthenticated
+  }
 };
 
 const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}`;
@@ -54,7 +75,9 @@ const schemaBeforeMiddleware = makeExecutableSchema({
 
 const schema = applyMiddleware(
   schemaBeforeMiddleware,
-  approvalRequiredApplications
+  authenticationRequiredApplications,
+  ownershipRequiredApplications,
+  approvalRequiredApplications,
 );
 
 const server = new ApolloServer({
