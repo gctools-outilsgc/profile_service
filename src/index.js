@@ -22,9 +22,7 @@ const resolvers = {
     createTeam,
     modifyTeam,  
     deleteTeam,
-    modifyApproval,
-    createProfile,
-    createOrganization
+    modifyApproval
   },
   Email : EmailAddress,
   PhoneNumber,
