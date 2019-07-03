@@ -41,7 +41,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
             where:{
                 gcID: approval.gcIDSubmitter.gcID
             }
-        }, "{team:{owner:{gcID}}}"
+        }, "{team{owner{gcID}}}"
     );
 
    if(approval.changeType === "Informational"){
