@@ -109,17 +109,6 @@ async function getExistingApprovals(context, gcID){
     }`);
 }
 
-async function whoIsTheApprover(context, args, submitterProfile){
-    const newTeamOwner = await isThereATeamOwner(args.data.team, context);
-
-    if (args.data.team){
-        return (newTeamOwner) ? newTeamOwner.owner : null;
-    } else {
-        return (submitterProfile.team.owner) ? submitterProfile.team.owner : null;
-    }
-}
-
-
 async function checkAgainstExistingApprovals(requestedChanges, approvals) {
 
     // If there are no existing approvals then short circuit
@@ -167,6 +156,38 @@ async function getApprovalType(approvals, type){
     return null;
 
 }
+
+async function getNewSupervisor(context, gcID){
+    return await getExistingApprovals(context, gcID)
+    .then((approvals) => {
+        return getApprovalType(approvals, "Membership");
+    })
+    .then((membershipApproval) => {
+        if (membershipApproval){
+            return isThereATeamOwner(membershipApproval.requestedChange.team);
+        }
+        return null;
+    });
+}
+
+
+async function whoIsTheApprover(context, args, submitterProfile){
+    const newTeamOwner = await isThereATeamOwner(args.data.team, context);
+    const membershipRequest = await getNewSupervisor(context, args.gcID);
+
+    if (args.data.team){
+        return (newTeamOwner) ? newTeamOwner.owner : null;
+    } else {
+        if (membershipRequest) {
+            return membershipRequest.owner;            
+        } else {
+            return (submitterProfile.team.owner) ? submitterProfile.team.owner : null;  
+        }        
+    }
+}
+
+
+
 
 async function generateMemerbshipApproval(membershipChanges, context, approvals = null){
     if (membershipChanges.data.team){
