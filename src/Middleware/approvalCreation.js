@@ -164,7 +164,7 @@ async function getNewSupervisor(context, gcID){
     })
     .then((membershipApproval) => {
         if (membershipApproval){
-            return isThereATeamOwner(membershipApproval.requestedChange.team);
+            return isThereATeamOwner(membershipApproval.requestedChange.team, context);
         }
         return null;
     });
