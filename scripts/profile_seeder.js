@@ -38,12 +38,6 @@ async function seed(){
                     nameFr: orgFr,
                     acronymEn: faker.hacker.abbreviation(),
                     acronymFr: faker.hacker.abbreviation(),
-                    teams:{
-                        create:{
-                            nameEn: "Organization Default Team",
-                            nameFr: "Équipe par defaut d'organization",
-                        }
-                    }
                 };
 
                 // Store the created org info to assign teams to the org.

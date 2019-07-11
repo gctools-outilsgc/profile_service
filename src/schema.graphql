@@ -34,7 +34,7 @@ type Query {
   search(partialName:String):[Profile!]!
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
-  teams(id: ID, nameEn: String, nameFr: String, descriptionEn: String, descriptionFr: String, skip: Int, first: Int): [Team!]!,
+  teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
   approvals(id:ID, gcIDApprover: gcIDProfileInput, gcIDSubmitter: gcIDProfileInput, status: Status, changeType: ChangeType, skip: Int, first: Int): [Approval!]!  
 }
@@ -189,7 +189,6 @@ type Approval {
 
 type RequestedChange {
     id: ID!
-    gcID: ID!
     name: String
     email: String
     avatar: String
@@ -202,7 +201,6 @@ type RequestedChange {
 }
 
 input RequestedChangeInput {
-    gcID: ID!
     name: String
     email: String
     avatar: String

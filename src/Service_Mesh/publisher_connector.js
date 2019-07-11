@@ -9,6 +9,11 @@ async function publishMessageQueue(exchange, key, msgBody){
 
     var retryDelay = 5000;
 
+    // If there is no Message Queue Connection then do not try to send a message
+    if(!publisherConnection){
+        return;
+    }
+
     if (publishChannel == null){
         publishChannel = await publisherConnection.createChannel();
         publishChannel.assertExchange(exchange, "topic", {

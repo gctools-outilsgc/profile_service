@@ -19,8 +19,21 @@ const propertyExists = (args, property) => {
   return true;  
 };
 
+function removeNullKeys(object){
+  Object.keys(object).forEach((key) => {
+    (!object.key) ? delete object.key : object.key;
+  });
+  return object;
+}
+
+function cloneObject(object){
+  return JSON.parse(JSON.stringify(object));
+}
+
 module.exports = {
   copyValueToObjectIfDefined,
   propertyRequired,
-  propertyExists
+  propertyExists,
+  removeNullKeys,
+  cloneObject
 };

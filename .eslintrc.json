@@ -5,7 +5,7 @@
     "arrow-spacing": ["error", { "before": true, "after": true }],
     "block-scoped-var":"error",
     "brace-style":["error", "1tbs"],
-    "complexity": ["error", { "max": 10 }],
+    "complexity": ["error", { "max": 15 }],
     "camelcase":"warn",
     "curly": ["error", "all"],
     "eqeqeq": ["error", "smart"],
