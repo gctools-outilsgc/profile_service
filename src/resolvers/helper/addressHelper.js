@@ -16,7 +16,7 @@ const getNewAddressFromArgs = (args) => {
   });
 
   if (errors.length > 0) {
-      throw new UserInputError("Missing Fields Required", {
+      throw new UserInputError("Missing Fields Required: " + errors, {
           missingFields: errors
         });
   }
