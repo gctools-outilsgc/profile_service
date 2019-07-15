@@ -220,6 +220,7 @@ enum Status {
 enum ChangeType {
     Membership
     Informational
+    Team
 }
 
 input gcIDProfileInput {
