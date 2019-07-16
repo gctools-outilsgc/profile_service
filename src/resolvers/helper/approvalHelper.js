@@ -86,6 +86,7 @@ async function getApprovalChanges(approvalID, context){
     if (approvalToAction.changeType === ("Membership" || "Informational")){
         infoToModify = removeNullKeys({
             gcID: approvalToAction.gcIDSubmitter.gcID,
+            changeType: approvalToAction.changeType,
             data: {
                 name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
                 email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
@@ -117,6 +118,7 @@ async function getApprovalChanges(approvalID, context){
     if(approvalToAction.changeType === "Team"){
         infoToModify = removeNullKeys({
             id: approvalToAction.requestedChange.ownershipOfTeam.id,
+            changeType: approvalToAction.changeType,
             data: {
                 owner:{
                     gcID: approvalToAction.gcIDApprover.gcID
