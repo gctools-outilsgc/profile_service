@@ -57,7 +57,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
         return await resolve(root, args, context, info);
     }
 
-    if(approval.changeType === "Membership"){
+    if(approval.changeType === "Membership" || approval.changeType === "Team"){
         if(approval.gcIDApprover.gcID !== context.token.owner.gcID){
             throw new AuthenticationError("Must be supervisor of the team to accept transfer request");
         }
