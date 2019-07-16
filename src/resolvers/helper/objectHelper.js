@@ -21,7 +21,18 @@ const propertyExists = (args, property) => {
 
 function removeNullKeys(object){
   Object.keys(object).forEach((key) => {
-    (!object.key) ? delete object.key : object.key;
+    if (!object[key]){
+      delete object[key];
+      return;
+    }
+    if (object[key] === Object(object[key])){
+      removeNullKeys(object[key]);
+      if(Object.entries(object[key]).length === 0){
+        delete object[key];
+        return;
+      }
+    }
+
   });
   return object;
 }

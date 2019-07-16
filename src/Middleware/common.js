@@ -1,3 +1,5 @@
+const { removeNullKeys, copyValueToObjectIfDefined } = require("../resolvers/helper/objectHelper");
+
 async function getProfile(context, args){
     return await context.prisma.query.profile({
         where:{
@@ -5,6 +7,14 @@ async function getProfile(context, args){
         }
     },"{gcID, name, email, avatar, mobilePhone, officePhone, titleEn, titleFr, address{streetAddress, city, province, postalCode, country},team{id,organization{id},owner{gcID}}}");
 }
+
+async function getTeam(context, id){
+    return await context.prisma.query.team({
+         where:{
+             id
+         }
+     }, "{id, owner{gcID}}");
+ }
 
 function checkForDirective(field, info, directiveName){
     const fieldDirectives = info.returnType.ofType._fields[field].astNode.directives;
@@ -33,6 +43,53 @@ function checkForEmptyChanges(changesObject){
     return isNull;
 }
 
+async function getExistingApprovals(context, gcID, team = null){
+    return await context.prisma.query.approvals({
+        where: removeNullKeys({
+            status: "Pending",
+            gcIDSubmitter:{
+                gcID
+            },
+            requestedChange:{
+                ownershipOfTeam:{
+                    id: copyValueToObjectIfDefined(team ? team.id : null)
+                }
+            }
+        })
+    }, 
+    `{
+        id,
+        gcIDApprover{
+            gcID
+        },
+        status,
+        changeType,
+        requestedChange{
+            id,
+            name,
+            email,
+            avatar,
+            mobilePhone,
+            officePhone,
+            address{
+            streetAddress,
+            city,
+            province,
+            postalCode,
+            country
+            },
+            titleEn,
+            titleFr,
+            team{
+                id
+            },
+            ownershipOfTeam{
+                id
+            } 
+        }
+    }`);
+}
+
 async function getApprovalType(approvals, type){
 
     if(approvals){
@@ -50,7 +107,9 @@ async function getApprovalType(approvals, type){
 
 module.exports = {
     getProfile,
+    getTeam,
     checkForDirective,
     checkForEmptyChanges,
-    getApprovalType
+    getApprovalType,
+    getExistingApprovals
 };

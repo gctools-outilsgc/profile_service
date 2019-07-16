@@ -1,6 +1,6 @@
 const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
-const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType } = require("./common");
+const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational
@@ -23,44 +23,7 @@ async function isThereATeamOwner(teamID, context){
     return owner;
 }
 
-async function getExistingApprovals(context, gcID){
-    return await context.prisma.query.approvals({
-        where:{
-            status: "Pending",
-            gcIDSubmitter:{
-                gcID
-            }
-        }
-    }, 
-    `{
-        id,
-        gcIDApprover{
-            gcID
-        },
-        status,
-        changeType,
-        requestedChange{
-            id,
-            name,
-            email,
-            avatar,
-            mobilePhone,
-            officePhone,
-            address{
-            streetAddress,
-            city,
-            province,
-            postalCode,
-            country
-            },
-            titleEn,
-            titleFr,
-            team{
-                id
-            }   
-        }
-    }`);
-}
+
 
 async function checkAgainstExistingApprovals(requestedChanges, approvals) {
 
