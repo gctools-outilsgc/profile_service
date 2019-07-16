@@ -7,7 +7,7 @@ const copyValueToObjectIfDefined = (originalValue) => {
 const propertyRequired = (args, property) => {
   let value = args[property];
   if(args[property] === null || typeof value === "undefined"){
-      return `${property} is not defined and is a required field`;
+      return `'${property}' is not defined and is a required field`;
   }
 };
 
@@ -21,7 +21,7 @@ const propertyExists = (args, property) => {
 
 function removeNullKeys(object){
   Object.keys(object).forEach((key) => {
-    if (!object[key]){
+    if(object[key] === null || typeof object[key] === "undefined"){
       delete object[key];
       return;
     }
@@ -32,7 +32,6 @@ function removeNullKeys(object){
         return;
       }
     }
-
   });
   return object;
 }
