@@ -76,34 +76,56 @@ async function getApprovalChanges(approvalID, context){
             where: {
                 id: approvalID
             }
-        }, "{gcIDApprover{gcID, name, email},gcIDSubmitter{gcID, name, email},requestedChange{name, email, avatar, mobilePhone, officePhone,"
+        }, "{gcIDApprover{gcID, name, email},gcIDSubmitter{gcID, name, email}, changeType, requestedChange{name, email, avatar, mobilePhone, officePhone,"
         + "address{streetAddress, city, province, postalCode, country},"
-        + "titleEn,titleFr,team{id}}}"
+        + "titleEn,titleFr,team{id},ownershipOfTeam{id}}}"
     );
+
+    var infoToModify = {};
+
+    if (approvalToAction.changeType === ("Membership" || "Informational")){
+        infoToModify = removeNullKeys({
+            gcID: approvalToAction.gcIDSubmitter.gcID,
+            data: {
+                name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
+                email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
+                avatar: copyValueToObjectIfDefined(approvalToAction.requestedChange.avatar),
+                mobilePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.mobilePhone),
+                officePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.officePhone),
+                titleEn: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleEn),
+                titleFr: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleFr)    
+            }
     
-    var infoToModify = removeNullKeys({
-        gcID: approvalToAction.gcIDSubmitter.gcID,
-        data: {
-            name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
-            email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
-            avatar: copyValueToObjectIfDefined(approvalToAction.requestedChange.avatar),
-            mobilePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.mobilePhone),
-            officePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.officePhone),
-            titleEn: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleEn),
-            titleFr: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleFr)    
+        });
+    
+        if(approvalToAction.requestedChange.team){
+            infoToModify.data.team = {
+                id: approvalToAction.requestedChange.team.id
+            };
         }
-
-    });
-
-    if(approvalToAction.requestedChange.team){
-        infoToModify.data.team = {
-            id: approvalToAction.requestedChange.team.id
-        };
+    
+        if(approvalToAction.requestedChange.ownershipOfTeam){
+            infoToModify.data.owner = {
+                gcID: approvalToAction.gcIDApprover.gcID
+            };
+        }
+    
+        if(approvalToAction.requestedChange.address){
+            infoToModify.data.address = approvalToAction.requestedChange.address;
+        }
     }
+    if(approvalToAction.changeType === "Team"){
+        infoToModify = removeNullKeys({
+            id: approvalToAction.requestedChange.ownershipOfTeam.id,
+            data: {
+                owner:{
+                    gcID: approvalToAction.gcIDApprover.gcID
+                }  
+            }    
+        });
+    } 
+    
 
-    if(approvalToAction.requestedChange.address){
-        infoToModify.data.address = approvalToAction.requestedChange.address;
-    }
 
     return infoToModify;
 }
