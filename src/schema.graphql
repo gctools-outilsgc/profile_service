@@ -198,6 +198,7 @@ type RequestedChange {
     titleEn: String
     titleFr: String
     team: Team
+    ownershipOfTeam: Team
 }
 
 input RequestedChangeInput {
@@ -210,6 +211,7 @@ input RequestedChangeInput {
     titleEn: String
     titleFr: String
     team: TeamInput
+    ownershipOfTeam: TeamInput
 }
 
 enum Status {

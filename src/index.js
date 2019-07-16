@@ -14,7 +14,7 @@ const { getDefaults } = require("./resolvers/helper/default_setup");
 const { applyMiddleware } = require("graphql-middleware");
 const { profileApprovalRequired } = require("./Middleware/profileApprovalCreation");
 const { teamApprovalRequired } = require("./Middleware/teamApprovalCreation");
-const {allowedToModifyProfile, allowedToModifyApproval, mustbeAuthenticated} = require("./Middleware/authMiddleware");
+const {allowedToModifyProfile, allowedToModifyApproval, allowedToModifyTeam, mustbeAuthenticated} = require("./Middleware/authMiddleware");
 
 const resolvers = {
   Query,
@@ -45,7 +45,8 @@ const teamApprovalRequiredApplications = {
 const ownershipRequiredApplications = {
   Mutation:{
     modifyProfile: allowedToModifyProfile,
-    modifyApproval: allowedToModifyApproval 
+    modifyApproval: allowedToModifyApproval,
+    modifyTeam: allowedToModifyTeam 
   },
 };
 

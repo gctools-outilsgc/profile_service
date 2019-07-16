@@ -1,6 +1,6 @@
 const { AuthenticationError } = require("apollo-server");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
-const {getProfile} = require("./common");
+const {getProfile, getTeam} = require("./common");
 
 
 const allowedToModifyProfile = async (resolve, root, args, context, info) => {
@@ -13,6 +13,16 @@ const allowedToModifyProfile = async (resolve, root, args, context, info) => {
     }
     return await resolve(root, args, context, info);
     
+};
+
+const allowedToModifyTeam = async (resolve, root, args, context, info) => {
+    // Only the current team owner can modify a team
+    const existingTeam = await getTeam(context, args.id);
+    if (existingTeam.owner.gcID !== context.token.owner.gcID){
+        throw new AuthenticationError("Must be owner of team to modify");
+    }
+    return await resolve(root, args, context, info);
+
 };
 
 const allowedToModifyApproval = async (resolve, root, args, context, info) => {
@@ -70,6 +80,7 @@ const mustbeAuthenticated = async (resolve, root, args, context, info) => {
 
 module.exports={
     allowedToModifyProfile,
+    allowedToModifyTeam,
     allowedToModifyApproval,
     mustbeAuthenticated
 
