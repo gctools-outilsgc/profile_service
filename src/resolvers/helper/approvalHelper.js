@@ -1,16 +1,16 @@
-const {copyValueToObjectIfDefined} = require("./objectHelper");
+const {copyValueToObjectIfDefined, removeNullKeys} = require("./objectHelper");
 const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
 
 async function createApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
-    const data = {
+    const data = removeNullKeys({
             gcIDApprover: {connect: {gcID: args.gcIDApprover}},
             gcIDSubmitter: {connect: {gcID: args.gcIDSubmitter}},
             createdBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
-                create:{
+                create: {
                     name: copyValueToObjectIfDefined(args.requestedChange.name),
                     email: copyValueToObjectIfDefined(args.requestedChange.email),
                     avatar: copyValueToObjectIfDefined(args.requestedChange.avatar),
@@ -20,12 +20,13 @@ async function createApproval(_, args, context, info){
                     titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
                     titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
                     team: (args.requestedChange.team) ? {connect: {id: args.requestedChange.team.id}} : null,
+                    ownershipOfTeam: (args.requestedChange.ownershipOfTeam) ? {connect: {id: args.requestedChange.ownershipOfTeam.id}} : null,
                 }
             },
             createdOn: await Date.now().toString(),
             status: "Pending",
             changeType: args.changeType        
-};
+    });
     
     return await context.prisma.mutation.createApproval({
         data
@@ -35,7 +36,7 @@ async function createApproval(_, args, context, info){
 async function appendApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
-    const data = {
+    const data = removeNullKeys({
             gcIDApprover: {connect: {gcID: args.gcIDApprover}},
             updatedBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
@@ -49,12 +50,14 @@ async function appendApproval(_, args, context, info){
                     titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
                     titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
                     team: (args.requestedChange.team) ? {connect: {id: args.requestedChange.team.id}} : null,
+                    ownershipOfTeam: (args.requestedChange.ownershipOfTeam) ? {connect: {id: args.requestedChange.ownershipOfTeam.id}} : null,
+                    
                 }
             },
             actionedOn: await Date.now().toString(),
             status: "Pending",
       
-};
+    });
     
     return await context.prisma.mutation.updateApproval({
         where:{
@@ -78,7 +81,7 @@ async function getApprovalChanges(approvalID, context){
         + "titleEn,titleFr,team{id}}}"
     );
     
-    var infoToModify = {
+    var infoToModify = removeNullKeys({
         gcID: approvalToAction.gcIDSubmitter.gcID,
         data: {
             name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
@@ -90,7 +93,7 @@ async function getApprovalChanges(approvalID, context){
             titleFr: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleFr)    
         }
 
-    };
+    });
 
     if(approvalToAction.requestedChange.team){
         infoToModify.data.team = {
