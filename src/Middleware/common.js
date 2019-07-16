@@ -1,4 +1,4 @@
-async function getSubmitterProfile(context, args){
+async function getProfile(context, args){
     return await context.prisma.query.profile({
         where:{
             gcID: args.gcID
@@ -49,7 +49,7 @@ async function getApprovalType(approvals, type){
 }
 
 module.exports = {
-    getSubmitterProfile,
+    getProfile,
     checkForDirective,
     checkForEmptyChanges,
     getApprovalType

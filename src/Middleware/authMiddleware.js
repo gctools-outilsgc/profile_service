@@ -1,20 +1,13 @@
 const { AuthenticationError } = require("apollo-server");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
+const {getProfile} = require("./common");
 
-
-async function getSubmitterProfile(context, args){
-    return await context.prisma.query.profile({
-        where:{
-            gcID: args.gcID
-        }
-    },"{gcID, name, email, avatar, mobilePhone, officePhone, titleEn, titleFr, address{streetAddress, city, province, postalCode, country},team{id,organization{id},owner{gcID}}}");
-}
 
 const allowedToModifyProfile = async (resolve, root, args, context, info) => {
 
     // Only the profile owner or their current supervisor can modify a profile
     
-    const submitter = await getSubmitterProfile(context, args);
+    const submitter = await getProfile(context, args);
     if (args.gcID !== context.token.owner.gcID && context.token.owner.gcID !== submitter.team.owner.gcID){
         throw new AuthenticationError("Must be owner or supervisor of profile to Modify");
     }

@@ -1,18 +1,12 @@
 const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
-const { getSubmitterProfile, checkForDirective, checkForEmptyChanges, getApprovalType } = require("./common");
+const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType } = require("./common");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational
  - Create 2 approvals with new supervisor
  - New supervisor cannot approve information until membership approved
  - Denying membership also cancels the associated informational change
-
-
-
-
-
-
 --------------------------------------------------------------------------*/
 
 async function isThereATeamOwner(teamID, context){
@@ -210,7 +204,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     requestedChanges.data = {};
     requestedChanges.createdBy = context.token.owner.gcID;
     requestedChanges.updatedBy = context.token.owner.gcID;
-    const submitter = await getSubmitterProfile(context, args);
+    const submitter = await getProfile(context, args);
     requestedChanges.approvalSubmitter = submitter.gcID;
     requestedChanges.approverID = await whoIsTheApprover(context, args, submitter);
 
