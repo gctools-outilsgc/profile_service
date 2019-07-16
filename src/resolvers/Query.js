@@ -1,4 +1,4 @@
-const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
+const {copyValueToObjectIfDefined, propertyExists, removeNullKeys} = require("./helper/objectHelper");
 const { addFragmentToInfo } = require("graphql-binding");
 const { profileFragment } = require("../Auth/Directives");
 const { autoCompleter } = require("../Search/autoComplete");
@@ -9,6 +9,7 @@ function search(_, args, context, info){
 
 function profiles(_, args, context, info) {
   return context.prisma.query.profiles(
+    removeNullKeys(
     {
       where:{
         gcID: copyValueToObjectIfDefined(args.gcID),
@@ -26,14 +27,14 @@ function profiles(_, args, context, info) {
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),
-    },
+    }),
     addFragmentToInfo(info, profileFragment),
   );
 }
 
 function addresses(_, args, context, info) {
   return context.prisma.query.addresses(
-    {
+    removeNullKeys({
       where:{
         id: copyValueToObjectIfDefined(args.id),
         // eslint-disable-next-line camelcase
@@ -49,7 +50,7 @@ function addresses(_, args, context, info) {
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),     
-    },
+    }),
     info
   );
 }
@@ -66,7 +67,7 @@ function teams(_, args, context, info) {
   }
 
   return context.prisma.query.teams(
-    {
+    removeNullKeys({
       where:{
         id: copyValueToObjectIfDefined(args.id),
         // eslint-disable-next-line camelcase
@@ -77,14 +78,14 @@ function teams(_, args, context, info) {
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),  
-    },
+    }),
     info
   );
 }
 
 function organizations(_, args, context, info){
   return context.prisma.query.organizations(
-    {
+    removeNullKeys({
       where:{
         id: copyValueToObjectIfDefined(args.id),
         // eslint-disable-next-line camelcase
@@ -98,7 +99,7 @@ function organizations(_, args, context, info){
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),
-    },
+    }),
     info
   );
 }
@@ -119,7 +120,7 @@ function approvals(_, args, context, info){
     };
   }
   return context.prisma.query.approvals(
-    {
+   removeNullKeys({
       where:{
         id: copyValueToObjectIfDefined(args.id),
         gcIDSubmitter: submittedApprovals,
@@ -133,7 +134,7 @@ function approvals(_, args, context, info){
       },
       skip: copyValueToObjectIfDefined(args.skip),
       first: copyValueToObjectIfDefined(args.first),
-    },
+    }),
     info
   );
 }
