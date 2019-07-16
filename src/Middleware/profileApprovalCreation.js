@@ -1,5 +1,4 @@
-const {createApproval, appendApproval} = require("../resolvers/helper/approvalHelper");
-const { AuthenticationError } = require("apollo-server");
+const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
 
 /*-------------------------------------------------------------------------
@@ -265,7 +264,7 @@ async function generateInformationalApproval(informationalChanges, context, appr
 }
 
 
-const approvalRequired = async (resolve, root, args, context, info) => {
+const profileApprovalRequired = async (resolve, root, args, context, info) => {
 
     var requestedChanges = {};
     requestedChanges.data = {};
@@ -340,5 +339,5 @@ const approvalRequired = async (resolve, root, args, context, info) => {
 
 
 module.exports ={
-    approvalRequired
+    profileApprovalRequired
 };
