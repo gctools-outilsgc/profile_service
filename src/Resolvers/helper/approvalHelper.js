@@ -1,8 +1,30 @@
 const {copyValueToObjectIfDefined, removeNullKeys} = require("./objectHelper");
 const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
+const { generateNotification } = require("../../Notifications/generateNotification");
 
-async function createApproval(_, args, context, info){
+const info = `
+{
+    gcIDSubmitter{
+        gcID,
+        name,
+        email,
+        avatar
+    },
+    gcIDApprover{
+        gcID,
+        name,
+        email,
+        avatar
+    },
+    createdOn,
+    actionedOn,
+    deniedComment,
+    status,
+    changeType
+}`;
+
+async function createApproval(_, args, context){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
     const data = removeNullKeys({
@@ -30,10 +52,20 @@ async function createApproval(_, args, context, info){
     
     return await context.prisma.mutation.createApproval({
         data
-    }, info);
+    }, info)
+    .then(async (result) => {
+        await Promise.all([
+            generateNotification(result, "newApprovalSubmitter", context),
+            generateNotification(result, "newApprovalApprover", context)
+        ]);
+        return result;
+    })
+    .catch((e) => {
+        return e;
+    });
 }
 
-async function appendApproval(_, args, context, info){
+async function appendApproval(_, args, context){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
     const data = removeNullKeys({
