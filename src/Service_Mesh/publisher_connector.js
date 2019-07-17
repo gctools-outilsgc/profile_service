@@ -16,7 +16,8 @@ async function publishMessageQueue(exchange, key, msgBody){
 
     if (publishChannel == null){
         publishChannel = await publisherConnection.createChannel();
-        publishChannel.assertExchange(exchange, "topic", {
+        // Ther is a problem here to look at.  The exchange is not being declared before firing the publish event
+        await publishChannel.assertExchange(exchange, "topic", {
             durable: true
         });
 

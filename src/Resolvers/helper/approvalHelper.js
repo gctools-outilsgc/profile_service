@@ -53,11 +53,8 @@ async function createApproval(_, args, context){
     return await context.prisma.mutation.createApproval({
         data
     }, info)
-    .then(async (result) => {
-        await Promise.all([
-            generateNotification(result, "newApprovalSubmitter", context),
-            generateNotification(result, "newApprovalApprover", context)
-        ]);
+    .then((result) => {
+        generateNotification(result, context);
         return result;
     })
     .catch((e) => {
@@ -96,7 +93,14 @@ async function appendApproval(_, args, context){
             id: args.id
         },
         data
-    }, info);
+    }, info)
+    .then((result) => {
+        generateNotification(result, context);
+        return result;
+    })
+    .catch((e) => {
+        return e;
+    });
 }
 
 

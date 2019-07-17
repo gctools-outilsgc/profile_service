@@ -16,7 +16,7 @@ async function renderContent(approval){
 
 async function sendNotification(content, context){
     const notificationObject = removeNullKeys({
-        gcID: content.toUser.gcID,
+        gcID: content.toUser,
         appID: context.token.aud,
         actionLevel: content.actionLevel,
         /*
@@ -31,11 +31,11 @@ async function sendNotification(content, context){
             descriptionFr: content.descriptionFr
         },
         whoDunIt:{
-            gcID: content.fromUser.gcID
+            gcID: content.fromUser
         }        
     });
 
-    await publishMessageQueue("notification", "profile.approval", notificationObject);
+    return await publishMessageQueue("profile", "profile.notification", notificationObject);
 }
 
 async function generateNotification(approval, context){
@@ -48,6 +48,7 @@ async function generateNotification(approval, context){
         sendNotification(content.submitter, context)
     ]);
     
+    return;
 }
 
 module.exports = {
