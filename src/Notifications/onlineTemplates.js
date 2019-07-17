@@ -4,6 +4,8 @@ async function generateOnlineTemplate(template, to, from){
     const onlineTemplate = {
         Team:{
             submitter:{
+                toUser: from.gcID,
+                fromUser: from.gcID,
                 titleEn: "Team Transfer" ,
                 titleFr: "Transfert d'équipe" ,
                 descriptionEn: `Your request to transfer a team to ${to.name} has been created` ,
@@ -11,6 +13,8 @@ async function generateOnlineTemplate(template, to, from){
                 actionLevel: "NoUserAction",
             },
             approver:{
+                toUser: to.gcID,
+                fromUser: from.gcID,
                 titleEn: `Team Transfer from ${from.name}` ,
                 titleFr: `Demande de transfert d'équipe de ${from.name}`,
                 descriptionEn: `${from.name} is requesting to transfer you a team.  Please approve or deny this request`,
@@ -21,6 +25,8 @@ async function generateOnlineTemplate(template, to, from){
         },
         Informational:{
             submitter:{
+                toUser: from.gcID,
+                fromUser: from.gcID,
                 titleEn: "Change Information",
                 titleFr: "Changement d'information",
                 descriptionEn: `You request to change your profile information has been submitted to ${to.name} for approval.` ,
@@ -28,6 +34,8 @@ async function generateOnlineTemplate(template, to, from){
                 actionLevel: "NoUserAction",
             },
             approver:{
+                toUser: to.gcID,
+                fromUser: from.gcID,
                 titleEn: "Reporting User Profile Change" ,
                 titleFr: "Signaler un changement de profil d'utilisateur",
                 descriptionEn: `${from.name} is requesting your approval for information changed in their profile.` ,
@@ -38,6 +46,8 @@ async function generateOnlineTemplate(template, to, from){
         },
         Membership:{
             submitter:{
+                toUser: from.gcID,
+                fromUser: from.gcID,
                 titleEn: "Supervisor Identification" ,
                 titleFr: "Identification du superviseur" ,
                 descriptionEn: `Your request to identify ${to.name}'s as your supervisor has been created` ,
@@ -45,6 +55,8 @@ async function generateOnlineTemplate(template, to, from){
                 actionLevel: "NoUserAction",
             },
             approver:{
+                toUser: to.gcID,
+                fromUser: from.gcID,
                 titleEn: `Request from ${from.name}` ,
                 titleFr: `Demande de ${from.name}`,
                 descriptionEn: `${from.name} has identified you as their supervisor.  Please approve or deny this request`,
@@ -57,3 +69,7 @@ async function generateOnlineTemplate(template, to, from){
     return onlineTemplate[template];
 
 }
+
+module.exports = {
+    generateOnlineTemplate,
+};
