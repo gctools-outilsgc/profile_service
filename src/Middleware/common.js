@@ -1,4 +1,4 @@
-const { removeNullKeys, copyValueToObjectIfDefined } = require("../resolvers/helper/objectHelper");
+const { removeNullKeys, copyValueToObjectIfDefined } = require("../Resolvers/helper/objectHelper");
 
 async function getProfile(context, args){
     return await context.prisma.query.profile({

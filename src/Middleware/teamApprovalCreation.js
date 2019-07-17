@@ -1,5 +1,5 @@
-const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
-const { cloneObject } = require("../resolvers/helper/objectHelper");
+const { createApproval, appendApproval } = require("../Resolvers/helper/approvalHelper");
+const { cloneObject } = require("../Resolvers/helper/objectHelper");
 const { getTeam, getExistingApprovals, getApprovalType} = require("./common");
 
 async function generateTeamTransferApproval(context, existingTeam, newOwner){
