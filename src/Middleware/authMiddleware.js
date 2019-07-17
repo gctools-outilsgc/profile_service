@@ -1,5 +1,5 @@
 const { AuthenticationError } = require("apollo-server");
-const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
+const { removeNullKeys, cloneObject } = require("../Resolvers/helper/objectHelper");
 
 
 async function getSubmitterProfile(context, args){

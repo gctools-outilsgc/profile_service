@@ -5,6 +5,7 @@ const { getApprovalChanges } = require("./helper/approvalHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 const  { searchPrep } = require("../Search/transformer");
+const { publishMessageQueue } = require("../Service_Mesh/publisher_connector");
 
 async function createProfile(_, args, context, info){
         var createProfileData = {

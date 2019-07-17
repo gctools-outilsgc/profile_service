@@ -1,6 +1,6 @@
 const config = require("../src/config");
 const { Prisma } = require("prisma-binding");
-const querys = require("../src/resolvers/Query");
+const querys = require("../src/Resolvers/Query");
 const mesh = require("../src/Service_Mesh/publisher_connector");
 const fs = require("fs");
 const { graphql } = require("graphql");

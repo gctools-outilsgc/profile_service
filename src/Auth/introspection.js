@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 const config = require("../config");
 const { Prisma } = require("prisma-binding");
-const { throwExceptionIfProfileIsNotDefined } = require("../resolvers/helper/profileHelper");
+const { throwExceptionIfProfileIsNotDefined } = require("../Resolvers/helper/profileHelper");
 
 async function getTokenOwner(tokenData){
 

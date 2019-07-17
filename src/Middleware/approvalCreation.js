@@ -1,6 +1,6 @@
-const {createApproval, appendApproval} = require("../resolvers/helper/approvalHelper");
+const {createApproval, appendApproval} = require("../Resolvers/helper/approvalHelper");
 const { AuthenticationError } = require("apollo-server");
-const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
+const { removeNullKeys, cloneObject } = require("../Resolvers/helper/objectHelper");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational
