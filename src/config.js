@@ -39,6 +39,9 @@ const development = {
  },
  engine:{
    apiID: engineAPI
+ },
+ directoryApp:{
+   url:"http://localhost:8000"
  }
 };
 
@@ -74,6 +77,9 @@ elastic:{
 },
 engine:{
   apiID: engineAPI
+},
+directoryApp:{
+  url:"https://profile.gccollab.ca"
 }
 };
 
