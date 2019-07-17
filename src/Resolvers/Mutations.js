@@ -321,7 +321,16 @@ async function modifyApproval(_, args, context, info){
     
     if (args.data.status === "Approved"){
         const approvedChanges = await getApprovalChanges(args.id, context);
-        modifyProfile(_, approvedChanges, context);
+        if (approvedChanges.changeType === ("Membership" || "Informational")){
+            delete approvedChanges.changeType;
+            modifyProfile(_, approvedChanges, context);
+        }
+        if(approvedChanges.changeType === "Team"){
+            delete approvedChanges.changeType;
+            modifyTeam(_, approvedChanges, context);
+        }
+
+
     }
 
     return await context.prisma.mutation.updateApproval({
