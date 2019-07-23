@@ -1,60 +1,13 @@
-const {createApproval, appendApproval} = require("../resolvers/helper/approvalHelper");
-const { AuthenticationError } = require("apollo-server");
+const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
+const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational
  - Create 2 approvals with new supervisor
  - New supervisor cannot approve information until membership approved
  - Denying membership also cancels the associated informational change
-
-
-
-
-
-
 --------------------------------------------------------------------------*/
-
-
-
-function checkForDirective(field, info){
-    const directiveName = "requiresApproval";
-    const fieldDirectives = info.returnType.ofType._fields[field].astNode.directives;
-    var directiveExists = false;
-    if (fieldDirectives.length > 0){
-        fieldDirectives.forEach((directive) => {
-            if (directive.name.value === directiveName){
-                directiveExists = true;
-                return;
-            }
-        });
-    }
-    return directiveExists;
-
-
-}
-
-async function getSubmitterProfile(context, args){
-    return await context.prisma.query.profile({
-        where:{
-            gcID: args.gcID
-        }
-    },"{gcID, name, email, avatar, mobilePhone, officePhone, titleEn, titleFr, address{streetAddress, city, province, postalCode, country},team{id,organization{id},owner{gcID}}}");
-}
-
-function checkForEmptyChanges(changesObject){
-    // Return True if requestedChanges is all null
-
-    var requestedChanges = JSON.parse(JSON.stringify(changesObject));
-    var isNull = true;
-    
-    Object.entries(requestedChanges).forEach((field) => {
-        isNull = isNull && !field;
-    });
-
-    return isNull;
-
-}
 
 async function isThereATeamOwner(teamID, context){
     
@@ -70,44 +23,7 @@ async function isThereATeamOwner(teamID, context){
     return owner;
 }
 
-async function getExistingApprovals(context, gcID){
-    return await context.prisma.query.approvals({
-        where:{
-            status: "Pending",
-            gcIDSubmitter:{
-                gcID
-            }
-        }
-    }, 
-    `{
-        id,
-        gcIDApprover{
-            gcID
-        },
-        status,
-        changeType,
-        requestedChange{
-            id,
-            name,
-            email,
-            avatar,
-            mobilePhone,
-            officePhone,
-            address{
-            streetAddress,
-            city,
-            province,
-            postalCode,
-            country
-            },
-            titleEn,
-            titleFr,
-            team{
-                id
-            }   
-        }
-    }`);
-}
+
 
 async function checkAgainstExistingApprovals(requestedChanges, approvals) {
 
@@ -141,22 +57,6 @@ async function checkAgainstExistingProfile(requestedChanges, submitterProfile){
     });
 }
 
-async function getApprovalType(approvals, type){
-
-    if(approvals){
-        const index = approvals.findIndex((approval) => {
-            return approval.changeType === type;
-        });
-    
-        if (index >= 0){
-            return approvals[index];
-        }
-    }
-
-    return null;
-
-}
-
 async function getNewSupervisor(context, gcID){
     return await getExistingApprovals(context, gcID)
     .then((approvals) => {
@@ -169,7 +69,6 @@ async function getNewSupervisor(context, gcID){
         return null;
     });
 }
-
 
 async function whoIsTheApprover(context, args, submitterProfile){
     const newTeamOwner = await isThereATeamOwner(args.data.team, context);
@@ -185,9 +84,6 @@ async function whoIsTheApprover(context, args, submitterProfile){
         }        
     }
 }
-
-
-
 
 async function generateMemerbshipApproval(membershipChanges, context, approvals = null){
     if (membershipChanges.data.team){
@@ -265,13 +161,13 @@ async function generateInformationalApproval(informationalChanges, context, appr
 }
 
 
-const approvalRequired = async (resolve, root, args, context, info) => {
+const profileApprovalRequired = async (resolve, root, args, context, info) => {
 
     var requestedChanges = {};
     requestedChanges.data = {};
     requestedChanges.createdBy = context.token.owner.gcID;
     requestedChanges.updatedBy = context.token.owner.gcID;
-    const submitter = await getSubmitterProfile(context, args);
+    const submitter = await getProfile(context, args);
     requestedChanges.approvalSubmitter = submitter.gcID;
     requestedChanges.approverID = await whoIsTheApprover(context, args, submitter);
 
@@ -284,7 +180,7 @@ const approvalRequired = async (resolve, root, args, context, info) => {
     for (var field in args.data){
         // Find any fields wrapped with the @requiresApproval directive and
         // remove them from the current context
-        if (await checkForDirective(field, info)){
+        if (await checkForDirective(field, info, "requiresApproval")){
             requestedChanges.data[field] = args.data[field];
             delete args.data[field];
         }
@@ -325,20 +221,12 @@ const approvalRequired = async (resolve, root, args, context, info) => {
                 generateMemerbshipApproval(cloneObject(requestedChanges), context, existingApprovals),
                 generateInformationalApproval(cloneObject(requestedChanges), context, existingApprovals)
             ]);
-    }
-    
-
+    }  
 
     // mutate any remainng non protected fields and resolve info
-    return await resolve(root, args, context, info);
-       
-
+    return await resolve(root, args, context, info);  
 };
 
-
-
-
-
 module.exports ={
-    approvalRequired
+    profileApprovalRequired
 };

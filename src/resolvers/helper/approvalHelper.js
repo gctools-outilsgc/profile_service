@@ -1,16 +1,16 @@
-const {copyValueToObjectIfDefined} = require("./objectHelper");
+const {copyValueToObjectIfDefined, removeNullKeys} = require("./objectHelper");
 const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
 
 async function createApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
-    const data = {
+    const data = removeNullKeys({
             gcIDApprover: {connect: {gcID: args.gcIDApprover}},
             gcIDSubmitter: {connect: {gcID: args.gcIDSubmitter}},
             createdBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
-                create:{
+                create: {
                     name: copyValueToObjectIfDefined(args.requestedChange.name),
                     email: copyValueToObjectIfDefined(args.requestedChange.email),
                     avatar: copyValueToObjectIfDefined(args.requestedChange.avatar),
@@ -20,12 +20,13 @@ async function createApproval(_, args, context, info){
                     titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
                     titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
                     team: (args.requestedChange.team) ? {connect: {id: args.requestedChange.team.id}} : null,
+                    ownershipOfTeam: (args.requestedChange.ownershipOfTeam) ? {connect: {id: args.requestedChange.ownershipOfTeam.id}} : null,
                 }
             },
             createdOn: await Date.now().toString(),
             status: "Pending",
             changeType: args.changeType        
-};
+    });
     
     return await context.prisma.mutation.createApproval({
         data
@@ -35,7 +36,7 @@ async function createApproval(_, args, context, info){
 async function appendApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
-    const data = {
+    const data = removeNullKeys({
             gcIDApprover: {connect: {gcID: args.gcIDApprover}},
             updatedBy: {connect: {gcID: args.createdBy}},
             requestedChange: {
@@ -49,12 +50,14 @@ async function appendApproval(_, args, context, info){
                     titleEn: copyValueToObjectIfDefined(args.requestedChange.titleEn),
                     titleFr: copyValueToObjectIfDefined(args.requestedChange.titleFr),
                     team: (args.requestedChange.team) ? {connect: {id: args.requestedChange.team.id}} : null,
+                    ownershipOfTeam: (args.requestedChange.ownershipOfTeam) ? {connect: {id: args.requestedChange.ownershipOfTeam.id}} : null,
+                    
                 }
             },
             actionedOn: await Date.now().toString(),
             status: "Pending",
       
-};
+    });
     
     return await context.prisma.mutation.updateApproval({
         where:{
@@ -73,34 +76,58 @@ async function getApprovalChanges(approvalID, context){
             where: {
                 id: approvalID
             }
-        }, "{gcIDApprover{gcID, name, email},gcIDSubmitter{gcID, name, email},requestedChange{name, email, avatar, mobilePhone, officePhone,"
+        }, "{gcIDApprover{gcID, name, email},gcIDSubmitter{gcID, name, email}, changeType, requestedChange{name, email, avatar, mobilePhone, officePhone,"
         + "address{streetAddress, city, province, postalCode, country},"
-        + "titleEn,titleFr,team{id}}}"
+        + "titleEn,titleFr,team{id},ownershipOfTeam{id}}}"
     );
+
+    var infoToModify = {};
+
+    if (approvalToAction.changeType === ("Membership" || "Informational")){
+        infoToModify = removeNullKeys({
+            gcID: approvalToAction.gcIDSubmitter.gcID,
+            changeType: approvalToAction.changeType,
+            data: {
+                name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
+                email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
+                avatar: copyValueToObjectIfDefined(approvalToAction.requestedChange.avatar),
+                mobilePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.mobilePhone),
+                officePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.officePhone),
+                titleEn: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleEn),
+                titleFr: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleFr)    
+            }
     
-    var infoToModify = {
-        gcID: approvalToAction.gcIDSubmitter.gcID,
-        data: {
-            name: copyValueToObjectIfDefined(approvalToAction.requestedChange.name),
-            email: copyValueToObjectIfDefined(approvalToAction.requestedChange.email),
-            avatar: copyValueToObjectIfDefined(approvalToAction.requestedChange.avatar),
-            mobilePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.mobilePhone),
-            officePhone: copyValueToObjectIfDefined(approvalToAction.requestedChange.officePhone),
-            titleEn: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleEn),
-            titleFr: copyValueToObjectIfDefined(approvalToAction.requestedChange.titleFr)    
+        });
+    
+        if(approvalToAction.requestedChange.team){
+            infoToModify.data.team = {
+                id: approvalToAction.requestedChange.team.id
+            };
         }
-
-    };
-
-    if(approvalToAction.requestedChange.team){
-        infoToModify.data.team = {
-            id: approvalToAction.requestedChange.team.id
-        };
+    
+        if(approvalToAction.requestedChange.ownershipOfTeam){
+            infoToModify.data.owner = {
+                gcID: approvalToAction.gcIDApprover.gcID
+            };
+        }
+    
+        if(approvalToAction.requestedChange.address){
+            infoToModify.data.address = approvalToAction.requestedChange.address;
+        }
     }
+    if(approvalToAction.changeType === "Team"){
+        infoToModify = removeNullKeys({
+            id: approvalToAction.requestedChange.ownershipOfTeam.id,
+            changeType: approvalToAction.changeType,
+            data: {
+                owner:{
+                    gcID: approvalToAction.gcIDApprover.gcID
+                }  
+            }    
+        });
+    } 
+    
 
-    if(approvalToAction.requestedChange.address){
-        infoToModify.data.address = approvalToAction.requestedChange.address;
-    }
 
     return infoToModify;
 }

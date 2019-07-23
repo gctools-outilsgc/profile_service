@@ -37,6 +37,8 @@ type Team {
   organization: Organization! @relation(name:"Teams")
   owner: Profile @relation(name:"OwnerOfTeam")
   members: [Profile!]! @relation(name:"TeamMembers")
+  transferApproval: RequestedChange @relation(name:"TransferOwnershipTo")
+  supervisorApproval: [RequestedChange] @relation(name:"SupervisoryApproval")
 }
 
 type Organization {
@@ -73,7 +75,8 @@ type RequestedChange {
     address: Address
     titleEn: String
     titleFr: String
-    team: Team
+    team: Team @relation(name:"SupervisoryApproval")
+    ownershipOfTeam: Team @relation(name:"TransferOwnershipTo")
 }
 
 enum Status {
@@ -84,4 +87,5 @@ enum Status {
 enum ChangeType {
     Membership
     Informational
+    Team
 } 
