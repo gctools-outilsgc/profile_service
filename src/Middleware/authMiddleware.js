@@ -28,6 +28,7 @@ const allowedToModifyTeam = async (resolve, root, args, context, info) => {
 const allowedToModifyApproval = async (resolve, root, args, context, info) => {
 
     // Only current supervisor can modify Informational type and new supervisor can modify Membership type.
+    // Only Submitter can revoke a pending approval
 
     // Approver on approval
     const approval = await context.prisma.query.approval(
@@ -46,6 +47,13 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
             }
         }, "{team{owner{gcID}}}"
     );
+
+    if(args.data.status === "Revoked"){
+        if(!context.token.owner.gcID === approval.gcIDSubmitter.gcID) {
+            throw new AuthenticationError("Approvals can only be revoked by the submitter");
+        }
+        return await resolve(root, args, context, info)
+    }
 
    if(approval.changeType === "Informational"){
 
