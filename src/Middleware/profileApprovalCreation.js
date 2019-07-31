@@ -1,3 +1,4 @@
+const { AuthenticationError } = require("apollo-server");
 const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
 const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
@@ -68,6 +69,19 @@ async function getNewSupervisor(context, gcID){
         }
         return null;
     });
+}
+
+async function isAllowedSupervisor(context, requestedChanges){
+    if(requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID){
+        throw new AuthenticationError("A supervisor must be a different person than the selected user");
+    }
+
+    const approver = await getProfile(context, requestedChanges.approverID);
+    console.log(approver);
+
+    if(approver.team.owner && approver.team.owner.gcID == requestedChanges.approvalSubmitter) {
+        throw new AuthenticationError("Selected supervisor is already member of user's team");
+    }
 }
 
 async function whoIsTheApprover(context, args, submitterProfile){
@@ -160,7 +174,6 @@ async function generateInformationalApproval(informationalChanges, context, appr
     return;
 }
 
-
 const profileApprovalRequired = async (resolve, root, args, context, info) => {
 
     var requestedChanges = {};
@@ -176,6 +189,8 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
         // it's a membership change
         return await resolve(root, args, context, info);
     }
+
+    await isAllowedSupervisor(context, requestedChanges);
 
     for (var field in args.data){
         // Find any fields wrapped with the @requiresApproval directive and
