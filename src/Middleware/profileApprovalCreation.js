@@ -80,7 +80,7 @@ async function isAllowedSupervisor(context, requestedChanges){
     const approver = await getProfile(context, requestedChanges.approverID);
 
     // Check for circular relationship with team member
-    if(approver.team.owner && approver.team.owner.gcID == requestedChanges.approvalSubmitter) {
+    if(approver.team.owner && approver.team.owner.gcID === requestedChanges.approvalSubmitter) {
         throw new AuthenticationError("Selected supervisor is already member of user's team");
     }
 }
