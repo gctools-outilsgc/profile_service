@@ -72,13 +72,14 @@ async function getNewSupervisor(context, gcID){
 }
 
 async function isAllowedSupervisor(context, requestedChanges){
+    // Check for self reporting relationship
     if(requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID){
         throw new AuthenticationError("A supervisor must be a different person than the selected user");
     }
 
     const approver = await getProfile(context, requestedChanges.approverID);
-    console.log(approver);
 
+    // Check for circular relationship with team member
     if(approver.team.owner && approver.team.owner.gcID == requestedChanges.approvalSubmitter) {
         throw new AuthenticationError("Selected supervisor is already member of user's team");
     }
@@ -190,6 +191,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
         return await resolve(root, args, context, info);
     }
 
+    // See if there is a team change and if it is allowed relationship
     await isAllowedSupervisor(context, requestedChanges);
 
     for (var field in args.data){
