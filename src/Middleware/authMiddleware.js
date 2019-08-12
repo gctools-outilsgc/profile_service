@@ -52,7 +52,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
         if(!context.token.owner.gcID === approval.gcIDSubmitter.gcID) {
             throw new AuthenticationError("Approvals can only be revoked by the submitter");
         }
-        return await resolve(root, args, context, info)
+        return await resolve(root, args, context, info);
     }
 
    if(approval.changeType === "Informational"){
