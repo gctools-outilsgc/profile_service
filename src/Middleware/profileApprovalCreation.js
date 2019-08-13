@@ -204,7 +204,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     }
     
     // If the supervisor is changing a persons team pass through the changes
-    if(requestedChanges.data.team && requestedChanges.approverID.gcID === context.token.owner.gcID){
+    if(requestedChanges.data.team && submitter.team.owner && submitter.team.owner.gcID === context.token.owner.gcID){
         const teamArgs = {
             gcID: args.gcID,
             data:{
