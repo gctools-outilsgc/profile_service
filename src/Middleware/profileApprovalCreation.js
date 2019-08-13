@@ -106,6 +106,9 @@ async function generateMemerbshipApproval(membershipChanges, context, approvals 
         // Get memebership approval if it exists
         const approval = await getApprovalType(approvals, "Membership");
 
+        // See if there is a team change and if it is allowed relationship
+        await isAllowedSupervisor(context, membershipChanges);
+
         var teamApprovalObject = {
             gcIDApprover: membershipChanges.approverID.gcID,
             gcIDSubmitter: membershipChanges.approvalSubmitter,
@@ -190,9 +193,6 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
         // it's a membership change
         return await resolve(root, args, context, info);
     }
-
-    // See if there is a team change and if it is allowed relationship
-    await isAllowedSupervisor(context, requestedChanges);
 
     for (var field in args.data){
         // Find any fields wrapped with the @requiresApproval directive and
