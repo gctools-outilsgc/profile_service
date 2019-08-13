@@ -71,18 +71,48 @@ async function getNewSupervisor(context, gcID){
     });
 }
 
+async function checkChildNodes(context, approver, parent) {
+
+    var childNodes = await context.prisma.query.profile({
+            where: {
+                gcID: parent
+            }
+        }, "{ownerOfTeams{members{gcID}}}");
+
+
+    if (childNodes.ownerOfTeams.length > 0){
+        await Promise.all(childNodes.ownerOfTeams.map(async (team) => {
+            if (team.members.length > 0){
+                await Promise.all(team.members.map(async (member) => {
+                    if (member.gcID === approver.gcID){
+                        throw new Error("Circular relationship caught");
+                    } else {
+                        await checkChildNodes(context, approver, member.gcID);
+                        return;
+                    }
+                }));
+            }
+            return;
+        }));        
+    }
+    return; 
+}
+
 async function isAllowedSupervisor(context, requestedChanges){
     // Check for self reporting relationship
     if(requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID){
         throw new AuthenticationError("A supervisor must be a different person than the selected user");
     }
 
-    const approver = await getProfile(context, requestedChanges.approverID);
+    // Check for creation of circular relationshiop with new supervisor
+    // Circular relationship can only be created in child nodes.
+    // Take requester and scan through child nodes for matching gcID.
 
-    // Check for circular relationship with team member
-    if(approver.team.owner && approver.team.owner.gcID === requestedChanges.approvalSubmitter) {
-        throw new AuthenticationError("Selected supervisor is already member of user's team");
-    }
+    await checkChildNodes(context, requestedChanges.approverID, requestedChanges.approvalSubmitter)
+    .catch(() => {
+        throw new AuthenticationError("Selected supervisor would create a circular reporting relationship");
+    });
+
 }
 
 async function whoIsTheApprover(context, args, submitterProfile){
