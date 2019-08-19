@@ -1,3 +1,4 @@
+const { AuthenticationError } = require("apollo-server");
 const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
 const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
@@ -70,6 +71,50 @@ async function getNewSupervisor(context, gcID){
     });
 }
 
+async function checkChildNodes(context, approver, parent) {
+
+    var childNodes = await context.prisma.query.profile({
+            where: {
+                gcID: parent
+            }
+        }, "{ownerOfTeams{members{gcID}}}");
+
+
+    if (childNodes.ownerOfTeams.length > 0){
+        await Promise.all(childNodes.ownerOfTeams.map(async (team) => {
+            if (team.members.length > 0){
+                await Promise.all(team.members.map(async (member) => {
+                    if (member.gcID === approver.gcID){
+                        throw new Error("Circular relationship caught");
+                    } else {
+                        await checkChildNodes(context, approver, member.gcID);
+                        return;
+                    }
+                }));
+            }
+            return;
+        }));        
+    }
+    return; 
+}
+
+async function isAllowedSupervisor(context, requestedChanges){
+    // Check for self reporting relationship
+    if(requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID){
+        throw new AuthenticationError("A supervisor must be a different person than the selected user");
+    }
+
+    // Check for creation of circular relationshiop with new supervisor
+    // Circular relationship can only be created in child nodes.
+    // Take requester and scan through child nodes for matching gcID.
+
+    await checkChildNodes(context, requestedChanges.approverID, requestedChanges.approvalSubmitter)
+    .catch(() => {
+        throw new AuthenticationError("Selected supervisor would create a circular reporting relationship");
+    });
+
+}
+
 async function whoIsTheApprover(context, args, submitterProfile){
     const newTeamOwner = await isThereATeamOwner(args.data.team, context);
     const membershipRequest = await getNewSupervisor(context, args.gcID);
@@ -90,6 +135,9 @@ async function generateMemerbshipApproval(membershipChanges, context, approvals 
 
         // Get memebership approval if it exists
         const approval = await getApprovalType(approvals, "Membership");
+
+        // See if there is a team change and if it is allowed relationship
+        await isAllowedSupervisor(context, membershipChanges);
 
         var teamApprovalObject = {
             gcIDApprover: membershipChanges.approverID.gcID,
@@ -160,7 +208,6 @@ async function generateInformationalApproval(informationalChanges, context, appr
     return;
 }
 
-
 const profileApprovalRequired = async (resolve, root, args, context, info) => {
 
     var requestedChanges = {};
@@ -187,7 +234,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     }
     
     // If the supervisor is changing a persons team pass through the changes
-    if(requestedChanges.data.team && requestedChanges.approverID.gcID === context.token.owner.gcID){
+    if(requestedChanges.data.team && submitter.team.owner && submitter.team.owner.gcID === context.token.owner.gcID){
         const teamArgs = {
             gcID: args.gcID,
             data:{
