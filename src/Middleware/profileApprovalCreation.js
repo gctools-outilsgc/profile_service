@@ -2,6 +2,7 @@ const { AuthenticationError } = require("apollo-server");
 const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
 const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
 const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
+const {modifyApproval} = require("../resolvers/Mutations");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational
@@ -9,6 +10,17 @@ User submits changes with both memembership and Informational
  - New supervisor cannot approve information until membership approved
  - Denying membership also cancels the associated informational change
 --------------------------------------------------------------------------*/
+async function noNewSupervisor(context, submitter){
+    const approval = await getExistingApprovals(context, submitter.gcID)
+    .then(async (approvals) => {
+        return await getApprovalType(approvals, "Informational");
+    });
+
+    if (approval){
+        modifyApproval(null, {id: approval.id, data:{status:"Approved"}}, context);
+    }
+
+}
 
 async function isThereATeamOwner(teamID, context){
     
@@ -52,8 +64,8 @@ async function checkAgainstExistingApprovals(requestedChanges, approvals) {
 
 async function checkAgainstExistingProfile(requestedChanges, submitterProfile){
     await Object.keys(submitterProfile).forEach((field) => {
-        if (requestedChanges.field === submitterProfile.field){
-            delete requestedChanges.field;
+        if (requestedChanges[field] === submitterProfile[field]){
+            delete requestedChanges[field];
         }
     });
 }
@@ -121,13 +133,12 @@ async function whoIsTheApprover(context, args, submitterProfile){
 
     if (args.data.team){
         return (newTeamOwner) ? newTeamOwner.owner : null;
-    } else {
-        if (membershipRequest) {
-            return membershipRequest.owner;            
-        } else {
-            return (submitterProfile.team.owner) ? submitterProfile.team.owner : null;  
-        }        
     }
+    if (membershipRequest && submitterProfile.team.owner) {
+        return membershipRequest.owner;
+    }            
+    return (submitterProfile.team.owner) ? submitterProfile.team.owner : null;
+    
 }
 
 async function generateMemerbshipApproval(membershipChanges, context, approvals = null){
@@ -176,7 +187,7 @@ async function generateInformationalApproval(informationalChanges, context, appr
             delete informationalChanges.data.team;
         }
     // If no current supervisor don't create an approval object
-    if(informationalChanges.approverID){
+    if(context.submitter.team.owner){
 
         const approval = await getApprovalType(approvals, "Informational");
 
@@ -214,13 +225,18 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     requestedChanges.data = {};
     requestedChanges.createdBy = context.token.owner.gcID;
     requestedChanges.updatedBy = context.token.owner.gcID;
-    const submitter = await getProfile(context, args);
-    requestedChanges.approvalSubmitter = submitter.gcID;
-    requestedChanges.approverID = await whoIsTheApprover(context, args, submitter);
+    context.submitter = await getProfile(context, args);
+    requestedChanges.approvalSubmitter = context.submitter.gcID;
+    requestedChanges.approverID = await whoIsTheApprover(context, args, context.submitter);
 
     if (!requestedChanges.approverID){
-        // If no current supervisor then pass through changes unless
-        // it's a membership change
+        // If no current supervisor or moving to organization default team 
+        // then pass through changes unless it's a membership change with a supervisor
+
+        // If existing approval for Informational change auto-approve 
+        // because there is no new supervisor to approve
+        
+        noNewSupervisor(context, {gcID: context.submitter.gcID});
         return await resolve(root, args, context, info);
     }
 
@@ -234,7 +250,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     }
     
     // If the supervisor is changing a persons team pass through the changes
-    if(requestedChanges.data.team && submitter.team.owner && submitter.team.owner.gcID === context.token.owner.gcID){
+    if(requestedChanges.data.team && context.submitter.team.owner && context.submitter.team.owner.gcID === context.token.owner.gcID){
         const teamArgs = {
             gcID: args.gcID,
             data:{
@@ -250,7 +266,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     // Check to see if the requested changes coming in are changes
     // or already existing data.
 
-    await checkAgainstExistingProfile(requestedChanges.data, submitter);
+    await checkAgainstExistingProfile(requestedChanges.data, context.submitter);
 
     // If there are changes that require approval check to see if there aren't already
     // approvals generated for the change
