@@ -324,18 +324,19 @@ async function modifyApproval(_, args, context, info){
         
         if (approvedChanges.changeType === "Membership" || approvedChanges.changeType === "Informational"){
             delete approvedChanges.changeType;
-            modifyProfile(_, approvedChanges, context);
+            await modifyProfile(_, approvedChanges, context);
         }
         if(approvedChanges.changeType === "Team"){
             delete approvedChanges.changeType;
-            modifyTeam(_, approvedChanges, context);
+            await modifyTeam(_, approvedChanges, context);
         }
 
 
     }
 
     if(args.data.status !== "Approved" && approvedChanges.changeType === "Membership"){
-        resetSupervisor({gcID: context.token.owner.team.owner.gcID}, {gcID: context.token.owner.gcID}, context);
+        const submitter = {gcID: approvedChanges.gcID};
+        resetSupervisor(submitter, context);
     }
 
     return await context.prisma.mutation.updateApproval({

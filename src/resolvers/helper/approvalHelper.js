@@ -1,7 +1,7 @@
 const {copyValueToObjectIfDefined, removeNullKeys} = require("./objectHelper");
 const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
-const {getExistingApprovals, getApprovalType} = require("../../Middleware/common");
+const {getExistingApprovals, getApprovalType, getProfile} = require("../../Middleware/common");
 async function createApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
@@ -135,13 +135,18 @@ async function getApprovalChanges(approvalID, context){
     return infoToModify;
 }
 
-async function resetSupervisor(supervisor, submitter, context){
+async function resetSupervisor(submitter, context){
     const approval = await getExistingApprovals(context, submitter.gcID)
     .then(async (approvals) => {
         return await getApprovalType(approvals, "Informational");
     });
 
     if (approval){
+        const supervisor = await getProfile(context, submitter)
+        .then((profile) => {
+            return profile.team.owner;
+        });
+
         await appendApproval(null, {id: approval.id, requestedChange:{}, gcIDApprover: supervisor.gcID, createdBy: submitter.gcID}, context);
     }
 }
