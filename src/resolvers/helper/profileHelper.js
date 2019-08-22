@@ -18,34 +18,36 @@ async function getTeams(userID, context){
   return result;
 }
 
-
-// Recursive funtion to cascade and move organizations
+// Recursive function to cascade and move organizations
 async function changeTeamOrg(teams, context, newOrgID){
 
-  for (let t = 0; t < teams.ownerOfTeams.length; t++){
-    await context.prisma.mutation.updateTeam(
-      {
-        where: {
-          id: teams.ownerOfTeams[t].id
-        },
-        data: {
-          organization:{
-            connect:{
-              id: newOrgID.organization.id
-           }
+  if (teams.ownerOfTeams.length > 0){
+    Promise.all(teams.ownerOfTeams.map(async (team) => {
+      await context.prisma.mutation.updateTeam(
+        {
+          where: {
+            id: team.id
+          },
+          data: {
+            organization:{
+              connect:{
+                id: newOrgID.organization.id
+             }
+            }
           }
-        }
-      });
+        });
 
-    if(teams.ownerOfTeams[t].members.length > 0){
-      for(let m=0; m<teams.ownerOfTeams[t].members.length; m++){
-        const childTeams = await getTeams(teams.ownerOfTeams[t].members[m].gcID, context);
-        if (typeof childTeams !== "undefined" && childTeams !== null){
-          await changeTeamOrg(childTeams, context, newOrgID);
-        }
-      }   
-    } 
+      if (team.members.length > 0){
+        Promise.all(team.members.map(async (member) => {
+          const childTeams = await getTeams(member.gcID, context);
+          if (typeof childTeams !== "undefined" && childTeams !== null){
+            await changeTeamOrg(childTeams, context, newOrgID);
+          }
+        }));    
+      }
+    }));
   }
+  return;
 }
 
 async function changeOwnedTeamsRoot(userID, newTeamID, context){
@@ -63,6 +65,7 @@ async function changeOwnedTeamsRoot(userID, newTeamID, context){
   
   const teams = await getTeams(userID, context);
   await changeTeamOrg(teams, context, newOrgID);
+  return;
   
 }
 
