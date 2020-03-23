@@ -1,6 +1,7 @@
 const {copyValueToObjectIfDefined, removeNullKeys} = require("./objectHelper");
 const { getNewAddressFromArgs} = require("./addressHelper");
 const { UserInputError } = require("apollo-server");
+const {getExistingApprovals, getApprovalType, getProfile} = require("../../Middleware/common");
 const { generateNotification } = require("../../Notifications/generateNotification");
 
 const info = `
@@ -24,7 +25,7 @@ const info = `
     changeType
 }`;
 
-async function createApproval(_, args, context){
+async function createApproval(_, args, context, info){
     var address = (args.requestedChange.address) ? getNewAddressFromArgs(args.requestedChange) : null;
 
     const data = removeNullKeys({
@@ -119,7 +120,7 @@ async function getApprovalChanges(approvalID, context){
 
     var infoToModify = {};
 
-    if (approvalToAction.changeType === ("Membership" || "Informational")){
+    if (approvalToAction.changeType === "Membership" || approvalToAction.changeType === "Informational"){
         infoToModify = removeNullKeys({
             gcID: approvalToAction.gcIDSubmitter.gcID,
             changeType: approvalToAction.changeType,
@@ -136,6 +137,9 @@ async function getApprovalChanges(approvalID, context){
         });
     
         if(approvalToAction.requestedChange.team){
+            if(typeof infoToModify.data === "undefined"){
+                infoToModify.data = {};
+            }
             infoToModify.data.team = {
                 id: approvalToAction.requestedChange.team.id
             };
@@ -168,6 +172,23 @@ async function getApprovalChanges(approvalID, context){
     return infoToModify;
 }
 
+async function resetSupervisor(submitter, context){
+    const approval = await getExistingApprovals(context, submitter.gcID)
+    .then(async (approvals) => {
+        return await getApprovalType(approvals, "Informational");
+    });
+
+    if (approval){
+        const supervisor = await getProfile(context, submitter)
+        .then((profile) => {
+            return profile.team.owner;
+        });
+
+        await appendApproval(null, {id: approval.id, requestedChange:{}, gcIDApprover: supervisor.gcID, createdBy: submitter.gcID}, context);
+    }
+}
+
+
 async function deleteApproval(_, args, context){
     // eslint-disable-next-line new-cap
     if (await context.prisma.exists.Approval({id:args.id})){
@@ -189,5 +210,6 @@ module.exports = {
     createApproval,
     deleteApproval,
     getApprovalChanges,
-    appendApproval
+    appendApproval,
+    resetSupervisor
 };

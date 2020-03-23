@@ -1,7 +1,7 @@
 const {copyValueToObjectIfDefined, propertyExists} = require("./helper/objectHelper");
 const { throwExceptionIfProfileIsNotDefined, throwExceptionIfTeamIsNotDefined, changeOwnedTeamsRoot, moveMembersToDefaultTeam} = require("./helper/profileHelper");
 const { getNewAddressFromArgs, updateOrCreateAddressOnProfile} = require("./helper/addressHelper");
-const { getApprovalChanges } = require("./helper/approvalHelper");
+const { getApprovalChanges, resetSupervisor } = require("./helper/approvalHelper");
 const {processUpload} = require("./File-Upload");
 const { UserInputError } = require("apollo-server");
 const  { searchPrep } = require("../Search/transformer");
@@ -318,19 +318,26 @@ async function modifyApproval(_, args, context, info){
         deniedComment: copyValueToObjectIfDefined(args.data.deniedComment),
         status: args.data.status
     };
-    
+
+    const approvedChanges = await getApprovalChanges(args.id, context);
+
     if (args.data.status === "Approved"){
-        const approvedChanges = await getApprovalChanges(args.id, context);
-        if (approvedChanges.changeType === ("Membership" || "Informational")){
+        
+        if (approvedChanges.changeType === "Membership" || approvedChanges.changeType === "Informational"){
             delete approvedChanges.changeType;
-            modifyProfile(_, approvedChanges, context);
+            await modifyProfile(_, approvedChanges, context);
         }
         if(approvedChanges.changeType === "Team"){
             delete approvedChanges.changeType;
-            modifyTeam(_, approvedChanges, context);
+            await modifyTeam(_, approvedChanges, context);
         }
 
 
+    }
+
+    if(args.data.status !== "Approved" && approvedChanges.changeType === "Membership"){
+        const submitter = {gcID: approvedChanges.gcID};
+        resetSupervisor(submitter, context);
     }
 
     return await context.prisma.mutation.updateApproval({
