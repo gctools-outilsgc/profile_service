@@ -1,11 +1,24 @@
 require("dotenv").config();
 
-const env = process.env.NODE_ENV; // 'development' or 'production'
+// set runtime environment as'development' or 'production'
+const env = process.env.NODE_ENV; 
+
+// OpenID provider url, clientID and Secret
+const accountURL = process.env.account_url;
 const clientId = process.env.client_id;
 const clientSecret = process.env.client_secret;
-const engineAPI = process.env.ENGINE_API_KEY;
+
+// Message queue host, username and password
+const mqHost = process.env.MQ_HOST;
 const mqUser = process.env.MQ_USER;
 const mqPass = process.env.MQ_PASS;
+
+// Prisma, Elastic, and image server hosts / urls
+const prismaHost = process.env.PRISMA_HOST;
+const elasticHost = process.env.ELASTIC_HOST;
+const imageURL = process.env.IMAGE_URL;
+
+const engineAPI = process.env.ENGINE_API_KEY;
 
 const development = {
  app: {
@@ -14,28 +27,28 @@ const development = {
    tracing: true
  },
  prisma: {
-     host:"localhost",
+     host: prismaHost,
      debug: false
  },
  image:{
-   url:"http://localhost:8007/backend.php",
+   url:imageURL,
    format:"jpeg",
    size:300
  },
  rabbitMQ:{
-   host:"localhost",
+   host: mqHost,
    user: mqUser,
    password: mqPass
  },
  openId:{
-   url:"https://dev.account.gccollab.ca"
+   url:accountURL
  },
  client:{
    id:clientId,
    secret:clientSecret
  },
  elastic:{
-   host:"http://localhost:9200"
+   host:elasticHost
  },
  engine:{
    apiID: engineAPI
@@ -49,28 +62,28 @@ const production = {
    tracing: false
  },
  prisma: {
-     host: "prisma",
+     host: prismaHost,
      debug: false
  },
  image:{
-  url:"http://image/backend.php",
+  url:imageURL,
   format:"jpeg",
   size:300
 },
 rabbitMQ:{
-  host:"mq.gccollab.ca",
+  host: mqHost,
   user: mqUser,
   password: mqPass
 },
 openId:{
-  url:"https://account.gccollab.ca"
+  url:accountURL
 },
 client:{
   id:clientId,
   secret:clientSecret
 },
 elastic:{
-  host:"http://localhost:9200"
+  host:elasticHost
 },
 engine:{
   apiID: engineAPI
