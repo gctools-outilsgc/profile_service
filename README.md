@@ -13,8 +13,16 @@ To configure this application there are 2 files that require mondifcation.
 2. `./.env`
 
     This file contains the secrets required for the application and can be set eitehr through ENV variables or through this file.
+* `MQ_HOST` = Host of the RabbitMQ instance set in `./src/config.js`
 * `MQ_USER` = Username for RabbitMQ instance set in `./src/config.js`
 * `MQ_PASS` = Password for RabbitMQ instance
+* `account_url` = The url of the Concierge instance to be used for this micro service
+* `client_id` = The client_ID from the client created in Concierge for this micro service
+* `client_secret` = The client secret for the Client ID listed above.
+* `PRISMA_HOST` = Host of the prisma instance that will be used by this micro service
+* `ELASTIC_HOST` = Host of the Elastic search instance that will be used by this micro service
+* `IMAGE_URL` = Host of the image server instance that will be used by this micro service
+* `ENGINE_API_KEY` = Apollo engine api key
 
 ## Development
 To setup this application in development run the following commands:
