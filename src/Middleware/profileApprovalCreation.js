@@ -1,8 +1,8 @@
 const { AuthenticationError } = require("apollo-server");
-const { createApproval, appendApproval } = require("../resolvers/helper/approvalHelper");
-const { removeNullKeys, cloneObject } = require("../resolvers/helper/objectHelper");
+const { createApproval, appendApproval } = require("../Resolvers/helper/approvalHelper");
+const { removeNullKeys, cloneObject } = require("../Resolvers/helper/objectHelper");
 const { getProfile, checkForDirective, checkForEmptyChanges, getApprovalType, getExistingApprovals } = require("./common");
-const {modifyApproval} = require("../resolvers/Mutations");
+const {modifyApproval} = require("../Resolvers/Mutations");
 
 /*-------------------------------------------------------------------------
 User submits changes with both memembership and Informational

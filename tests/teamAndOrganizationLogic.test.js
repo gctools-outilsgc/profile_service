@@ -1,5 +1,5 @@
-const mutations = require("../src/resolvers/Mutations");
-const querys = require("../src/resolvers/Query");
+const mutations = require("../src/Resolvers/Mutations");
+const querys = require("../src/Resolvers/Query");
 
 const { getContext, cleanUp, setPrisma } = require("./init/helper");
 

@@ -1,6 +1,6 @@
 
 const {  AuthenticationError } = require("apollo-server");
-const { propertyExists } = require("../resolvers/helper/objectHelper");
+const { propertyExists } = require("../Resolvers/helper/objectHelper");
 const { GraphQLNonNull, GraphQLList } = require("graphql");
 
 /*

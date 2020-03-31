@@ -1,4 +1,4 @@
-const mutations = require("../src/resolvers/Mutations");
+const mutations = require("../src/Resolvers/Mutations");
 const { getContext, cleanUp } = require("./init/helper");
 
 

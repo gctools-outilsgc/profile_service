@@ -1,5 +1,5 @@
 const { SchemaDirectiveVisitor, AuthenticationError } = require("apollo-server");
-const { propertyExists } = require("../resolvers/helper/objectHelper");
+const { propertyExists } = require("../Resolvers/helper/objectHelper");
 const { defaultFieldResolver } = require("graphql");
 
 const { blockValue, getOrganizationid, getTeamid, getSupervisorid, getOwnerid } = require("./helpers");

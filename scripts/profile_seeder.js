@@ -1,7 +1,7 @@
 const faker = require("faker");
 const config = require("../src/config");
 const { Prisma } = require("prisma-binding");
-const mutations = require("../src/resolvers/Mutations");
+const mutations = require("../src/Resolvers/Mutations");
 const random = require("randomatic");
 
 const ctx = {
