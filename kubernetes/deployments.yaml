@@ -1,0 +1,130 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: image
+  namespace: profile
+spec:
+  replicas: 1 # tells deployment to run 1 pod matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: image
+    spec:
+      containers:
+      - name: profile-image:latest
+        image: profile:latest
+        ports:
+        - containerPort: 4466
+        env:
+        - name: "TITLE"
+          value: "OADW-Image-Server"
+        - name: "DOMAIN"
+          value: "https://avatar.gccollab.ca"
+        - name: "LOWPROFILE"
+          value: "True"
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: profile-apollo
+  namespace: profile
+spec:
+  replicas: 1 # tells deployment to run 1 pod matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: profile-apollo
+    spec:
+      containers:
+      - name: prisma
+        image: profile-apollo:latest
+        ports:
+        - containerPort: 4466
+        env:
+        - name: "NODE_ENV"
+          value: "production"
+        - name: "PRISMA_API_ENDPOINT"
+          value: "prisma"
+        - name: "client_id": 
+          valueFrom:
+            secretKeyRef:
+              name: apollo-env
+              key: client_id
+        - name: "client_secret": 
+          valueFrom:
+            secretKeyRef:
+              name: apollo-env
+              key: client_secret
+        - name: "MQ_USER": 
+          valueFrom:
+            secretKeyRef:
+              name: apollo-env
+              key: MQ_USER
+        - name: "MQ_PASS": 
+          valueFrom:
+            secretKeyRef:
+              name: apollo-env
+              key: MQ_PASS
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: prismagraphql
+  namespace: profile
+spec:
+  replicas: 1 # tells deployment to run 1 pod matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: prismagraphql
+    spec:
+      containers:
+      - name: prisma
+        image: prismagraphql/prisma:1.26
+        ports:
+        - containerPort: 4466
+        env:
+        - name: "PRISMA_CONFIG": 
+          valueFrom:
+            secretKeyRef:
+              name: prisma-env
+              key: PRISMA_CONFIG
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: profile
+spec:
+  replicas: 1 # tells deployment to run 1 pod matching the template
+  template: # create pods using pod definition in this template
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:10.6
+        ports:
+        - containerPort: 5432
+        env:
+        - name: "POSTGRES_USER"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-env
+              key: POSTGRES_USER
+        - name: "POSTGRES_PASSWORD"
+          valueFrom:
+            secretKeyRef:
+              name: postgres-env
+              key: POSTGRES_PASSWORD
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          subPath: postgresql-db
+          name: postgres-volume
+      volumes:
+      - name: postgres-volume
+        azureDisk:
+          kind: Managed
+          diskName: accountDBVolume
+          diskURI: /subscriptions/{sub-id}/resourcegroups/{group-name}/providers/microsoft.compute/disks/profileDBVolume

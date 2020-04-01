@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: image
+  namespace: profile
+spec:
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 80
+  selector: 
+    app: image
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-apollo
+  namespace: profile
+spec:
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 4000
+  selector: 
+    app: profile-apollo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prismagraphql
+  namespace: profile
+spec:
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 4466
+  selector: 
+    app: prismagraphql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: profile
+spec:
+  clusterIP: None
+  ports:
+    - protocol: TCP
+      port: 5432
+  selector: 
+    app: postgres
+---
