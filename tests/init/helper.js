@@ -1,5 +1,5 @@
 const { Prisma } = require("prisma-binding");
-const { getDefaults } = require("../../src/resolvers/helper/default_setup");
+const { getDefaults } = require("../../src/Resolvers/helper/default_setup");
 
 // Set prisma object on context
 function setPrisma(context){
