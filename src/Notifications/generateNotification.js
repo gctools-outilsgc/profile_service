@@ -19,11 +19,12 @@ async function sendNotification(content, context){
         gcID: content.toUser,
         appID: context.token.aud,
         actionLevel: content.actionLevel,
-        /*
         email:{
-            // To build templates later
+            titleEn: content.titleEn,
+            titleFr: content.titleFr,
+            descriptionEn: content.descriptionEn,
+            descriptionFr: content.descriptionFr
         },
-        */
         online:{
             titleEn: content.titleEn,
             titleFr: content.titleFr,
