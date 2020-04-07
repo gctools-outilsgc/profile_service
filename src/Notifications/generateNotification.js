@@ -20,10 +20,13 @@ async function sendNotification(content, context){
         appID: context.token.aud,
         actionLevel: content.actionLevel,
         email:{
-            titleEn: content.titleEn,
-            titleFr: content.titleFr,
-            descriptionEn: content.descriptionEn,
-            descriptionFr: content.descriptionFr
+            from: "",
+            to: "",
+            subject: content.emailSubject,
+            body: "",
+            status: "",
+            sendError: "",
+            html: ""
         },
         online:{
             titleEn: content.titleEn,
