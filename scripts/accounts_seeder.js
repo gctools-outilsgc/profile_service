@@ -1,7 +1,6 @@
 const config = require("../src/config");
 const { Prisma } = require("prisma-binding");
 const got = require('got');
-const { GraphQLError } = require("graphql");
 const { createProfile } = require("../src/Resolvers/Mutations");
 const { getDefaults } = require("../src/Resolvers/helper/default_setup");
 
@@ -19,9 +18,9 @@ async function account_seeder() {
 
     const accounts = await got(config.openId.url + '/api/users/all', {});
 
-    console.log(JSON.parse(accounts.body));
-
     var profiles = JSON.parse(accounts.body);
+
+    console.log("Found " + profiles.length + " accounts")
 
     for (var u = 0; u < profiles.length; u++) {
         var args = {
