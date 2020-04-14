@@ -16,6 +16,7 @@ async function generateOnlineTemplate(template, to, from){
             approver:{
                 toUser: to.gcID,
                 fromUser: from.gcID,
+                email: to.email,
                 titleEn: `Team Transfer from ${from.name}` ,
                 titleFr: `Demande de transfert d'équipe de ${from.name}`,
                 descriptionEn: `${from.name} is requesting to transfer you a team.  Please approve or deny this request`,
@@ -38,6 +39,7 @@ async function generateOnlineTemplate(template, to, from){
             approver:{
                 toUser: to.gcID,
                 fromUser: from.gcID,
+                email: to.email,
                 titleEn: "Reporting User Profile Change" ,
                 titleFr: "Signaler un changement de profil d'utilisateur",
                 descriptionEn: `${from.name} is requesting your approval for information changed in their profile.` ,
@@ -60,6 +62,7 @@ async function generateOnlineTemplate(template, to, from){
             approver:{
                 toUser: to.gcID,
                 fromUser: from.gcID,
+                email: to.email,
                 titleEn: `Request from ${from.name}` ,
                 titleFr: `Demande de ${from.name}`,
                 descriptionEn: `${from.name} has identified you as their supervisor.  Please approve or deny this request`,
