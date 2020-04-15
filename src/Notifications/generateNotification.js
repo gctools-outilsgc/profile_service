@@ -29,6 +29,7 @@ async function sendNotification(content, context) {
             to: content.email,
             subject: content.emailSubject,
             body: content.body,
+            html: true
         },
         online: {
             titleEn: content.titleEn,
