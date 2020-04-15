@@ -1,12 +1,13 @@
 require("dotenv").config();
 
 // set runtime environment as'development' or 'production'
-const env = process.env.NODE_ENV; 
+const env = process.env.NODE_ENV;
 
 // OpenID provider url, clientID and Secret
 const accountURL = process.env.account_url;
 const clientId = process.env.client_id;
 const clientSecret = process.env.client_secret;
+const directoryApp = process.env.directory_app;
 
 // Message queue host, username and password
 const mqHost = process.env.MQ_HOST;
@@ -22,84 +23,84 @@ const imageURL = process.env.IMAGE_URL;
 const engineAPI = process.env.ENGINE_API_KEY;
 
 const development = {
- app: {
-   port: 4000,
-   multicore: false,
-   tracing: true
- },
- prisma: {
-     host: prismaHost,
-     debug: false
- },
- image:{
-   url:imageURL,
-   format:"jpeg",
-   size:300
- },
- rabbitMQ:{
-   host: mqHost,
-   user: mqUser,
-   password: mqPass
- },
- openId:{
-   url:accountURL
- },
- client:{
-   id:clientId,
-   secret:clientSecret
- },
- elastic:{
-   host:elasticHost
- },
- engine:{
-   apiID: engineAPI
- },
- directoryApp:{
-   url:"http://localhost:8000"
- }
+  app: {
+    port: 4000,
+    multicore: false,
+    tracing: true
+  },
+  prisma: {
+    host: prismaHost,
+    debug: false
+  },
+  image: {
+    url: imageURL,
+    format: "jpeg",
+    size: 300
+  },
+  rabbitMQ: {
+    host: mqHost,
+    user: mqUser,
+    password: mqPass
+  },
+  openId: {
+    url: accountURL
+  },
+  client: {
+    id: clientId,
+    secret: clientSecret
+  },
+  elastic: {
+    host: elasticHost
+  },
+  engine: {
+    apiID: engineAPI
+  },
+  directoryApp: {
+    url: directoryApp
+  }
 };
 
 const production = {
- app: {
-   port: 4000,
-   multicore: true,
-   tracing: false
- },
- prisma: {
-     host: prismaHost,
-     debug: false
- },
- image:{
-  url:imageURL,
-  format:"jpeg",
-  size:300
-},
-rabbitMQ:{
-  host: mqHost,
-  user: mqUser,
-  password: mqPass
-},
-openId:{
-  url:accountURL
-},
-client:{
-  id:clientId,
-  secret:clientSecret
-},
-elastic:{
-  host:elasticHost
-},
-engine:{
-  apiID: engineAPI
-},
-directoryApp:{
-  url:"https://profile.gccollab.ca"
-}
+  app: {
+    port: 4000,
+    multicore: true,
+    tracing: false
+  },
+  prisma: {
+    host: prismaHost,
+    debug: false
+  },
+  image: {
+    url: imageURL,
+    format: "jpeg",
+    size: 300
+  },
+  rabbitMQ: {
+    host: mqHost,
+    user: mqUser,
+    password: mqPass
+  },
+  openId: {
+    url: accountURL
+  },
+  client: {
+    id: clientId,
+    secret: clientSecret
+  },
+  elastic: {
+    host: elasticHost
+  },
+  engine: {
+    apiID: engineAPI
+  },
+  directoryApp: {
+    url: directoryApp
+  }
 };
 
 const config = {
- development,
- production
+  development,
+  production
 };
 
 module.exports = config[env];
