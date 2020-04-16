@@ -4,8 +4,8 @@ metadata:
   name: image
   namespace: profile
 spec:
-  replicas: 1 # tells deployment to run 1 pod matching the template
-  template: # create pods using pod definition in this template
+  replicas: 1 
+  template: 
     metadata:
       labels:
         app: image
@@ -29,8 +29,8 @@ metadata:
   name: profile-apollo
   namespace: profile
 spec:
-  replicas: 1 # tells deployment to run 1 pod matching the template
-  template: # create pods using pod definition in this template
+  replicas: 1 
+  template: 
     metadata:
       labels:
         app: profile-apollo
@@ -72,8 +72,8 @@ metadata:
   name: prismagraphql
   namespace: profile
 spec:
-  replicas: 1 # tells deployment to run 1 pod matching the template
-  template: # create pods using pod definition in this template
+  replicas: 1 
+  template: 
     metadata:
       labels:
         app: prismagraphql
@@ -96,8 +96,8 @@ metadata:
   name: postgres
   namespace: profile
 spec:
-  replicas: 1 # tells deployment to run 1 pod matching the template
-  template: # create pods using pod definition in this template
+  replicas: 1 
+  template: 
     metadata:
       labels:
         app: postgres
@@ -126,5 +126,5 @@ spec:
       - name: postgres-volume
         azureDisk:
           kind: Managed
-          diskName: accountDBVolume
+          diskName: profileDBVolume
           diskURI: /subscriptions/{sub-id}/resourcegroups/{group-name}/providers/microsoft.compute/disks/profileDBVolume
