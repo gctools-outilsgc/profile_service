@@ -1,18 +1,21 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: image
   namespace: profile
 spec:
   replicas: 1 
+  selector:
+    matchLabels:
+      app: image
   template: 
     metadata:
       labels:
         app: image
     spec:
       containers:
-      - name: profile-image:latest
-        image: profile:latest
+      - name: profile-image
+        image: digitalcollab/profile-image:latest
         ports:
         - containerPort: 4466
         env:
@@ -23,13 +26,16 @@ spec:
         - name: "LOWPROFILE"
           value: "True"
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: profile-apollo
   namespace: profile
 spec:
   replicas: 1 
+  selector:
+    matchLabels:
+      app: profile-apollo
   template: 
     metadata:
       labels:
@@ -37,7 +43,7 @@ spec:
     spec:
       containers:
       - name: prisma
-        image: profile-apollo:latest
+        image: digitalcollab/profile-apollo:latest
         ports:
         - containerPort: 4466
         env:
@@ -45,34 +51,37 @@ spec:
           value: "production"
         - name: "PRISMA_API_ENDPOINT"
           value: "prisma"
-        - name: "client_id": 
+        - name: "client_id"
           valueFrom:
             secretKeyRef:
               name: apollo-env
               key: client_id
-        - name: "client_secret": 
+        - name: "client_secret"
           valueFrom:
             secretKeyRef:
               name: apollo-env
               key: client_secret
-        - name: "MQ_USER": 
+        - name: "MQ_USER"
           valueFrom:
             secretKeyRef:
               name: apollo-env
               key: MQ_USER
-        - name: "MQ_PASS": 
+        - name: "MQ_PASS"
           valueFrom:
             secretKeyRef:
               name: apollo-env
               key: MQ_PASS
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prismagraphql
   namespace: profile
 spec:
   replicas: 1 
+  selector:
+    matchLabels:
+      app: prismagraphql
   template: 
     metadata:
       labels:
@@ -84,19 +93,22 @@ spec:
         ports:
         - containerPort: 4466
         env:
-        - name: "PRISMA_CONFIG": 
+        - name: "PRISMA_CONFIG"
           valueFrom:
             secretKeyRef:
               name: prisma-env
               key: PRISMA_CONFIG
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
   namespace: profile
 spec:
   replicas: 1 
+  selector:
+    matchLabels:
+      app: postgres
   template: 
     metadata:
       labels:
