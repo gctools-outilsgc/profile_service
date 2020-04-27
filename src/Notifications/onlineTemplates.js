@@ -14,7 +14,7 @@ async function generateOnlineTemplate(template, to, from) {
                 actionLevel: "NoUserAction",
                 emailSubject: `Team Transfer | Transfert d'équipe`,
                 emailBodyEn: `Your request to transfer a team to ${to.name} has been created`,
-                emailBodyFr: `Votre demande de transferer une equipe à ${to.name} a été créée`,
+                emailBodyFr: `Votre demande de transférer une équipe à ${to.name} a été créée`,
             },
             approver: {
                 toUser: to.gcID,
@@ -27,7 +27,7 @@ async function generateOnlineTemplate(template, to, from) {
                 email: to.email,
                 emailSubject: `Team Transfer from ${from.name} | Demande de transfert d'équipe de ${from.name}`,
                 emailBodyEn: `${from.name} is requesting to transfer a team to you.  Please approve or deny this request.`,
-                emailBodyFr: `${from.name} demande de vous transférer une équipe. Veuillez approuver ou refuser cette demande.`,
+                emailBodyFr: `${from.name} demande de vous transférer une équipe. Veuillez s.v.p. approuver ou refuser cette demande.`,
             }
         },
         Informational: {
