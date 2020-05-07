@@ -49,6 +49,17 @@ const convertPicture = async (originPath) => {
   });
 };
 
+const deleteOldAvatar = async (profile) => {
+  return new Promise((resolve, reject) => {
+    if (profile != null && profile.avatar != "") {
+      var avatarPath = profile.avatar.split('/');
+      var avatarHash = avatarPath[avatarPath.length - 1];
+      request.post(`${config.image.url}/delete_${config.image.code}/${avatarHash}`);
+    }
+    resolve();
+  });
+};
+
 const postImage = (path) => {
   return new Promise((resolve, reject) => {
     var filePath = String(path);
@@ -61,6 +72,9 @@ const postImage = (path) => {
         reject();
       } else {
         var bodyJson = JSON.parse(body);
+        if (bodyJson.status == "err") {
+          reject();
+        }
         var url = bodyJson.url;
         resolve(url);
       }
@@ -79,7 +93,7 @@ const createUploadFolderIfNeeded = async () => {
   });
 };
 
-const processUpload = async (upload) => {
+const processUpload = async (upload, profile) => {
   const { createReadStream, filename } = await upload;
   const stream = createReadStream();
   await createUploadFolderIfNeeded();
@@ -87,6 +101,7 @@ const processUpload = async (upload) => {
   const avatarPath = await convertPicture(originPath);
   const url = await postImage(avatarPath);
   await deletePictureFromTempFolder(avatarPath);
+  await deleteOldAvatar(profile);
   return url;
 };
 
