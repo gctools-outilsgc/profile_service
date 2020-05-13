@@ -82,8 +82,7 @@ fi
 if [ ${AUTOUPDATE} = "true" ]; then
 		echo "[i] Updating installation"
 		cd /usr/share/nginx/html
-		git pull https://github.com/gctools-outilsgc/Image-Resource-Server.git graphql-integration
-		git checkout graphql-integration
+		git pull https://github.com/gctools-outilsgc/Image-Resource-Server.git 
 fi
 
 chown -Rf nginx:nginx /usr/share/nginx/html
@@ -100,6 +99,7 @@ echo "define('LOG_UPLOADER', ${LOGUPLOADER});" >> /usr/share/nginx/html/inc/conf
 echo "define('MAX_RESIZED_IMAGES',${MAXRESIZEDIMAGES});" >> /usr/share/nginx/html/inc/config.inc.php
 echo "define('ALLOW_BLOATING', ${BLOATING});" >> /usr/share/nginx/html/inc/config.inc.php
 echo "define('FORCE_DOMAIN', '${DOMAIN}');" >> /usr/share/nginx/html/inc/config.inc.php
+echo "define('URL', '${DOMAIN}/');" >> /usr/share/nginx/html/inc/config.inc.php
 echo "define('SHOW_ERRORS', ${SHOWERRORS});" >> /usr/share/nginx/html/inc/config.inc.php
 echo "define('JPEG_COMPRESSION', ${JPEGCOMPRESSION});" >> /usr/share/nginx/html/inc/config.inc.php
 echo "define('PNG_COMPRESSION', ${PNGCOMPRESSION});" >> /usr/share/nginx/html/inc/config.inc.php

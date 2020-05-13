@@ -18,6 +18,7 @@ const mqPass = process.env.MQ_PASS;
 const prismaHost = process.env.PRISMA_HOST;
 const elasticHost = process.env.ELASTIC_HOST;
 const imageURL = process.env.IMAGE_URL;
+const imageDeleteCode = process.env.MASTERDELETECODE;
 
 // Apollo engine api key
 const engineAPI = process.env.ENGINE_API_KEY;
@@ -34,6 +35,7 @@ const development = {
   },
   image: {
     url: imageURL,
+    code: imageDeleteCode,
     format: "jpeg",
     size: 300
   },
@@ -72,6 +74,7 @@ const production = {
   },
   image: {
     url: imageURL,
+    code: imageDeleteCode,
     format: "jpeg",
     size: 300
   },

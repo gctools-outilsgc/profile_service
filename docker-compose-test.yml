@@ -5,6 +5,7 @@ services:
     environment:
       - TITLE=OADW-Image-Server
       - DOMAIN=http://localhost:8007
+      - MASTERDELETECODE=changeME
       - LOWPROFILE=True
     ports:
     - "8007:80"
