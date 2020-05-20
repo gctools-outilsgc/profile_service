@@ -26,7 +26,8 @@ async function sendNotification(content, context) {
         appID: context.token.aud,
         actionLevel: content.actionLevel,
         email: {
-            to: content.email,
+            to: content.emailTo,
+            from: content.emailFrom,
             subject: content.emailSubject,
             body: content.body,
             html: true
