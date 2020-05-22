@@ -51,7 +51,7 @@ const convertPicture = async (originPath) => {
 
 const deleteOldAvatar = async (profile) => {
   return new Promise((resolve, reject) => {
-    if (profile != null && profile.avatar != "") {
+    if (profile !== null && profile.avatar !== "" && profile.avatar !== null) {
       var avatarPath = profile.avatar.split('/');
       var avatarHash = avatarPath[avatarPath.length - 1];
       request.post(`${config.image.url}/delete_${config.image.code}/${avatarHash}`);
