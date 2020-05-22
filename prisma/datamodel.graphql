@@ -47,6 +47,7 @@ type Organization {
   nameFr: String!
   acronymEn: String!
   acronymFr: String!
+  orgType: OrgType!
   teams: [Team!]! @relation(name:"Teams", onDelete: CASCADE) 
 }
 
@@ -90,3 +91,13 @@ enum ChangeType {
     Informational
     Team
 } 
+
+enum OrgType {
+    Default
+    Federal
+    Provincal
+    Municipal
+    University
+    College
+    Other
+}

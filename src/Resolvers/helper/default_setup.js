@@ -6,10 +6,10 @@ const querys = require("../Query");
 const ctx = {
     prisma: new Prisma({
         typeDefs: "./src/generated/prisma.graphql",
-        endpoint: "http://"+config.prisma.host+":4466/profile/",
-        debug: config.prisma.debug,
-    }) 
-}; 
+        endpoint: "http://" + "10.0.0.61" + ":4466/profile/",
+        debug: true,
+    })
+};
 
 var defaultData = {};
 
@@ -19,38 +19,39 @@ async function createDefaultOrg() {
     // Create default organization
 
     const args = {
-        data:{
+        data: {
             nameEn: "Global Organization",
             nameFr: "Organization Global",
             acronymEn: "DO",
             acronymFr: "OPD",
-            teams:{
-                create:{
-                    nameEn:"Global Team",
-                    nameFr:"Équipe Global"
+            orgType: "Default",
+            teams: {
+                create: {
+                    nameEn: "Global Team",
+                    nameFr: "Équipe Global"
                 }
             }
         }
     };
 
     let org = await ctx.prisma.mutation.createOrganization(args, "{id, teams{id}}");
-    
+
     return org;
-            
+
 }
 
-async function getDefaults(){
-    var org = await querys.organizations({},{nameEn:"Global Organization", nameFr:"Organization Global"}, ctx, "{id,teams{id}}");
+async function getDefaults() {
+    var org = await querys.organizations({}, { nameEn: "Global Organization", nameFr: "Organization Global" }, ctx, "{id,teams{id}}");
 
-    if (org.length < 1 ){
+    if (org.length < 1) {
         defaultData.org = await createDefaultOrg();
     } else {
-         defaultData.org = org[0];
-    }   
+        defaultData.org = org[0];
+    }
 
     return defaultData;
 
-    
+
 }
 
 
