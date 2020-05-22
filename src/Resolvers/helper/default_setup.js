@@ -6,8 +6,8 @@ const querys = require("../Query");
 const ctx = {
     prisma: new Prisma({
         typeDefs: "./src/generated/prisma.graphql",
-        endpoint: "http://" + "10.0.0.61" + ":4466/profile/",
-        debug: true,
+        endpoint: "http://" + config.prisma.host + ":4466/profile/",
+        debug: config.prisma.debug,
     })
 };
 
