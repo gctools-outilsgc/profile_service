@@ -185,7 +185,7 @@ async function modifyOrganization(_, args, context, info) {
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
         acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
         acronymFr: copyValueToObjectIfDefined(args.data.acronymFr),
-        orgtype: copyValueToObjectIfDefined(args.data.type),
+        orgType: copyValueToObjectIfDefined(args.data.orgType),
     };
 
     return await context.prisma.mutation.updateOrganization({
