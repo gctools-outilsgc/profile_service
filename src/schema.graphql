@@ -109,8 +109,8 @@ type Organization {
   id: ID!
   nameEn: String!
   nameFr: String!
-  acronymEn: String!
-  acronymFr: String!
+  acronymEn: String
+  acronymFr: String
   teams: [Team!]!
   orgType: OrgType!
 }

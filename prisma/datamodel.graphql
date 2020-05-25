@@ -45,8 +45,8 @@ type Organization {
   id: ID! @unique
   nameEn: String!
   nameFr: String!
-  acronymEn: String!
-  acronymFr: String!
+  acronymEn: String
+  acronymFr: String
   orgType: OrgType!
   teams: [Team!]! @relation(name:"Teams", onDelete: CASCADE) 
 }
