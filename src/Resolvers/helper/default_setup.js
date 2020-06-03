@@ -27,7 +27,7 @@ async function createDefaultOrg() {
             teams:{
                 create:{
                     nameEn:"Global Team",
-                    nameFr:"Équipe Global"
+                    nameFr:"Équipe Globale"
                 }
             }
         }
