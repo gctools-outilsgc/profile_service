@@ -95,7 +95,7 @@ enum ChangeType {
 enum OrgType {
     Default
     Federal
-    Provincal
+    Provincial
     Municipal
     University
     College
