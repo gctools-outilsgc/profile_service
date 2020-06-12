@@ -9,7 +9,7 @@ const { blockValue, getOrganizationid, getTeamid, getSupervisorid, getOwnerid } 
   These fragments will ensure that the fields that are required to identify relationships for access
   levels will always be returned.
 */
-const profileFragment = "fragment authProfile on Profile {gcID, name, email, team{id, owner{gcID}, organization{id}}}";
+const profileFragment = "fragment authProfile on Profile {gcID, name, email, isAdmin, team{id, owner{gcID}, organization{id}}}";
 
 
 // inOrganization directive can only be used on the Profile object fields.
@@ -17,7 +17,7 @@ const profileFragment = "fragment authProfile on Profile {gcID, name, email, tea
 
 class OrganizationDirective extends SchemaDirectiveVisitor {
 
-  visitObject(type){
+  visitObject(type) {
     this.wrapOrgAuth(type);
     type._requiresOrgAuth = true;
   }
@@ -28,7 +28,7 @@ class OrganizationDirective extends SchemaDirectiveVisitor {
 
   }
 
-  wrapOrgAuth(objectType){
+  wrapOrgAuth(objectType) {
     if (objectType._fieldsWrapped) {
       return;
     }
@@ -41,19 +41,19 @@ class OrganizationDirective extends SchemaDirectiveVisitor {
       const field = fields[fieldName];
       const { resolve = defaultFieldResolver } = field;
 
-      field.resolve = async function (record, args, context, info){
+      field.resolve = async function (record, args, context, info) {
 
         const requireOrgAuth = field._requiresOrgAuth || objectType._requiresOrgAuth;
 
-        if (!requireOrgAuth){
+        if (!requireOrgAuth) {
           return await resolve.apply(this, [record, args, context, info]);
         }
 
         const requesterOrg = await getOrganizationid(context.token.owner);
         const recordOrg = await getOrganizationid(record);
 
-        if(requesterOrg !== null && recordOrg !== null){
-          if (requesterOrg === recordOrg){
+        if (requesterOrg !== null && recordOrg !== null) {
+          if (requesterOrg === recordOrg) {
             return await resolve.apply(this, [record, args, context, info]);
           }
         }
@@ -68,17 +68,17 @@ class OrganizationDirective extends SchemaDirectiveVisitor {
 
 class AuthenticatedDirective extends SchemaDirectiveVisitor {
 
-  visitObject(type){
+  visitObject(type) {
     this.wrapAuth(type);
     type._requiresAuth = true;
   }
 
-  visitFieldDefinition(field, details){
+  visitFieldDefinition(field, details) {
     this.wrapAuth(details.objectType);
     field._requiresAuth = true;
   }
 
-  wrapAuth(objectType){
+  wrapAuth(objectType) {
     if (objectType._fieldsWrapped) {
       return;
     }
@@ -91,15 +91,15 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
       const field = fields[fieldName];
       const { resolve = defaultFieldResolver } = field;
 
-      field.resolve = async function (record, args, context, info){
+      field.resolve = async function (record, args, context, info) {
         const requireAuth = field._requiresAuth || objectType._requiresAuth;
-        if (!requireAuth){
+        if (!requireAuth) {
           return await resolve.apply(this, [record, args, context, info]);
         }
-        if (propertyExists(context.token,"sub")){
+        if (propertyExists(context.token, "sub")) {
           return await resolve.apply(this, [record, args, context, info]);
         } else {
-            return await blockValue(field);
+          return await blockValue(field);
         }
 
       };
@@ -112,14 +112,14 @@ class AuthenticatedDirective extends SchemaDirectiveVisitor {
 class SameTeamDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
-    field.resolve = async function(...args) {
-      const [record, requestArgs , ctx] = args;
+    field.resolve = async function (...args) {
+      const [record, requestArgs, ctx] = args;
 
       const requesterTeam = await getTeamid(ctx.token.owner);
-      const requestedTeam =  await getTeamid(record);
+      const requestedTeam = await getTeamid(record);
 
-      if(requesterTeam !== null && requestedTeam !== null){
-        if(requesterTeam === requestedTeam){
+      if (requesterTeam !== null && requestedTeam !== null) {
+        if (requesterTeam === requestedTeam) {
           return resolve.apply(this, args);
         }
       }
@@ -132,15 +132,15 @@ class SameTeamDirective extends SchemaDirectiveVisitor {
 class SupervisorDirective extends SchemaDirectiveVisitor {
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
-    field.resolve = async function(...args) {
-      const [record, requestArgs , ctx] = args;
+    field.resolve = async function (...args) {
+      const [record, requestArgs, ctx] = args;
 
       const requester = ctx.token.sub;
       const requestedSuper = await getSupervisorid(record);
 
-      if(requester !== null && requestedSuper !== null){
-        if(requester === requestedSuper){
-            return resolve.apply(this, args);
+      if (requester !== null && requestedSuper !== null) {
+        if (requester === requestedSuper) {
+          return resolve.apply(this, args);
         }
       }
 
@@ -149,17 +149,17 @@ class SupervisorDirective extends SchemaDirectiveVisitor {
   }
 }
 class OwnerDirective extends SchemaDirectiveVisitor {
-    
+
   visitFieldDefinition(field) {
     const { resolve = defaultFieldResolver } = field;
-    field.resolve = async function (record, args, context, info){
+    field.resolve = async function (record, args, context, info) {
 
       const OwnerRequester = await getOwnerid(context.token.owner);
       const OwnerRequested = await getOwnerid(record);
 
-      if(OwnerRequester !== null && OwnerRequested !== null){
-        if(OwnerRequester === OwnerRequested){
-            return resolve.apply(this, [record, args, context, info]);
+      if (OwnerRequester !== null && OwnerRequested !== null) {
+        if (OwnerRequester === OwnerRequested) {
+          return resolve.apply(this, [record, args, context, info]);
         }
       }
 
@@ -172,7 +172,16 @@ class RequiresApproval extends SchemaDirectiveVisitor {
   // A marker that is placed on the Input object to be identigy a field that requires approval
   // The fields are then captured and handled in middleware
 
-  visitFieldDefinition(){
+  visitFieldDefinition() {
+    return;
+  }
+}
+
+class AdminDirective extends SchemaDirectiveVisitor {
+  // A marker that is placed on the Input object to be identify a field that requires admin
+  // The fields are then captured and handled in middleware
+
+  visitFieldDefinition() {
     return;
   }
 }
@@ -184,5 +193,6 @@ module.exports = {
   SameTeamDirective,
   OwnerDirective,
   RequiresApproval,
+  AdminDirective,
   profileFragment
 };
