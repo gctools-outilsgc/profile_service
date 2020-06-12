@@ -8,6 +8,8 @@ directive @inOrganization on FIELD_DEFINITION
 # The access token passed must be valid in order to proceed.
 directive @isAuthenticated on OBJECT | FIELD_DEFINITION
 
+directive @onlyAdmin on FIELD_DEFINITION
+
 # The @isSameTeam directive can be placed on a field of a Profile object and will only
 # return the field value if the requestor is on the same team
 directive @isSameTeam on FIELD_DEFINITION
@@ -53,9 +55,9 @@ type Mutation {
   deleteTeam(id: ID!): Boolean!
 
 # The Organization mutations are being removed because they would be Admin type mutations
-# createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!, orgType: OrgType!): Organization!
-# modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
-# deleteOrganization(id: ID!): Boolean!
+  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String, acronymFr: String, orgType: OrgType!): Organization!
+  modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
+  deleteOrganization(id: ID!): Boolean!
   
   modifyApproval(id: ID!, data: ModifyApprovalInput): Approval! @isAuthenticated
 }
@@ -80,6 +82,7 @@ type Profile {
   ownerOfTeams: [Team!]!
   outstandingApprovals: [Approval!]!
   submittedApprovals: [Approval!]!
+  isAdmin: Boolean! @onlyAdmin
 }
 
 type Address {
@@ -151,6 +154,7 @@ input ModifyProfileInput {
   titleEn: String 
   titleFr: String 
   team: TeamInput 
+  isAdmin: Boolean
 }
 
 input ModifyTeamInput {
