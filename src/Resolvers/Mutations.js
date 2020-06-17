@@ -163,6 +163,7 @@ async function createOrganization(_, args, context, info) {
             nameFr: args.nameFr,
             acronymEn: args.acronymEn,
             acronymFr: args.acronymFr,
+            orgType: args.orgType,
             teams: {
                 create: {
                     nameEn: "Organization Default Team",
@@ -184,7 +185,8 @@ async function modifyOrganization(_, args, context, info) {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
         acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr)
+        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr),
+        orgType: copyValueToObjectIfDefined(args.data.orgType),
     };
 
     return await context.prisma.mutation.updateOrganization({

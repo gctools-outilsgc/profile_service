@@ -37,7 +37,7 @@ type Query {
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
-  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, skip: Int, first: Int): [Organization!]!,
+  organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, orgType: OrgType, skip: Int, first: Int): [Organization!]!,
   approvals(id:ID, gcIDApprover: gcIDProfileInput, gcIDSubmitter: gcIDProfileInput, status: Status, changeType: ChangeType, skip: Int, first: Int): [Approval!]!  
 }
 
@@ -55,7 +55,7 @@ type Mutation {
   deleteTeam(id: ID!): Boolean!
 
 # The Organization mutations are being removed because they would be Admin type mutations
-  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String!, acronymFr: String!): Organization!
+  createOrganization(nameEn: String!, nameFr: String!, acronymEn: String, acronymFr: String, orgType: OrgType!): Organization!
   modifyOrganization(id: ID!, data: ModifyOrganizationInput): Organization!
   deleteOrganization(id: ID!): Boolean!
   
@@ -112,9 +112,10 @@ type Organization {
   id: ID!
   nameEn: String!
   nameFr: String!
-  acronymEn: String!
-  acronymFr: String!
+  acronymEn: String
+  acronymFr: String
   teams: [Team!]!
+  orgType: OrgType!
 }
 
 input TeamOwnerInput {
@@ -172,6 +173,7 @@ input ModifyOrganizationInput {
   nameFr: String
   acronymEn: String
   acronymFr: String
+  orgType: OrgType
 }
 
 input ModifyApprovalInput {
@@ -228,6 +230,16 @@ enum ChangeType {
     Membership
     Informational
     Team
+}
+
+enum OrgType {
+    Default
+    Federal
+    Provincial
+    Municipal
+    University
+    College
+    Other
 }
 
 input gcIDProfileInput {
