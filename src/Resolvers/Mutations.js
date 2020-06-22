@@ -146,7 +146,7 @@ async function deleteProfile(_, args, context) {
         });
 
     } catch (e) {
-        throw new UserInputError("Profile does not exist");
+        throw new UserInputError("E1ProfileNotExist");
     }
     searchPrep(args, "delete", context);
     return true;
@@ -176,7 +176,7 @@ async function modifyOrganization(_, args, context, info) {
 
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Organization({ id: args.id })) {
-        throw new UserInputError("Organization does not Exist");
+        throw new UserInputError("E3OrgNotExist");
     }
 
     var updateOrganizationData = {
@@ -209,7 +209,7 @@ async function deleteOrganization(_, args, context) {
         }
         return true;
     }
-    throw new UserInputError("Organization does not exist");
+    throw new UserInputError("E3OrgNotExist");
 
 
 
@@ -306,14 +306,14 @@ async function deleteTeam(_, args, context) {
         }
         return true;
     }
-    throw new UserInputError("Team does not exist");
+    throw new UserInputError("E2TeamNotExist");
 }
 
 async function modifyApproval(_, args, context, info) {
 
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({ id: args.id })) {
-        throw new UserInputError("Approval does not Exist");
+        throw new UserInputError("E4ApprovalNotExist");
     }
     var updateApprovalData = {
         actionedOn: await Date.now().toString(),

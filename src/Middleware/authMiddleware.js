@@ -9,7 +9,7 @@ const allowedToModifyProfile = async (resolve, root, args, context, info) => {
     
     const submitter = await getProfile(context, args);
     if (args.gcID !== context.token.owner.gcID && context.token.owner.gcID !== submitter.team.owner.gcID){
-        throw new AuthenticationError("Must be owner or supervisor of profile to Modify");
+        throw new AuthenticationError("E10MustBeOwnerOrSupervisor");
     }
     return await resolve(root, args, context, info);
     
@@ -19,7 +19,7 @@ const allowedToModifyTeam = async (resolve, root, args, context, info) => {
     // Only the current team owner can modify a team
     const existingTeam = await getTeam(context, args.id);
     if (existingTeam.owner.gcID !== context.token.owner.gcID){
-        throw new AuthenticationError("Must be owner of team to modify");
+        throw new AuthenticationError("E11MustBeTeamOwner");
     }
     return await resolve(root, args, context, info);
 
@@ -50,7 +50,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
 
     if(args.data.status === "Revoked"){
         if(!context.token.owner.gcID === approval.gcIDSubmitter.gcID) {
-            throw new AuthenticationError("Approvals can only be revoked by the submitter");
+            throw new AuthenticationError("E12ApprovalOnlyRevokedBySubmitter");
         }
         return await resolve(root, args, context, info);
     }
@@ -59,7 +59,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
 
         if(approvalSubject.team.owner){
             if(approvalSubject.team.owner.gcID !== context.token.owner.gcID){
-                throw new AuthenticationError("Must be supervisor of user to modify Informational Approval");                   
+                throw new AuthenticationError("E13MustBeSupervisorInfo");                   
             }
         }
         return await resolve(root, args, context, info);
@@ -67,13 +67,13 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
 
     if(approval.changeType === "Membership" || approval.changeType === "Team"){
         if(approval.gcIDApprover.gcID !== context.token.owner.gcID){
-            throw new AuthenticationError("Must be supervisor of the team to accept transfer request");
+            throw new AuthenticationError("E14MustBeSupervisorTransfer");
         }
         return await resolve(root, args, context, info);
     }
 
     if(!context.token.owner.gcID === approval.gcIDApprover.gcID){
-        throw new AuthenticationError("Must be Approver on Approval to modify");
+        throw new AuthenticationError("E15MustBeApprover");
     }
 
     return await resolve(root, args, context, info);
@@ -81,7 +81,7 @@ const allowedToModifyApproval = async (resolve, root, args, context, info) => {
 
 const mustbeAuthenticated = async (resolve, root, args, context, info) => {
     if (!context.token || !context.token.active){
-        throw new AuthenticationError("Must be authenticaticated");
+        throw new AuthenticationError("E9MustBeAuthenticated");
     }
     return await resolve(root, args, context, info);
 };
