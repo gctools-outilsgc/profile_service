@@ -96,8 +96,8 @@ async function checkChildNodes(context, approver, parent) {
         await Promise.all(childNodes.ownerOfTeams.map(async (team) => {
             if (team.members.length > 0) {
                 await Promise.all(team.members.map(async (member) => {
-                    if (member.gcID === approver.gcID) {
-                        throw new Error("Circular relationship caught");
+                    if (member.gcID === approver.gcID){
+                        throw new Error("E7CircularRelationship");
                     } else {
                         await checkChildNodes(context, approver, member.gcID);
                         return;
@@ -112,8 +112,8 @@ async function checkChildNodes(context, approver, parent) {
 
 async function isAllowedSupervisor(context, requestedChanges) {
     // Check for self reporting relationship
-    if (requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID) {
-        throw new AuthenticationError("A supervisor must be a different person than the selected user");
+    if(requestedChanges.approvalSubmitter === requestedChanges.approverID.gcID){
+        throw new AuthenticationError("E7CircularRelationship");
     }
 
     // Check for creation of circular relationshiop with new supervisor
@@ -121,9 +121,9 @@ async function isAllowedSupervisor(context, requestedChanges) {
     // Take requester and scan through child nodes for matching gcID.
 
     await checkChildNodes(context, requestedChanges.approverID, requestedChanges.approvalSubmitter)
-        .catch(() => {
-            throw new AuthenticationError("Selected supervisor would create a circular reporting relationship");
-        });
+    .catch(() => {
+        throw new AuthenticationError("E7CircularRelationship");
+    });
 
 }
 

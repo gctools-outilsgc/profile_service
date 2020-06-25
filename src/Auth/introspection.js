@@ -19,7 +19,7 @@ async function getTokenOwner(tokenData) {
         }
       }, "{gcID, name, email, isAdmin, team{id, owner{gcID}, organization{id}}}");
   } catch (e) {
-    throw new Error("Profile does not exist");
+    throw new Error("E8TokenProfileNotExist");
   }
   await throwExceptionIfProfileIsNotDefined(tokenData.owner);
   return tokenData;
