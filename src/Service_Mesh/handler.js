@@ -1,7 +1,7 @@
 // Handler for messages from different exchanges and keys
 const { Prisma } = require("prisma-binding");
 const { createProfile } = require("../Resolvers/Mutations");
-const {GraphQLError} = require("graphql");
+const { GraphQLError } = require("graphql");
 const { publishMessageQueue } = require("./publisher_connector");
 const config = require("../config");
 const { getDefaults } = require("../Resolvers/helper/default_setup");
@@ -9,33 +9,34 @@ const { getDefaults } = require("../Resolvers/helper/default_setup");
 var context = {
     prisma: new Prisma({
         typeDefs: "./src/generated/prisma.graphql",
-        endpoint: "http://"+config.prisma.host+":4466/profile/",
+        endpoint: "http://" + config.prisma.host + ":4466/profile/",
         debug: config.prisma.debug,
-      }),
+    }),
 };
 
 async function msgHandler(msg, success) {
     const messageBody = JSON.parse(msg.content.toString());
     context.defaults = await getDefaults();
-    switch (msg.fields.routingKey){
+    switch (msg.fields.routingKey) {
         case "user.new":
             var args = {
                 gcID: messageBody.gcID,
                 name: messageBody.name,
-                email: messageBody.email
+                email: messageBody.email,
+                isAdmin: messageBody.isAdmin
             };
             try {
-                await createProfile(null, args, context, "{gcID, name, email}");
+                await createProfile(null, args, context, "{gcID, name, email, isAdmin}");
                 success(true);
-            } catch(err){
-                if (err instanceof GraphQLError){
+            } catch (err) {
+                if (err instanceof GraphQLError) {
                     let rejectMsg = {
                         args,
                         error: err
                     };
-                    try{
+                    try {
                         await publishMessageQueue("errors", "profile.creation", rejectMsg);
-                    } catch(err){
+                    } catch (err) {
                         // eslint-disable-next-line no-console
                         console.error(err);
                     }
@@ -43,7 +44,7 @@ async function msgHandler(msg, success) {
                     success(true);
 
 
-                } else{
+                } else {
                     // If it's not a GraphQL Error then requeue it.
                     success(false);
                 }
@@ -57,7 +58,7 @@ async function msgHandler(msg, success) {
             };
             try {
                 await publishMessageQueue("errors", "profile.noHandler", rejectMsg);
-            } catch(err){
+            } catch (err) {
                 // Could not forward error - will need to cache these
                 // eslint-disable-next-line no-console
                 console.error(err);
@@ -65,7 +66,7 @@ async function msgHandler(msg, success) {
             // eslint-disable-next-line no-console
             console.error("No handler method available - Default Policy : Drop to error");
             success(true);
-            break;        
+            break;
     }
 }
 

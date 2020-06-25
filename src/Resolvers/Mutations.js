@@ -26,7 +26,8 @@ async function createProfile(_, args, context, info) {
         team: {
             connect: { id: context.defaults.org.teams[0].id }
 
-        }
+        },
+        isAdmin: args.isAdmin
     };
 
     if (propertyExists(args, "avatar")) {
@@ -58,7 +59,6 @@ async function createProfile(_, args, context, info) {
         createProfileData.ownerOfTeams.create.organization.connect.id = teamInfo.organization.id;
     }
 
-
     const profile = await context.prisma.mutation.createProfile({
         data: createProfileData,
     }, info);
@@ -89,6 +89,7 @@ async function modifyProfile(_, args, context, info) {
         officePhone: copyValueToObjectIfDefined(args.data.officePhone),
         titleEn: copyValueToObjectIfDefined(args.data.titleEn),
         titleFr: copyValueToObjectIfDefined(args.data.titleFr),
+        isAdmin: copyValueToObjectIfDefined(args.data.isAdmin),
     };
 
     if (propertyExists(args.data, "avatar")) {
@@ -155,13 +156,14 @@ async function deleteProfile(_, args, context) {
 
 
 
-function createOrganization(_, args, context, info) {
-    return context.prisma.mutation.createOrganization({
+async function createOrganization(_, args, context, info) {
+    return await context.prisma.mutation.createOrganization({
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
             acronymEn: args.acronymEn,
             acronymFr: args.acronymFr,
+            orgType: args.orgType,
             teams: {
                 create: {
                     nameEn: "Organization Default Team",
@@ -183,7 +185,8 @@ async function modifyOrganization(_, args, context, info) {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
         acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr)
+        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr),
+        orgType: copyValueToObjectIfDefined(args.data.orgType),
     };
 
     return await context.prisma.mutation.updateOrganization({
