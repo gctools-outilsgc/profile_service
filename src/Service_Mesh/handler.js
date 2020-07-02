@@ -16,7 +16,7 @@ var context = {
 
 async function msgHandler(msg, success) {
     const messageBody = JSON.parse(msg.content.toString());
-    context.defaults = await getDefaults();
+    context.defaults = await getDefaults(true);
     switch (msg.fields.routingKey) {
         case "user.new":
             var args = {

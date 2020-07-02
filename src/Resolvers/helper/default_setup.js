@@ -212,8 +212,9 @@ function getKeyByValue(object, value) {
 }
 
 
-async function getDefaults() {
-    var org = await querys.organizations({}, { nameEn: "Global Organization", nameFr: "Organization Global" }, ctx, "{id,teams{id}}");
+async function getDefaults(teams = false) {
+    let fields = teams ? "{id,teams{id}}" : "{id}";
+    var org = await querys.organizations({}, { nameEn: "Global Organization", nameFr: "Organization Global" }, ctx, fields);
 
     if (org.length < 1) {
         defaultData.org = await createDefaultOrg();
