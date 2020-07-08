@@ -11,8 +11,8 @@ async function renderContent(approval) {
     const template = approval.changeType;
 
     let online = await generateOnlineTemplate(template, to, from);
-    let emailApprover = await ejs.renderFile(path.join(__dirname, '/Email_Templates/base.ejs'), { content: online.approver, directoryUrl: config.directoryApp.url }, {});
-    let emailSubmitter = await ejs.renderFile(path.join(__dirname, '/Email_Templates/base.ejs'), { content: online.submitter, directoryUrl: config.directoryApp.url }, {});
+    let emailApprover = await ejs.renderFile(path.join(__dirname, '/Email_Templates/base.ejs'), { content: online.approver, directoryUrl: config.directoryApp.url, approvalID: approval.id }, {});
+    let emailSubmitter = await ejs.renderFile(path.join(__dirname, '/Email_Templates/base.ejs'), { content: online.submitter, directoryUrl: config.directoryApp.url, approvalID: false }, {});
 
     online.approver.body = emailApprover;
     online.submitter.body = emailSubmitter;
