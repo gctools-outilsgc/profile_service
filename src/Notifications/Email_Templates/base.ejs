@@ -5,7 +5,83 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0 " />
-    <style></style>
+    <style type="text/css">
+        /* Remove space around the email design. */
+        html,
+        body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        /* Stop Outlook resizing small text. */
+        * {
+            -ms-text-size-adjust: 100%;
+        }
+
+        /* Stop Outlook from adding extra spacing to tables. */
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* Use a better rendering method when resizing images in Outlook IE. */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* Prevent Windows 10 Mail from underlining links. Styles for underlined links should be inline. */
+        a {
+            text-decoration: none;
+        }
+
+        .em_main_table {
+            background-color: #ffffff;
+            width: 100% !important;
+            max-width: 700px !important;
+        }
+
+        .em_button_link {
+            color: #002d42;
+            background-color: transparent;
+            background-image: none;
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid #002d42;
+            padding: .375rem .75rem !important;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .35rem;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+    </style>
+    <!--[if mso]>
+        <style>
+            .topImg {
+                margin: 10px 0px 0px 15px !important;
+            }
+            .em_main_table {
+                width: 700px !important;
+            }
+             .em_button_link {
+                mso-border-alt: 8px solid #002d42;
+                background-color: #002d42;
+                mso-padding-alt: 0 !important;
+                color: #ffffff !important;
+             }
+            .button-row {
+                padding: 10px 0px 0px 0px !important;
+            }
+        </style>
+    <![endif]-->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
 </head>
@@ -13,14 +89,15 @@
 <body style="background-color: #EEE; padding:10px 6px;">
 
     <table align="center" bgcolor="#FFF" width="700" border="0" cellspacing="0" cellpadding="0" class="em_main_table"
-        style="width: 100%;max-width:700px; box-shadow: 0 0 5px rgba(0,0,0,.15); font-family: 'Nunito Sans', sans-serif;
+        style="width: 100%;max-width:700px; box-shadow: 0 0 5px rgba(0,0,0,.15); font-family: 'Nunito Sans', Arial, sans-serif;
         ">
         <tr role="presentation">
             <td
                 style="background-image: linear-gradient(90deg,#0d7586,#0d84b9); padding-top:2px; background-color: #0d7586">
+                <span style="padding: 2px 0px"></span>
             </td>
         </tr>
-        <tr role="presentation">
+        <tr role="presentation" class="topImg">
             <td>
                 <img style="max-width: 200px; margin-top: 10px; margin-left: 15px;"
                     src="https://raw.githubusercontent.com/gctools-outilsgc/gcconnex/master/mod/wet4/graphics/sig-alt-en.png"
@@ -59,27 +136,10 @@
                             <p><%= content.emailBodyEn %></p>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="button-row">
                         <td align="center" valign="top">
-                            <a style="color: #002d42;
-                            background-color: transparent;
-                            background-image: none;
-                            display: inline-block;
-                            font-weight: 400;
-                            text-align: center;
-                            white-space: nowrap;
-                            vertical-align: middle;
-                            user-select: none;
-                            border: 1px solid #002d42;
-                            padding: .375rem .75rem;
-                            font-size: 1rem;
-                            line-height: 1.5;
-                            border-radius: .35rem;
-                            text-decoration: none;
-                            margin-top: 15px;
-                            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                href="<%= directoryUrl %>/p/<%= content.toUser %>">View profile</a>
-                        </td>
+                            <a class="em_button_link" href="<%= directoryUrl %>/p/<%= content.toUser %>">View
+                                profile</a>
                     </tr>
                 </table>
             </td>
@@ -97,26 +157,10 @@
                             <p><%= content.emailBodyFr %></p>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="button-row">
                         <td align="center" valign="top">
-                            <a style="color: #002d42;
-                            background-color: transparent;
-                            background-image: none;
-                            display: inline-block;
-                            font-weight: 400;
-                            text-align: center;
-                            white-space: nowrap;
-                            vertical-align: middle;
-                            user-select: none;
-                            border: 1px solid #002d42;
-                            padding: .375rem .75rem;
-                            font-size: 1rem;
-                            line-height: 1.5;
-                            border-radius: .35rem;
-                            text-decoration: none;
-                            margin-top: 15px;
-                            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                href="<%= directoryUrl %>/p/<%= content.toUser %>">Voir le profil</a>
+                            <a class="em_button_link" href="<%= directoryUrl %>/p/<%= content.toUser %>">Voir le
+                                profil</a>
                         </td>
                     </tr>
                 </table>
