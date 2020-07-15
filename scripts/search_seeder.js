@@ -40,7 +40,7 @@ async function seed(){
     // Get all profile information needed into a single JSON.
     var info = `query queryProfiles {
         profiles { gcID, name, email, mobilePhone, officePhone, titleEn, titleFr,
-        team{nameEn, nameFr, organization{nameEn, nameFr, acronymEn, acronymFr}}}
+        team{id, nameEn, nameFr, organization{id, nameEn, nameFr}}}
       }`;
     const users = await graphql(schema, info);
     const profiles = users.data.profiles;
