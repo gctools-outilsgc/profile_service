@@ -4,7 +4,8 @@ const { profileFragment } = require("../Auth/Directives");
 const { autoCompleter } = require("../Search/autoComplete");
 
 function search(_, args, context, info){
-  return autoCompleter(args.partialName, context, info);
+  
+  return autoCompleter(args.partialName, args.number, context, info);
 }
 
 function profiles(_, args, context, info) {
