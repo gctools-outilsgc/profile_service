@@ -26,7 +26,8 @@ async function createProfile(_, args, context, info) {
         team: {
             connect: { id: context.defaults.org.teams[0].id }
 
-        }
+        },
+        isAdmin: args.isAdmin
     };
 
     if (propertyExists(args, "avatar")) {
@@ -58,7 +59,6 @@ async function createProfile(_, args, context, info) {
         createProfileData.ownerOfTeams.create.organization.connect.id = teamInfo.organization.id;
     }
 
-
     const profile = await context.prisma.mutation.createProfile({
         data: createProfileData,
     }, info);
@@ -89,6 +89,7 @@ async function modifyProfile(_, args, context, info) {
         officePhone: copyValueToObjectIfDefined(args.data.officePhone),
         titleEn: copyValueToObjectIfDefined(args.data.titleEn),
         titleFr: copyValueToObjectIfDefined(args.data.titleFr),
+        isAdmin: copyValueToObjectIfDefined(args.data.isAdmin),
     };
 
     if (propertyExists(args.data, "avatar")) {
@@ -146,7 +147,7 @@ async function deleteProfile(_, args, context) {
         });
 
     } catch (e) {
-        throw new UserInputError("Profile does not exist");
+        throw new UserInputError("E1ProfileNotExist");
     }
     searchPrep(args, "delete", context);
     return true;
@@ -155,13 +156,14 @@ async function deleteProfile(_, args, context) {
 
 
 
-function createOrganization(_, args, context, info) {
-    return context.prisma.mutation.createOrganization({
+async function createOrganization(_, args, context, info) {
+    return await context.prisma.mutation.createOrganization({
         data: {
             nameEn: args.nameEn,
             nameFr: args.nameFr,
             acronymEn: args.acronymEn,
             acronymFr: args.acronymFr,
+            orgType: args.orgType,
             teams: {
                 create: {
                     nameEn: "Organization Default Team",
@@ -176,14 +178,15 @@ async function modifyOrganization(_, args, context, info) {
 
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Organization({ id: args.id })) {
-        throw new UserInputError("Organization does not Exist");
+        throw new UserInputError("E3OrgNotExist");
     }
 
     var updateOrganizationData = {
         nameEn: copyValueToObjectIfDefined(args.data.nameEn),
         nameFr: copyValueToObjectIfDefined(args.data.nameFr),
         acronymEn: copyValueToObjectIfDefined(args.data.acronymEn),
-        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr)
+        acronymFr: copyValueToObjectIfDefined(args.data.acronymFr),
+        orgType: copyValueToObjectIfDefined(args.data.orgType),
     };
 
     return await context.prisma.mutation.updateOrganization({
@@ -209,7 +212,7 @@ async function deleteOrganization(_, args, context) {
         }
         return true;
     }
-    throw new UserInputError("Organization does not exist");
+    throw new UserInputError("E3OrgNotExist");
 
 
 
@@ -306,14 +309,14 @@ async function deleteTeam(_, args, context) {
         }
         return true;
     }
-    throw new UserInputError("Team does not exist");
+    throw new UserInputError("E2TeamNotExist");
 }
 
 async function modifyApproval(_, args, context, info) {
 
     // eslint-disable-next-line new-cap
     if (!context.prisma.exists.Approval({ id: args.id })) {
-        throw new UserInputError("Approval does not Exist");
+        throw new UserInputError("E4ApprovalNotExist");
     }
     var updateApprovalData = {
         actionedOn: await Date.now().toString(),

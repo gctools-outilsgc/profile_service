@@ -224,7 +224,7 @@ async function deleteApproval(_, args, context) {
         }
         return true;
     }
-    throw new UserInputError("Approval does not exist");
+    throw new UserInputError("E4ApprovalNotExist");
 }
 
 module.exports = {

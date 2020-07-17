@@ -3,35 +3,35 @@ const config = require("../config");
 const { Prisma } = require("prisma-binding");
 const { throwExceptionIfProfileIsNotDefined } = require("../Resolvers/helper/profileHelper");
 
-async function getTokenOwner(tokenData){
+async function getTokenOwner(tokenData) {
 
   const prisma = await new Prisma({
     typeDefs: "./src/generated/prisma.graphql",
-    endpoint: "http://"+config.prisma.host+":4466/profile/",
+    endpoint: "http://" + config.prisma.host + ":4466/profile/",
     debug: config.prisma.debug,
   });
 
   try {
     tokenData.owner = await prisma.query.profile(
       {
-          where: {
-              gcID: tokenData.sub
-          }            
-      },"{gcID, name, email, team{id, owner{gcID}, organization{id}}}");
-  } catch(e){
-    throw new Error("Profile does not exist");
+        where: {
+          gcID: tokenData.sub
+        }
+      }, "{gcID, name, email, isAdmin, team{id, owner{gcID}, organization{id}}}");
+  } catch (e) {
+    throw new Error("E8TokenProfileNotExist");
   }
-    await throwExceptionIfProfileIsNotDefined(tokenData.owner);
-    return tokenData;
+  await throwExceptionIfProfileIsNotDefined(tokenData.owner);
+  return tokenData;
 }
 
-async function verifyToken(request){
+async function verifyToken(request) {
 
   var token;
   var tokenData;
 
   //see if token provided in request
-  if(await request.req.headers.hasOwnProperty("authorization")){
+  if (await request.req.headers.hasOwnProperty("authorization")) {
     //remove "bearer" from token
     var splitReq = request.req.headers.authorization.split(" ");
     token = splitReq[1];
@@ -54,19 +54,19 @@ async function verifyToken(request){
   };
 
   await fetch(url, postOptions)
-  .then((response) => response.json())
-  .then(function(data){ 
-    tokenData = data;
-  })
-  .catch((error) => {
-    const errorMsg = {
-      "active": false,
-      "message": error.message
-    };
-    tokenData = errorMsg;
-  });
+    .then((response) => response.json())
+    .then(function (data) {
+      tokenData = data;
+    })
+    .catch((error) => {
+      const errorMsg = {
+        "active": false,
+        "message": error.message
+      };
+      tokenData = errorMsg;
+    });
 
-  if (tokenData.active){
+  if (tokenData.active) {
     tokenData = await getTokenOwner(tokenData);
   }
 

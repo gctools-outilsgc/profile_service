@@ -1,45 +1,45 @@
 const { createApproval, appendApproval } = require("../Resolvers/helper/approvalHelper");
 const { cloneObject } = require("../Resolvers/helper/objectHelper");
-const { getTeam, getExistingApprovals, getApprovalType} = require("./common");
+const { getTeam, getExistingApprovals, getApprovalType } = require("./common");
 
-async function generateTeamTransferApproval(context, existingTeam, newOwner){
+async function generateTeamTransferApproval(context, existingTeam, newOwner) {
     // Check to see if there is an existing transfer for this specific team
 
     const existingApprovals = await getExistingApprovals(context, context.token.owner.gcID, existingTeam)
-    .then((approvals) => getApprovalType(approvals, "Team"))
-    .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-    });
+        .then((approvals) => getApprovalType(approvals, "Team"))
+        .catch((e) => {
+            // eslint-disable-next-line no-console
+            console.error(e);
+        });
 
     var ownershipTransferObject = {
         gcIDApprover: newOwner.gcID,
         gcIDSubmitter: context.token.owner.gcID,
         createdBy: context.token.owner.gcID,
         requestedChange: {
-            ownershipOfTeam:{
+            ownershipOfTeam: {
                 id: existingTeam.id
             }
         },
         changeType: "Team"
-    };    
+    };
 
     // Append existing transfer with new owner
 
-    if (existingApprovals){
+    if (existingApprovals) {
         ownershipTransferObject.id = existingApprovals.id;
         await appendApproval(null, ownershipTransferObject, context)
-        .catch((e) => {
-            // eslint-disable-next-line no-console
-            console.log(e);
-        });
+            .catch((e) => {
+                // eslint-disable-next-line no-console
+                console.log(e);
+            });
     } else {
         // Create new transfer if none already exist
         await createApproval(null, ownershipTransferObject, context)
-        .catch((e) => {
-            // eslint-disable-next-line no-console
-            console.log(e);
-        });
+            .catch((e) => {
+                // eslint-disable-next-line no-console
+                console.log(e);
+            });
     }
 
     return;
@@ -49,7 +49,7 @@ const teamApprovalRequired = async (resolve, root, args, context, info) => {
 
     const existingTeam = await getTeam(context, args.id);
 
-    if (args.data.owner && args.data.owner.gcID !== existingTeam.owner.gcID){
+    if (args.data.owner && args.data.owner.gcID !== existingTeam.owner.gcID && !context.token.owner.isAdmin) {
         // change in ownership
         // clone args object so we don't need to wait for generate team transfer to return.
         generateTeamTransferApproval(context, existingTeam, cloneObject(args.data.owner));

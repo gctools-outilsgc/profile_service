@@ -3,13 +3,13 @@ const { UserInputError } = require("apollo-server");
 
 const throwExceptionIfProfileIsNotDefined = (profile) => {
     if (profile === null || typeof profile === "undefined"){
-        throw new UserInputError("Profile does not exist");
+        throw new UserInputError("E1ProfileNotExist");
     }
 };
 
 const throwExceptionIfTeamIsNotDefined = (team) => {
   if (team === null || typeof team === "undefined" || team.length === 0){
-      throw new UserInputError("Team does not exist");
+      throw new UserInputError("E2TeamNotExist");
   }
 };
 

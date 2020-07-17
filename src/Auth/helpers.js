@@ -24,7 +24,7 @@ async function blockValue(field){
       }
 
       if (field.type.ofType instanceof GraphQLList){
-        throw new AuthenticationError("Not Authorized");
+        throw new AuthenticationError("E6NotAuthorized");
       }
     }
 

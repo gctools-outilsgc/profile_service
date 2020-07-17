@@ -14,6 +14,7 @@ type Profile {
   submittedApprovals: [Approval] @relation(name:"Submitter", onDelete: CASCADE)
   createdApprovals: [Approval] @relation(name:"Creator")
   updatedApprovals: [Approval] @relation(name:"Updater")
+  isAdmin: Boolean!
 }
 
 type Address {
@@ -45,8 +46,9 @@ type Organization {
   id: ID! @unique
   nameEn: String!
   nameFr: String!
-  acronymEn: String!
-  acronymFr: String!
+  acronymEn: String
+  acronymFr: String
+  orgType: OrgType!
   teams: [Team!]! @relation(name:"Teams", onDelete: CASCADE) 
 }
 
@@ -90,3 +92,13 @@ enum ChangeType {
     Informational
     Team
 } 
+
+enum OrgType {
+    Default
+    Federal
+    Provincial
+    Municipal
+    University
+    College
+    Other
+}

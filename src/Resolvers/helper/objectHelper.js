@@ -7,7 +7,7 @@ const copyValueToObjectIfDefined = (originalValue) => {
 const propertyRequired = (args, property) => {
   let value = args[property];
   if(args[property] === null || typeof value === "undefined"){
-      return `'${property}' is not defined and is a required field`;
+      return `E5'${property}'NotDefined`;
   }
 };
 
