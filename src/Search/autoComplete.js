@@ -1,6 +1,6 @@
 const elastic = require("./connection");
 
-async function getSuggestions(partialName){
+async function getSuggestions(partialName, number){
     return elastic.search({
         index:"profiles",
         body:{
@@ -9,7 +9,7 @@ async function getSuggestions(partialName){
                     prefix: partialName,
                     completion: {
                         field:"suggest",
-                        size:"10"
+                        size: number,
                     }
                 }
             }
@@ -32,8 +32,8 @@ async function responseFormatter(suggestion, context, info){
     );
 }
 
-async function autoCompleter(partialName, context, info){
-    const response = await getSuggestions(partialName);
+async function autoCompleter(partialName, number, context, info){
+    const response = await getSuggestions(partialName, number);
     return Promise.all(
         response.body.suggest.nameAutoComplete[0].options.map((suggestion) => responseFormatter(suggestion, context, info))
         );
