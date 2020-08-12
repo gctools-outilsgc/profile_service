@@ -9,12 +9,12 @@ const storeUpload = async ({ stream, filename }) => {
   const id = shortid.generate();
   const path = `${uploadDir}/${id}-${filename}`;
 
-  return new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) => {
     stream
       .pipe(fs.createWriteStream(path))
       .on("finish", () => resolve(path))
-      .on("error", reject),
-  );
+      .on("error", reject);
+  });
 };
 
 function deletePictureFromTempFolder(path) {
@@ -34,7 +34,7 @@ const convertPicture = async (originPath) => {
   return new Promise((resolve, reject) => {
     sharp(originPath)
       .jpeg()
-      .resize(config.image.size)
+      .resize(config.image.size, config.image.size)
       .toFile(destinationPath)
       .then(function (removeFile) {
         deletePictureFromTempFolder(originPath);
@@ -69,7 +69,7 @@ const postImage = (path) => {
       method: "POST"
     }, function optionalCallback(err, httpResponse, body) {
       if (err) {
-        reject();
+        reject(err);
       } else {
         var bodyJson = JSON.parse(body);
         if (bodyJson.status == "err") {
@@ -93,9 +93,31 @@ const createUploadFolderIfNeeded = async () => {
   });
 };
 
+const urltoFile = (upload) => {
+  return new Promise((resolve, reject) => {
+    if (upload.includes("/mod/profile/icondirect.php")) {
+      var imageRequest = request.get(upload, { timeout: 5000 });
+      resolve(imageRequest);
+    } else {
+      reject("Invalid url");
+    }
+  });
+}
+
 const processUpload = async (upload, profile) => {
-  const { createReadStream, filename } = await upload;
-  const stream = createReadStream();
+  let filename = '';
+  let stream = '';
+
+  if (typeof upload == 'string') { // Upload from GCcollab
+    filename = 'tempAvatar.jpg';
+    await urltoFile(upload).then(data => {
+      stream = data;
+    });
+  } else { // File upload
+    let { createReadStream, filename } = await upload;
+    stream = createReadStream();
+  }
+
   await createUploadFolderIfNeeded();
   const originPath = await storeUpload({ stream, filename });
   const avatarPath = await convertPicture(originPath);
