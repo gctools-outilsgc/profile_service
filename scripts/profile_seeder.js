@@ -21,6 +21,8 @@ async function seed(){
     // Number or profiles to create in each Organization
     const profileNumber = 4000;
 
+    const orgList = ["Default", "Federal", "Provincial", "Municipal", "University", "College", "Other"]; 
+
     try {
         // Create n organizations
         for(var o = 0; o < orgNumber; o++){
@@ -38,6 +40,7 @@ async function seed(){
                     nameFr: orgFr,
                     acronymEn: faker.hacker.abbreviation(),
                     acronymFr: faker.hacker.abbreviation(),
+                    orgType:orgList[Math.floor(Math.random() * orgList.length)]
                 };
 
                 // Store the created org info to assign teams to the org.
@@ -67,6 +70,7 @@ async function seed(){
                             officePhone: faker.phone.phoneNumberFormat(),
                             titleEn: faker.name.jobType(),
                             titleFr: faker.name.jobType(), 
+                            isAdmin: false,
                             address: { 
                                 create :{
                                     streetAddress: faker.address.streetAddress(),
