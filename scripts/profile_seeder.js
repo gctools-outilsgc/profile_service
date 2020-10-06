@@ -70,7 +70,7 @@ async function seed(){
                             officePhone: faker.phone.phoneNumberFormat(),
                             titleEn: faker.name.jobType(),
                             titleFr: faker.name.jobType(), 
-                            isAdmin: false,
+                            role: "User",
                             address: { 
                                 create :{
                                     streetAddress: faker.address.streetAddress(),

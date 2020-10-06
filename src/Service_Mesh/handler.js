@@ -23,10 +23,10 @@ async function msgHandler(msg, success) {
                 gcID: messageBody.gcID,
                 name: messageBody.name,
                 email: messageBody.email,
-                isAdmin: messageBody.isAdmin
+                role: (messageBody.isAdmin) ? "Admin" : "User"
             };
             try {
-                await createProfile(null, args, context, "{gcID, name, email, isAdmin}");
+                await createProfile(null, args, context, "{gcID, name, email, role}");
                 success(true);
             } catch (err) {
                 if (err instanceof GraphQLError) {

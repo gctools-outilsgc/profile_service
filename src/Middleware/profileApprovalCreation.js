@@ -229,7 +229,7 @@ const profileApprovalRequired = async (resolve, root, args, context, info) => {
     requestedChanges.approvalSubmitter = context.submitter.gcID;
     requestedChanges.approverID = await whoIsTheApprover(context, args, context.submitter);
 
-    if (!requestedChanges.approverID || context.token.owner.isAdmin) {
+    if (!requestedChanges.approverID || context.token.owner.role == "Admin") {
         // If no current supervisor or moving to organization default team 
         // then pass through changes unless it's a membership change with a supervisor
 
