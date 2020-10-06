@@ -52,7 +52,8 @@ async function account_seeder() {
         var args = {
             gcID: profiles[u].id,
             name: profiles[u].name,
-            email: profiles[u].email
+            email: profiles[u].email,
+            role: (profiles[u].isAdmin) ? "Admin" : "User"
         };
         try {
             await createProfile(null, args, ctx, "{gcID, name, email}");

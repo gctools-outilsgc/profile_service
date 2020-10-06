@@ -154,7 +154,7 @@ input ModifyProfileInput {
   titleEn: String 
   titleFr: String 
   team: TeamInput 
-  isAdmin: Boolean
+  role: UserRole
 }
 
 input ModifyTeamInput {
