@@ -8,7 +8,7 @@ const allowedToModifyProfile = async (resolve, root, args, context, info) => {
     // Only the profile owner or their current supervisor can modify a profile
 
     const submitter = await getProfile(context, args);
-    if (args.gcID !== context.token.owner.gcID && (submitter.team.owner === null || context.token.owner.gcID !== submitter.team.owner.gcID) && !context.token.owner.isAdmin) {
+    if (args.gcID !== context.token.owner.gcID && (submitter.team.owner === null || context.token.owner.gcID !== submitter.team.owner.gcID) && context.token.owner.role !== "Admin") {
         throw new AuthenticationError("E10MustBeOwnerOrSupervisor");
     }
     return await resolve(root, args, context, info);
@@ -18,7 +18,7 @@ const allowedToModifyProfile = async (resolve, root, args, context, info) => {
 const allowedToModifyTeam = async (resolve, root, args, context, info) => {
     // Only the current team owner can modify a team
     const existingTeam = await getTeam(context, args.id);
-    if (existingTeam.owner.gcID !== context.token.owner.gcID && !context.token.owner.isAdmin) {
+    if (existingTeam.owner.gcID !== context.token.owner.gcID && context.token.owner.role !== "Admin") {
         throw new AuthenticationError("E11MustBeTeamOwner");
     }
     return await resolve(root, args, context, info);
@@ -90,7 +90,7 @@ const mustBeAdmin = async (resolve, root, args, context, info) => {
 
     // Must be an admin
 
-    if (!context.token || !context.token.owner.isAdmin) {
+    if (!context.token || context.token.owner.role !== "Admin") {
         throw new AuthenticationError("Must be an system admin");
     }
     return await resolve(root, args, context, info);
@@ -101,7 +101,7 @@ const adminOnlyField = async (resolve, root, args, context, info) => {
 
     for (var field in args.data) {
         if (await checkForDirective(field, info, "onlyAdmin")) {
-            if (!context.token.owner.isAdmin) {
+            if (context.token.owner.role !== "Admin") {
                 delete args.data[field];
             }
         }

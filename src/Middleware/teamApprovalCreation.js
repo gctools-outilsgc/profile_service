@@ -49,7 +49,7 @@ const teamApprovalRequired = async (resolve, root, args, context, info) => {
 
     const existingTeam = await getTeam(context, args.id);
 
-    if (args.data.owner && args.data.owner.gcID !== existingTeam.owner.gcID && !context.token.owner.isAdmin) {
+    if (args.data.owner && args.data.owner.gcID !== existingTeam.owner.gcID && context.token.owner.role !== "Admin") {
         // change in ownership
         // clone args object so we don't need to wait for generate team transfer to return.
         generateTeamTransferApproval(context, existingTeam, cloneObject(args.data.owner));

@@ -14,7 +14,7 @@ type Profile {
   submittedApprovals: [Approval] @relation(name:"Submitter", onDelete: CASCADE)
   createdApprovals: [Approval] @relation(name:"Creator")
   updatedApprovals: [Approval] @relation(name:"Updater")
-  isAdmin: Boolean!
+  role: UserRole!
 }
 
 type Address {
@@ -101,4 +101,9 @@ enum OrgType {
     University
     College
     Other
+}
+
+enum UserRole {
+    User
+    Admin
 }

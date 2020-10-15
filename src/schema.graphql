@@ -82,7 +82,7 @@ type Profile {
   ownerOfTeams: [Team!]!
   outstandingApprovals: [Approval!]!
   submittedApprovals: [Approval!]!
-  isAdmin: Boolean! @onlyAdmin
+  role: UserRole! @onlyAdmin
 }
 
 type Address {
@@ -154,7 +154,7 @@ input ModifyProfileInput {
   titleEn: String 
   titleFr: String 
   team: TeamInput 
-  isAdmin: Boolean
+  role: UserRole
 }
 
 input ModifyTeamInput {
@@ -240,6 +240,11 @@ enum OrgType {
     University
     College
     Other
+}
+
+enum UserRole {
+    User
+    Admin
 }
 
 input gcIDProfileInput {

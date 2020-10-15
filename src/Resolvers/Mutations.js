@@ -27,7 +27,7 @@ async function createProfile(_, args, context, info) {
             connect: { id: context.defaults.org.teams[0].id }
 
         },
-        isAdmin: args.isAdmin
+        role: args.role
     };
 
     if (propertyExists(args, "avatar")) {
@@ -89,7 +89,7 @@ async function modifyProfile(_, args, context, info) {
         officePhone: copyValueToObjectIfDefined(args.data.officePhone),
         titleEn: copyValueToObjectIfDefined(args.data.titleEn),
         titleFr: copyValueToObjectIfDefined(args.data.titleFr),
-        isAdmin: copyValueToObjectIfDefined(args.data.isAdmin),
+        role: copyValueToObjectIfDefined(args.data.role),
     };
 
     if (propertyExists(args.data, "avatar")) {

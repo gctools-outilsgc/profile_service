@@ -17,7 +17,7 @@ async function getTokenOwner(tokenData) {
         where: {
           gcID: tokenData.sub
         }
-      }, "{gcID, name, email, isAdmin, team{id, owner{gcID}, organization{id}}}");
+      }, "{gcID, name, email, role, team{id, owner{gcID}, organization{id}}}");
   } catch (e) {
     throw new Error("E8TokenProfileNotExist");
   }
