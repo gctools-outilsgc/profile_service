@@ -81,6 +81,15 @@ type RequestedChange {
     ownershipOfTeam: Team @relation(name:"TransferOwnershipTo")
 }
 
+type Integration {
+    id: ID!@unique
+    gcID: Int!
+    integrationID: String
+    source: IntegrationSources!
+    lastSync: String!
+    changes: Profile
+}
+
 enum Status {
     Pending
     Approved
@@ -106,4 +115,8 @@ enum OrgType {
 enum UserRole {
     User
     Admin
+}
+
+enum IntegrationSources {
+    GEDS
 }
