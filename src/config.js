@@ -23,6 +23,9 @@ const imageDeleteCode = process.env.MASTERDELETECODE;
 // Apollo engine api key
 const engineAPI = process.env.ENGINE_API_KEY;
 
+// GEDS API Auth Key
+const gedsKey = process.env.GEDS_KEY;
+
 const development = {
   app: {
     port: 4000,
@@ -31,7 +34,7 @@ const development = {
   },
   prisma: {
     host: prismaHost,
-    debug: false
+    debug: true
   },
   image: {
     url: imageURL,
@@ -59,6 +62,9 @@ const development = {
   },
   directoryApp: {
     url: directoryApp
+  },
+  integration: {
+    geds: gedsKey
   }
 };
 
@@ -98,6 +104,9 @@ const production = {
   },
   directoryApp: {
     url: directoryApp
+  },
+  integration: {
+    geds: gedsKey
   }
 };
 

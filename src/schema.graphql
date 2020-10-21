@@ -31,9 +31,12 @@ scalar Email
 scalar PhoneNumber
 scalar Upload
 scalar PostalCode
+scalar JSON
+scalar JSONObject
 
 type Query {
   search(partialName:String, number: Int):[Profile!]!
+  integration(email: Email!, source: IntegrationSources!):JSONObject!
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
