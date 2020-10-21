@@ -69,10 +69,16 @@ const getGEDSInfo = async (email) => {
   const engData = await englishAPI(email);
   const frData = await frenchAPI(email);
 
-  return {
-    en: engData,
-    fr: frData
-  };
+  if(engData.error && engData.error == "Not Authorized") {
+    return { error: "Not Authorized" };
+  } else if(engData.error && engData.error == "User not found") {
+    return { error: "User not found" };
+  } else {
+    return {
+      en: engData,
+      fr: frData
+    };
+  }
 }
 
 module.exports = {
