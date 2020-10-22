@@ -2,6 +2,7 @@ const { copyValueToObjectIfDefined, propertyExists, removeNullKeys } = require("
 const { addFragmentToInfo } = require("graphql-binding");
 const { profileFragment } = require("../Auth/Directives");
 const { autoCompleter } = require("../Search/autoComplete");
+const { getGEDSInfo } = require("../Integrations/GEDS");
 
 function search(_, args, context, info){
   
@@ -141,6 +142,10 @@ function approvals(_, args, context, info) {
   );
 }
 
+async function integration(_, args, context, info){
+  return await getGEDSInfo(args.email);
+}
+
 
 module.exports = {
   search,
@@ -148,5 +153,6 @@ module.exports = {
   addresses,
   teams,
   organizations,
-  approvals
+  approvals,
+  integration
 };
