@@ -220,6 +220,23 @@ input RequestedChangeInput {
     ownershipOfTeam: TeamInput
 }
 
+type Integration {
+    id: ID!
+    gcID: Int!
+    integrationID: String
+    source: IntegrationSources!
+    lastSync: String!
+    changes: Profile
+}
+
+input IntegrationInput {
+    gcID: Int!
+    integrationID: String
+    source: IntegrationSources!
+    lastSync: String!
+    changes: ModifyProfileInput
+}
+
 enum Status {
     Pending
     Approved
@@ -249,4 +266,8 @@ enum UserRole {
 
 input gcIDProfileInput {
   gcID: ID,
+}
+
+enum IntegrationSources {
+    GEDS
 }
