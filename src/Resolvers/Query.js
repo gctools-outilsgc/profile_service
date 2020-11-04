@@ -146,6 +146,19 @@ async function integration(_, args, context, info){
   return await getGEDSInfo(args.email);
 }
 
+function integrationData(_, args, context, info) {
+  return context.prisma.query.integrations(
+    {
+      where: {
+        gcID: copyValueToObjectIfDefined(args.gcID),
+        source: copyValueToObjectIfDefined(args.source),
+      },
+      skip: copyValueToObjectIfDefined(args.skip),
+      first: copyValueToObjectIfDefined(args.first),
+    },
+    info,
+  );
+}
 
 module.exports = {
   search,
@@ -154,5 +167,6 @@ module.exports = {
   teams,
   organizations,
   approvals,
+  integrationData,
   integration
 };
