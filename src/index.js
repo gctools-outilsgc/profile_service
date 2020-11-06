@@ -3,6 +3,7 @@ const { Prisma } = require("prisma-binding");
 const { EmailAddress, PostalCode } = require("@okgrow/graphql-scalars");
 const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json');
 const Query = require("./Resolvers/Query");
+const { integration } = require("./Resolvers/Query");
 const { modifyProfile, createTeam, modifyTeam, deleteTeam, modifyApproval, createOrganization, modifyOrganization, deleteOrganization } = require("./Resolvers/Mutations");
 const { PhoneNumber } = require("./Resolvers/Scalars");
 const config = require("./config");
@@ -58,6 +59,9 @@ const ownershipRequiredApplications = {
 
 const authenticationRequiredApplications =
 {
+  Query: {
+    integration: mustbeAuthenticated,
+  },
   Mutation: {
     modifyProfile: mustbeAuthenticated,
     createTeam: mustbeAuthenticated,
