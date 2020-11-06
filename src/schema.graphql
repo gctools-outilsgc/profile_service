@@ -36,13 +36,13 @@ scalar JSONObject
 
 type Query {
   search(partialName:String, number: Int):[Profile!]!
-  integration(email: Email!, source: IntegrationSources!):JSONObject!
-  integrationData(gcID: ID, source: IntegrationSources, skip: Int, first: Int): [Integration!]!
   profiles(gcID: ID, name: String, email: Email, mobilephone: String, officePhone: String , titleEn: String, titleFr: String, skip: Int, first: Int): [Profile!]!,
   addresses(id: ID, streetAddress: String, city: String, province: String, postalCode: String, country: String, skip: Int, first: Int): [Address!]!,
   teams(id: ID, nameEn: String, nameFr: String, skip: Int, first: Int): [Team!]!,
   organizations(id: ID, nameEn: String, nameFr: String, acronymEn: String, acronymFr: String, orgType: OrgType, skip: Int, first: Int): [Organization!]!,
-  approvals(id:ID, gcIDApprover: gcIDProfileInput, gcIDSubmitter: gcIDProfileInput, status: Status, changeType: ChangeType, skip: Int, first: Int): [Approval!]!  
+  approvals(id:ID, gcIDApprover: gcIDProfileInput, gcIDSubmitter: gcIDProfileInput, status: Status, changeType: ChangeType, skip: Int, first: Int): [Approval!]! 
+  integration(email: Email!, source: IntegrationSources!):JSONObject! @isAuthenticated
+  integrationData(gcID: ID, source: IntegrationSources, skip: Int, first: Int): [Integration!]!
 }
 
 type Mutation {
