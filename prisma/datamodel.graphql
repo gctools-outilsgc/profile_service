@@ -87,7 +87,28 @@ type Integration {
     integrationID: String
     source: IntegrationSources!
     lastSync: String!
-    changes: Profile
+    changes: Changes @relation(name: "IncomingChanges" onDelete: CASCADE)
+}
+
+type Changes {
+    id: ID! @unique
+    name: String
+    email: String
+    avatar: String
+    mobilePhone: String
+    officePhone: String
+    address: ChangesAddress @relation(name: "ChangesAddress" onDelete: CASCADE)
+    titleEn: String
+    titleFr: String
+}
+
+type ChangesAddress {
+  id: ID! @unique
+  streetAddress: String
+  city: String
+  province: String
+  postalCode: String
+  country: String
 }
 
 enum Status {

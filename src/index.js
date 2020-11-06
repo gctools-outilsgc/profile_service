@@ -16,6 +16,7 @@ const { getDefaults } = require("./Resolvers/helper/default_setup");
 const { applyMiddleware } = require("graphql-middleware");
 const { profileApprovalRequired } = require("./Middleware/profileApprovalCreation");
 const { teamApprovalRequired } = require("./Middleware/teamApprovalCreation");
+const { hasIntegrationSource } = require("./Middleware/integrationCreation");
 const { allowedToModifyProfile, allowedToModifyApproval, allowedToModifyTeam, mustbeAuthenticated, mustBeAdmin, adminOnlyField } = require("./Middleware/authMiddleware");
 
 const resolvers = {
@@ -81,6 +82,12 @@ const adminOnlyApplications =
   }
 }
 
+const profileIntegrationApplications = {
+  Mutation: {
+    modifyProfile: hasIntegrationSource
+  },
+};
+
 const typeDefs = gql`${fs.readFileSync(__dirname.concat("/schema.graphql"), "utf8")}`;
 
 const schemaBeforeMiddleware = makeExecutableSchema({
@@ -106,7 +113,8 @@ const schema = applyMiddleware(
   ownershipRequiredApplications,
   profileApprovalRequiredApplications,
   teamApprovalRequiredApplications,
-  adminOnlyApplications
+  adminOnlyApplications,
+  profileIntegrationApplications
 );
 
 const server = new ApolloServer({
