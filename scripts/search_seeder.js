@@ -37,7 +37,9 @@ async function seed(){
   console.log("Starting to Seed");
 
   let n = 0;
+  let more = false;
   do{
+    more = false;
     try {
 
       // Get all profile information needed into a single JSON.
@@ -50,13 +52,17 @@ async function seed(){
       
       for (var profile of profiles){
         await searchPrep(profile, "new", ctx);
+        more = true;
       }
     } catch(e){
         // eslint-disable-next-line no-console
         console.error(e);
     }
     n += 1;
-  } while( profiles );
+  } while( more );
+
+  console.log("Finished seeding");
+  return 0;
 
 }
 mesh.connectMessageQueuePublisher();
