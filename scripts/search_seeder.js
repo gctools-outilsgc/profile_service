@@ -35,23 +35,28 @@ addMockFunctionsToSchema({ schema, mocks });
 async function seed(){
   // eslint-disable-next-line no-console
   console.log("Starting to Seed");
+
+  let n = 0;
+  do{
     try {
 
-    // Get all profile information needed into a single JSON.
-    var info = `query queryProfiles {
-        profiles { gcID, name, email, mobilePhone, officePhone, titleEn, titleFr,
-        team{id, nameEn, nameFr, organization{id, nameEn, nameFr}}}
-      }`;
-    const users = await graphql(schema, info);
-    const profiles = users.data.profiles;
-    
-    for (var profile of profiles){
-      await searchPrep(profile, "new", ctx);
-    }
+      // Get all profile information needed into a single JSON.
+      var info = `query queryProfiles {
+          profiles (skip: ` + n * 1000 + `, first: 1) { gcID, name, email, mobilePhone, officePhone, titleEn, titleFr,
+          team{id, nameEn, nameFr, organization{id, nameEn, nameFr}}}
+        }`;
+      const users = await graphql(schema, info);
+      const profiles = users.data.profiles;
+      
+      for (var profile of profiles){
+        await searchPrep(profile, "new", ctx);
+      }
     } catch(e){
         // eslint-disable-next-line no-console
         console.error(e);
     }
+    n += 1;
+  } while( profiles );
 
 }
 mesh.connectMessageQueuePublisher();
