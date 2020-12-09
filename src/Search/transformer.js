@@ -5,8 +5,8 @@ function suggester(newProfile, newTeam, newOrg){
     var suggestions = newProfile.name.split(" ");
     suggestions.push(newProfile.name);
     suggestions.push(newProfile.email);
-    newProfile.mobilePhone != '' ? suggestions.push(newProfile.mobilePhone) : "";
-    newProfile.officePhone != '' ? suggestions.push(newProfile.officePhone) : "";
+    (newProfile.mobilePhone != '' && newProfile.mobilePhone !== null) ? suggestions.push(newProfile.mobilePhone) : "";
+    (newProfile.officePhone != '' && newProfile.officePhone !== null) ? suggestions.push(newProfile.officePhone) : "";
     if(typeof newTeam !== 'undefined'){
         suggestions.push(newTeam.nameFr)
         suggestions.push(newTeam.nameEn)
