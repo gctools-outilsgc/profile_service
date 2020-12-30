@@ -123,8 +123,6 @@ const server = new ApolloServer({
     apiKey: config.engine.apiID,
   },
   tracing: config.app.tracing,
-  introspection: true,
-  playground: true,
   cors: {
     origin: "*"
   },
