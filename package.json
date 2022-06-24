@@ -52,7 +52,7 @@
     "graphql-binding": "^2.5.0",
     "graphql-middleware": "^3.0.2",
     "graphql-type-json": "^0.3.2",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.7",
     "parse-svg-path": "^0.1.2",
     "prisma": "1.26.6",
     "prisma-binding": "^2.3.2",
